@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 public class UserInterface extends javax.swing.JFrame {
@@ -39,7 +40,9 @@ public class UserInterface extends javax.swing.JFrame {
         fillTable(musicTable, SQL_JDBC.getAllMusic());
         
         selection_panel.setVisible(false);
-       
+        
+        this.pack();
+        
         this.setVisible(true);     
     }
 
@@ -100,7 +103,6 @@ public class UserInterface extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         musicTable = new javax.swing.JTable();
-        refresh_button = new javax.swing.JToggleButton();
         selection_panel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -128,6 +130,7 @@ public class UserInterface extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         file_menu = new javax.swing.JMenu();
         file_menu_exit = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         help_menu = new javax.swing.JMenu();
         help_menu_getHelp = new javax.swing.JMenuItem();
 
@@ -171,13 +174,6 @@ public class UserInterface extends javax.swing.JFrame {
             musicTable.getColumnModel().getColumn(2).setPreferredWidth(400);
             musicTable.getColumnModel().getColumn(3).setPreferredWidth(100);
         }
-
-        refresh_button.setText("Refresh");
-        refresh_button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                refresh_buttonMouseClicked(evt);
-            }
-        });
 
         selection_panel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -228,25 +224,27 @@ public class UserInterface extends javax.swing.JFrame {
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(selection_panelLayout.createSequentialGroup()
                         .addGroup(selection_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(selection_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(selection_panelLayout.createSequentialGroup()
-                                .addComponent(update_button, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(hide_button))
+                            .addGroup(selection_panelLayout.createSequentialGroup()
+                                .addGroup(selection_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(id_field)
-                            .addComponent(title_field)
-                            .addComponent(library_field)
-                            .addComponent(composer_field)))
-                    .addGroup(selection_panelLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(hide_button)))
-                .addContainerGap())
+                                .addGroup(selection_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(selection_panelLayout.createSequentialGroup()
+                                        .addComponent(update_button, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(id_field)
+                                    .addComponent(title_field)
+                                    .addComponent(composer_field)
+                                    .addComponent(library_field, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addContainerGap())))
         );
         selection_panelLayout.setVerticalGroup(
             selection_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -285,26 +283,20 @@ public class UserInterface extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(selection_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 1550, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(refresh_button)))
+                .addContainerGap()
+                .addComponent(selection_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(selection_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 723, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                .addComponent(refresh_button)
-                .addGap(16, 16, 16))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         OtherTab.addTab("View Music", jPanel3);
@@ -359,7 +351,7 @@ public class UserInterface extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1907, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(clear_items)
@@ -372,7 +364,7 @@ public class UserInterface extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 596, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 147, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(add_items)
                     .addComponent(clear_items))
@@ -459,12 +451,12 @@ public class UserInterface extends javax.swing.JFrame {
                     .addComponent(search_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(OtherTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(PanelLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addGap(0, 375, Short.MAX_VALUE)
                     .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(0, 375, Short.MAX_VALUE)))
         );
 
         file_menu.setText("File");
@@ -479,6 +471,15 @@ public class UserInterface extends javax.swing.JFrame {
             }
         });
         file_menu.add(file_menu_exit);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("Refresh Table");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        file_menu.add(jMenuItem1);
 
         jMenuBar1.add(file_menu);
 
@@ -502,15 +503,15 @@ public class UserInterface extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -520,6 +521,11 @@ public class UserInterface extends javax.swing.JFrame {
     private void file_menu_exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_file_menu_exitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_file_menu_exitActionPerformed
+
+    private void help_menu_getHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_help_menu_getHelpActionPerformed
+        Help help_screen = new Help();
+        help_screen.setVisible(true);
+    }//GEN-LAST:event_help_menu_getHelpActionPerformed
 
     private void exactMatch_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exactMatch_checkActionPerformed
         exactMatch = !exactMatch;
@@ -579,31 +585,22 @@ public class UserInterface extends javax.swing.JFrame {
         model.addRow(new String [] {null,null,null,null});
     }//GEN-LAST:event_add_musicTablePropertyChange
 
-    private void refresh_buttonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refresh_buttonMouseClicked
-        refresh_button.setEnabled(false);
+    private void hide_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hide_buttonActionPerformed
+        selection_panel.setVisible(false);
+    }//GEN-LAST:event_hide_buttonActionPerformed
+
+    private void update_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_buttonActionPerformed
+        update_button.setEnabled(false);
+        SQL_JDBC.executeStatement("UPDATE music SET pid="+id_field.getText()+", title='"+title_field.getText()+"', composer='"+composer_field.getText()+"', library='"+library_field.getText()+
+            "' WHERE pid="+selectedPID+" AND title='"+selectedTitle+"' AND composer='"+selectedComposer+"' AND library='"+selectedLibrary+"'");
         try {
             refreshTable(musicTable, SQL_JDBC.getAllMusic());
         } catch (SQLException ex) {
             Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, ex);
-
         }
-        refresh_button.setEnabled(true);
-    }//GEN-LAST:event_refresh_buttonMouseClicked
-
-    private void musicTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_musicTableMouseClicked
-        int id = Integer.parseInt(musicTable.getValueAt(musicTable.getSelectedRow(), 0)+"");
-        String title = (String) musicTable.getValueAt(musicTable.getSelectedRow(), 1);
-        String composer = (String) musicTable.getValueAt(musicTable.getSelectedRow(), 2);
-        String library = (String) musicTable.getValueAt(musicTable.getSelectedRow(), 3);
-        
-        
-        
-        updateSelection(id,title,composer,library);
-    }//GEN-LAST:event_musicTableMouseClicked
-
-    private void id_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_id_fieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_id_fieldActionPerformed
+        updateSelection(Integer.parseInt(id_field.getText()),title_field.getText(),composer_field.getText(),library_field.getText());
+        update_button.setEnabled(true);
+    }//GEN-LAST:event_update_buttonActionPerformed
 
     private void delete_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete_buttonActionPerformed
         delete_button.setEnabled(false);
@@ -616,27 +613,27 @@ public class UserInterface extends javax.swing.JFrame {
         delete_button.setEnabled(true);
     }//GEN-LAST:event_delete_buttonActionPerformed
 
-    private void update_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_buttonActionPerformed
-        update_button.setEnabled(false);
-        SQL_JDBC.executeStatement("UPDATE music SET pid="+id_field.getText()+", title='"+title_field.getText()+"', composer='"+composer_field.getText()+"', library='"+library_field.getText()+
-                "' WHERE pid="+selectedPID+" AND title='"+selectedTitle+"' AND composer='"+selectedComposer+"' AND library='"+selectedLibrary+"'");
-        try {
+    private void id_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_id_fieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_id_fieldActionPerformed
+
+    private void musicTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_musicTableMouseClicked
+        int id = Integer.parseInt(musicTable.getValueAt(musicTable.getSelectedRow(), 0)+"");
+        String title = (String) musicTable.getValueAt(musicTable.getSelectedRow(), 1);
+        String composer = (String) musicTable.getValueAt(musicTable.getSelectedRow(), 2);
+        String library = (String) musicTable.getValueAt(musicTable.getSelectedRow(), 3);
+
+        updateSelection(id,title,composer,library);
+    }//GEN-LAST:event_musicTableMouseClicked
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+       try {
             refreshTable(musicTable, SQL_JDBC.getAllMusic());
         } catch (SQLException ex) {
             Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, ex);
+
         }
-        updateSelection(Integer.parseInt(id_field.getText()),title_field.getText(),composer_field.getText(),library_field.getText());
-        update_button.setEnabled(true);
-    }//GEN-LAST:event_update_buttonActionPerformed
-
-    private void hide_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hide_buttonActionPerformed
-        selection_panel.setVisible(false);
-    }//GEN-LAST:event_hide_buttonActionPerformed
-
-    private void help_menu_getHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_help_menu_getHelpActionPerformed
-        Help help_screen = new Help();
-        help_screen.setVisible(true);
-    }//GEN-LAST:event_help_menu_getHelpActionPerformed
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
    
     private void searchMusicTable() { 
         search_button.setEnabled(false);
@@ -698,6 +695,7 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane3;
@@ -706,7 +704,6 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTextField library_field;
     private javax.swing.JTable musicTable;
-    private javax.swing.JToggleButton refresh_button;
     private javax.swing.JButton search_button;
     private javax.swing.JTextField search_field;
     private javax.swing.JComboBox search_filter;

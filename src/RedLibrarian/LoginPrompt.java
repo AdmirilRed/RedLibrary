@@ -25,6 +25,7 @@ public class LoginPrompt extends javax.swing.JFrame {
         initComponents();
         this.setIconImage(new ImageIcon(getClass().getResource("Icon.png")).getImage());
         failed_attempt.setVisible(false);
+        this.pack();
         this.setVisible(true);
     }
 

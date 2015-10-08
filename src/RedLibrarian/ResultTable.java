@@ -22,6 +22,7 @@ public class ResultTable extends javax.swing.JFrame {
      */
     public ResultTable() {
         initComponents();
+        this.pack();
         this.setIconImage(new ImageIcon(getClass().getResource("Icon.png")).getImage());
     }
 

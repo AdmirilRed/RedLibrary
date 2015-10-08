@@ -18,6 +18,7 @@ public class Help extends javax.swing.JFrame {
      */
     public Help() {
         initComponents();
+        this.pack();
         this.setIconImage(new ImageIcon(getClass().getResource("Icon.png")).getImage());
     }
 
