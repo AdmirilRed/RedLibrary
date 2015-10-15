@@ -12,22 +12,27 @@ import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
+ * Creates a jTable of results from a search
  * @author Joseph
  */
 public class ResultTable extends javax.swing.JFrame {
 
     /**
-     * Creates new form NewJFrame
+     * Creates new jFrame containing an empty jTable
      */
     public ResultTable() {
         initComponents();
         this.pack();
         this.setIconImage(new ImageIcon(getClass().getResource("Icon.png")).getImage());
     }
-
+    /**
+     * Creates a jFrame containing a jTable filled with matching results from a search
+     * @param text The string to search for
+     * @param filter How to limit the search (ID, Title, Composer, or Date Added)
+     * @param exactMatch Indicates whether or not the search will only return results that match the input string exactly
+     */
     public ResultTable(String text, String filter, boolean exactMatch) {
-        initComponents();
+        this();
         DefaultTableModel model = (DefaultTableModel) musicTable.getModel();
         
         String statement = "SELECT * FROM music WHERE ";

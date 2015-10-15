@@ -8,13 +8,13 @@ package RedLibrarian;
 import javax.swing.ImageIcon;
 
 /**
- *
+ * Creates a jFrame with help and about information
  * @author Joseph
  */
 public class Help extends javax.swing.JFrame {
 
     /**
-     * Creates new form Help
+     * Creates new Help frame
      */
     public Help() {
         initComponents();

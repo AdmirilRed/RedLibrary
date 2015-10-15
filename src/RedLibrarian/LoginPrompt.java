@@ -10,13 +10,24 @@ import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 
 /**
- *
+ *Login prompt for connection to server
  * @author Joseph
  */
 public class LoginPrompt extends javax.swing.JFrame {
 
+    /**
+     * Indicator of whether the application is or is not connected to the server
+     */
     public boolean loggedIn = false;
+
+    /**
+     *Username used to log into the server
+     */
     public String username = "null";
+    
+    /**
+     * Password used to log into the server
+     */
     public String password = "null";
     /**
      * Creates new form LoginPrompt

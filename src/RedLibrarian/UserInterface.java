@@ -18,6 +18,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * Main window for application
+ * @author Joseph
+ */
 public class UserInterface extends javax.swing.JFrame {
 
     private static String filter = "All";
@@ -32,7 +36,7 @@ public class UserInterface extends javax.swing.JFrame {
     
     /**
      * Creates new form UserInterface
-     * @throws java.sql.SQLException
+     * @throws java.sql.SQLException Thrown if the user interface cannot connect the server.
      */ 
     public UserInterface() throws SQLException {
         initComponents();
@@ -46,40 +50,66 @@ public class UserInterface extends javax.swing.JFrame {
         this.setVisible(true);     
     }
 
+    /**
+     * Clears the given table and replaces cells with the given array
+     * @param table The table to refresh
+     * @param results The array of information to fill the table with
+     */
     public void refreshTable(javax.swing.JTable table, String [][] results) {
         clearTable(table);
         fillTable(table, results);
         System.out.println("REFRESH COMPLETE");
     }
+    /**
+     * Adds rows to the given table with the given array
+     * @param table The table to fill
+     * @param results The array of information to fill the table with
+     */
     public void fillTable(javax.swing.JTable table, String [][] results) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         for(String [] r:results)
             model.addRow(r);
     }
+    /**
+     * Clears all rows of a given table
+     * @param table The table to clear
+     */
     public void clearTable(javax.swing.JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0);
         table.revalidate();
     }
+    /**
+     * Resets the given table to the given number of blank rows
+     * @param table The table to reset
+     * @param rows The number of blank rows to create
+     */
     private void resetTable(javax.swing.JTable table, int rows) {
         clearTable(table);
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(rows);
     }
+    /**
+     * Determines if a given row is empty
+     * @param model The table model to evaluate 
+     * @param row The row to evaluate
+     * @return Returns true is the row is empty
+     */
     public boolean isEmptyRow(javax.swing.table.DefaultTableModel model, int row) {
         for(int c=0;c<model.getColumnCount();c++)
             if(model.getValueAt(row,c)!=null)
                 return false;
         return true;
     }
-    public void updateSelection(int id, String title, String composer, String library) {
+
+    protected void updateSelection(int id, String title, String composer, String library) {
         selectedPID = id;
         selectedTitle = title;
         selectedComposer = composer;
         selectedLibrary = library;
         updateSelectionOutput();
     }
-    public void updateSelectionOutput() {
+    protected void updateSelectionOutput() {
         id_field.setText(selectedPID+"");
         title_field.setText(selectedTitle);
         composer_field.setText(selectedComposer);
@@ -237,7 +267,7 @@ public class UserInterface extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(selection_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(selection_panelLayout.createSequentialGroup()
-                                        .addComponent(update_button, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                                        .addComponent(update_button, javax.swing.GroupLayout.PREFERRED_SIZE, 95, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(id_field)
