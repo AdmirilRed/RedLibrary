@@ -12,9 +12,9 @@
   <session-factory>
     <!-- Database connection settings -->
     <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="connection.url">jdbc:mysql://commstationfive.net:3306/RedLibrarian</property>
-    <property name="connection.username">root</property>
-    <property name="connection.password">rootbeer</property>
+    <property name="connection.url"></property>
+    <property name="connection.username"></property>
+    <property name="connection.password"></property>
 
     <!-- JDBC connection pool (use the built-in) -->
     <property name="connection.pool_size">1</property>
@@ -33,6 +33,8 @@
 
     <!-- Drop and re-create the database schema on startup -->
     <property name="hbm2ddl.auto">create</property>
-    <mapping class="redlibrarian.MusicDetails"/>
+    <mapping class="redlibrarian.music.Library"/>
+    <mapping class="redlibrarian.music.Song"/>
+    <mapping class="redlibrarian.music.Performance"/>
   </session-factory>
 </hibernate-configuration>
