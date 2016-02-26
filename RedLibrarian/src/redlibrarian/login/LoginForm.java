@@ -5,53 +5,41 @@
  */
 package redlibrarian.login;
 
-import java.awt.event.KeyEvent;
-import org.hibernate.HibernateException;
-import org.hibernate.cfg.Configuration;
-import static redlibrarian.RedLibrarian.sessionFactory;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import redlibrarian.organization.OrgUser;
 
 /**
  *
  * @author admir
  */
-public class LoginPrompt extends javax.swing.JDialog {
+public class LoginForm extends javax.swing.JDialog {
 
-    private String URL = "jdbc:mysql://commstationfive.net:3306/RedLibrary_Test";
+    private final SessionFactory sessionFactory;
     private boolean loggedIn = false;
+    private OrgUser user;
     
     /**
-     * Creates new form LoginPrompt
+     * Creates new form LoginForm
      * @param parent
      * @param modal
+     * @param sessionFactory
      */
-    public LoginPrompt(java.awt.Frame parent, boolean modal) {
+    public LoginForm(java.awt.Frame parent, boolean modal, SessionFactory sessionFactory) {
         super(parent, modal);
         initComponents();
-        this.setVisible(true);
+        loginStatus_label.setVisible(false);
+        this.sessionFactory = sessionFactory;
     }
     
-    private boolean attemptLogin() {
-        
-        try {
-            Configuration cfg = new Configuration();
-            cfg.configure("hibernate.cfg.xml"); //hibernate config xml file name
-            cfg.getProperties().setProperty("hibernate.connection.password", password_field.getText());
-            cfg.getProperties().setProperty("hibernate.connection.username", username_field.getText());
-            cfg.getProperties().setProperty("hibernate.connection.url", URL);
-            sessionFactory = cfg.buildSessionFactory();
-            this.loggedIn = true;
-            System.out.println("SUCCESS");
-            return true;
-        } catch (HibernateException hibernateException) {
-            System.out.println("FAILURE");
-            return false;
-        }
-        
+    public OrgUser getUser() {
+        return user;
+    }
+    
+    public boolean isLoggedIn() {
+        return loggedIn;
     }
 
-    public boolean isLoggedIn() {
-        return this.loggedIn;
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -64,18 +52,13 @@ public class LoginPrompt extends javax.swing.JDialog {
         username_label = new javax.swing.JLabel();
         username_field = new javax.swing.JTextField();
         password_label = new javax.swing.JLabel();
-        login_button = new javax.swing.JButton();
         password_field = new javax.swing.JPasswordField();
+        login_button = new javax.swing.JButton();
+        loginStatus_label = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         username_label.setText("Username");
-
-        username_field.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                username_fieldKeyPressed(evt);
-            }
-        });
 
         password_label.setText("Password");
 
@@ -86,25 +69,31 @@ public class LoginPrompt extends javax.swing.JDialog {
             }
         });
 
+        loginStatus_label.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(314, Short.MAX_VALUE)
-                .addComponent(login_button)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(username_label)
-                    .addComponent(password_label)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(password_field, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                            .addComponent(username_field))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(password_label)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(username_label, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(10, 10, 10)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(username_field, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                                        .addComponent(password_field)))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(loginStatus_label)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 248, Short.MAX_VALUE)
+                        .addComponent(login_button)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -113,26 +102,43 @@ public class LoginPrompt extends javax.swing.JDialog {
                 .addComponent(username_label)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(username_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(password_label)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addComponent(login_button)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(login_button, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(loginStatus_label, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void username_fieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_username_fieldKeyPressed
-        if(evt.getKeyCode()==(KeyEvent.VK_ENTER))
-            password_field.requestFocusInWindow();
-    }//GEN-LAST:event_username_fieldKeyPressed
-
     private void login_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_buttonActionPerformed
-        if(this.attemptLogin())
-            this.dispose();
+        if(user == null) {
+            try {
+                Session session = sessionFactory.getCurrentSession();
+                session.beginTransaction();
+                
+                OrgUser remoteUser = (OrgUser) session.get(OrgUser.class, username_field.getText());
+                if(remoteUser.verifyPassword(password_field.getText())) {
+                    user = remoteUser;
+                    this.loggedIn = true;
+                    this.setVisible(false);
+                }
+            } catch(Exception hibernateException) {
+                if(hibernateException.toString().contains("NullPointerException")) {
+                    loginStatus_label.setText("User does not exist.");
+                }
+                
+                loginStatus_label.setVisible(true);
+                    
+            }
+            
+                
+        }
     }//GEN-LAST:event_login_buttonActionPerformed
 
     /**
@@ -152,32 +158,31 @@ public class LoginPrompt extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginPrompt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginPrompt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginPrompt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginPrompt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                LoginPrompt dialog = new LoginPrompt(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            LoginForm dialog = new LoginForm(new javax.swing.JFrame(), true, null);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel loginStatus_label;
     private javax.swing.JButton login_button;
     private javax.swing.JPasswordField password_field;
     private javax.swing.JLabel password_label;

@@ -4,11 +4,16 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/admir/Documents/GitHub/RedLibrary/RedLibrarian/src/redlibrarian/UserInterface.java</file>
+            <file>file:/C:/Users/admir/Documents/GitHub/RedLibrary/RedLibrarian/src/redlibrarian/organization/OrgUser.java</file>
             <file>file:/C:/Users/admir/Documents/GitHub/RedLibrary/RedLibrarian/src/redlibrarian/music/Library.java</file>
+            <file>file:/C:/Users/admir/Documents/GitHub/RedLibrary/RedLibrarian/src/redlibrarian/login/Password.java</file>
             <file>file:/C:/Users/admir/Documents/GitHub/RedLibrary/RedLibrarian/src/redlibrarian/RedLibrarian.java</file>
+            <file>file:/C:/Users/admir/Documents/GitHub/RedLibrary/RedLibrarian/test/redlibrarian/organization/OrgUserTest.java</file>
+            <file>file:/C:/Users/admir/Documents/GitHub/RedLibrary/RedLibrarian/src/hibernate.cfg.xml</file>
+            <file>file:/C:/Users/admir/Documents/GitHub/RedLibrary/RedLibrarian/src/redlibrarian/organization/Organization.java</file>
             <file>file:/C:/Users/admir/Documents/GitHub/RedLibrary/RedLibrarian/src/redlibrarian/music/Song.java</file>
             <file>file:/C:/Users/admir/Documents/GitHub/RedLibrary/RedLibrarian/src/redlibrarian/music/Performance.java</file>
-            <file>file:/C:/Users/admir/Documents/GitHub/RedLibrary/RedLibrarian/test/redlibrarian/music/LibraryTest.java</file>
+            <file>file:/C:/Users/admir/Documents/GitHub/RedLibrary/RedLibrarian/src/redlibrarian/login/LoginPrompt.java</file>
         </group>
     </open-files>
 </project-private>

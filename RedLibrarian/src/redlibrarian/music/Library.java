@@ -21,7 +21,7 @@ import javax.persistence.ManyToMany;
 public class Library implements Serializable {
 
     @Id
-    private Long id;
+    private long id;
     private String name;
     private String description;
     
