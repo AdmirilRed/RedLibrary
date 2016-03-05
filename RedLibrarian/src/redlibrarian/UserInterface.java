@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import static redlibrarian.RedLibrarian.sessionFactory;
 import redlibrarian.login.LoginForm;
+import redlibrarian.music.Library;
 import redlibrarian.music.Organization;
 
 /**
@@ -78,7 +79,7 @@ public class UserInterface extends javax.swing.JFrame {
             //session.save(lib);
             
             //org.addLibrary(lib);
-            //session.save(org);
+            session.save(org);
             
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
@@ -87,7 +88,6 @@ public class UserInterface extends javax.swing.JFrame {
         
         
         System.out.println(org);
-        System.out.println(admin);
         return true;
     }
     

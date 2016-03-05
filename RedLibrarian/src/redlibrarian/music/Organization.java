@@ -14,7 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import redlibrarian.login.Password;
 
 /**
@@ -33,9 +33,9 @@ public class Organization implements Serializable {
     private final byte [] passwordHash;
     private final byte [] salt;  
     
-    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
+    @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     private Set<Performance> performances;
-    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
+    @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     private Set<Library> libraries;
     
     public Organization(String name, String password) {
@@ -104,6 +104,6 @@ public class Organization implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("ORGANIZATION< %s | LIBRARIES%s>\n", name, libraries);
+        return String.format("ORGANIZATION< %s | LIBRARIES%s>", name, libraries);
     }
 }
