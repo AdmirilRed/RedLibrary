@@ -5,19 +5,22 @@
  */
 package redlibrarian.login;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import redlibrarian.organization.OrgUser;
+import redlibrarian.music.Organization;
 
 /**
  *
  * @author admir
  */
+@SuppressWarnings("serial")
 public class LoginForm extends javax.swing.JDialog {
 
     private final SessionFactory sessionFactory;
     private boolean loggedIn = false;
-    private OrgUser user;
+    private boolean isAdmin = false;
+    private Organization organization;
     
     /**
      * Creates new form LoginForm
@@ -32,12 +35,16 @@ public class LoginForm extends javax.swing.JDialog {
         this.sessionFactory = sessionFactory;
     }
     
-    public OrgUser getUser() {
-        return user;
+    public Organization getOrganization() {
+        return organization;
     }
     
     public boolean isLoggedIn() {
         return loggedIn;
+    }
+    
+    public boolean isAdmin() {
+        return isAdmin;
     }
 
     /**
@@ -49,8 +56,8 @@ public class LoginForm extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        username_label = new javax.swing.JLabel();
-        username_field = new javax.swing.JTextField();
+        organization_label = new javax.swing.JLabel();
+        organization_field = new javax.swing.JTextField();
         password_label = new javax.swing.JLabel();
         password_field = new javax.swing.JPasswordField();
         login_button = new javax.swing.JButton();
@@ -58,7 +65,7 @@ public class LoginForm extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        username_label.setText("Username");
+        organization_label.setText("Organization");
 
         password_label.setText("Password");
 
@@ -69,7 +76,7 @@ public class LoginForm extends javax.swing.JDialog {
             }
         });
 
-        loginStatus_label.setText("jLabel1");
+        loginStatus_label.setText("LOGIN STATUS");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -82,16 +89,16 @@ public class LoginForm extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(password_label)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(username_label, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(organization_label, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
                                     .addGap(10, 10, 10)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(username_field, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                                        .addComponent(organization_field, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                                         .addComponent(password_field)))))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(loginStatus_label)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 248, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 186, Short.MAX_VALUE)
                         .addComponent(login_button)))
                 .addContainerGap())
         );
@@ -99,9 +106,9 @@ public class LoginForm extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(username_label)
+                .addComponent(organization_label)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(username_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(organization_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(password_label)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -117,24 +124,44 @@ public class LoginForm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void login_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login_buttonActionPerformed
-        if(user == null) {
+        if(organization == null) {
+            
+            login_button.setEnabled(false);
+            
             try {
                 Session session = sessionFactory.getCurrentSession();
                 session.beginTransaction();
                 
-                OrgUser remoteUser = (OrgUser) session.get(OrgUser.class, username_field.getText());
-                if(remoteUser.verifyPassword(password_field.getText())) {
-                    user = remoteUser;
+                SQLQuery query = session.createSQLQuery("SELECT * FROM Organization WHERE NAME='"+organization_field.getText()+"'");
+                query.addEntity(Organization.class);
+                
+                Organization remoteOrg = (Organization) query.list().get(0);
+                
+                if(!password_field.getText().trim().equals("")) {
+                    if(!remoteOrg.verifyPassword(password_field.getText()))
+                        loginStatus_label.setText("Administrator password incorrect.");
+                    else {
+                        this.organization = remoteOrg;
+                        this.loggedIn = true;
+                        this.isAdmin = true;
+                        this.setVisible(false);
+                    }
+                        
+                } else {
+                    this.organization = remoteOrg;
                     this.loggedIn = true;
                     this.setVisible(false);
                 }
             } catch(Exception hibernateException) {
+                System.out.println("LOGIN: "+hibernateException);
                 if(hibernateException.toString().contains("NullPointerException")) {
-                    loginStatus_label.setText("User does not exist.");
+                    loginStatus_label.setText("Organization does not exist.");
                 }
                 
                 loginStatus_label.setVisible(true);
                     
+            } finally {
+                login_button.setEnabled(true);
             }
             
                 
@@ -184,9 +211,10 @@ public class LoginForm extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel loginStatus_label;
     private javax.swing.JButton login_button;
+    private javax.swing.JTextField organization_field;
+    private javax.swing.JLabel organization_label;
     private javax.swing.JPasswordField password_field;
     private javax.swing.JLabel password_label;
-    private javax.swing.JTextField username_field;
-    private javax.swing.JLabel username_label;
     // End of variables declaration//GEN-END:variables
+
 }

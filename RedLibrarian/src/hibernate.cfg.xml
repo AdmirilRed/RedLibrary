@@ -32,10 +32,11 @@
     <property name="show_sql">true</property>
 
     <!-- Drop and re-create the database schema on startup -->
+    <property name="hbm2ddl.auto"></property>
+    
     <mapping class="redlibrarian.music.Library"/>
     <mapping class="redlibrarian.music.Song"/>
     <mapping class="redlibrarian.music.Performance"/>
-    <mapping class="redlibrarian.organization.OrgUser"/>
-    <mapping class="redlibrarian.organization.Organization"/>
+    <mapping class="redlibrarian.music.Organization"/>
   </session-factory>
 </hibernate-configuration>

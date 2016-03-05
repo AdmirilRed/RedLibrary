@@ -12,6 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 /**
  *
@@ -20,20 +23,23 @@ import javax.persistence.ManyToMany;
 @Entity
 public class Library implements Serializable {
 
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Id
     private long id;
+    
     private String name;
     private String description;
     
-    /**
-     *
-     */
-    @ManyToMany (fetch = FetchType.EAGER)
-    public Set<Song> contents = new TreeSet<>();
+    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
+    private Set<Song> contents = new TreeSet<>();
     
+    public Library(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
     
     public Library() {
-        this.id = -1l;
+        
     }    
    
     public Long getId() {
@@ -70,7 +76,7 @@ public class Library implements Serializable {
     
     public boolean removeSong(long targetId) {
         for(Song song:contents)
-            if(song.getId()==targetId)
+            if(song.getUniqueId()==targetId)
                 return contents.remove(song);
         return false;        
     }
@@ -81,6 +87,6 @@ public class Library implements Serializable {
             
     @Override
     public String toString() {
-        return String.format("LIBRARY<%s, %s %s>", name, description, contents);
+        return String.format("%s, %s %s", name, description, contents);
     }
 }

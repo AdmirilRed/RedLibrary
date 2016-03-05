@@ -30,11 +30,11 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="password_label" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                              <Component id="username_label" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="organization_label" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="username_field" pref="180" max="32767" attributes="0"/>
+                                      <Component id="organization_field" pref="180" max="32767" attributes="0"/>
                                       <Component id="password_field" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
@@ -44,7 +44,7 @@
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="loginStatus_label" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="248" max="32767" attributes="0"/>
+                      <EmptySpace pref="186" max="32767" attributes="0"/>
                       <Component id="login_button" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -56,9 +56,9 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="username_label" min="-2" max="-2" attributes="0"/>
+              <Component id="organization_label" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="username_field" min="-2" max="-2" attributes="0"/>
+              <Component id="organization_field" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="password_label" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -74,12 +74,12 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="username_label">
+    <Component class="javax.swing.JLabel" name="organization_label">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Username"/>
+        <Property name="text" type="java.lang.String" value="Organization"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="username_field">
+    <Component class="javax.swing.JTextField" name="organization_field">
     </Component>
     <Component class="javax.swing.JLabel" name="password_label">
       <Properties>
@@ -98,7 +98,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="loginStatus_label">
       <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel1"/>
+        <Property name="text" type="java.lang.String" value="LOGIN STATUS"/>
       </Properties>
     </Component>
   </SubComponents>

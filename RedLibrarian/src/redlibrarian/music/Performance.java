@@ -14,6 +14,9 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
+import javax.persistence.CascadeType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 /**
  *
@@ -22,6 +25,7 @@ import javax.persistence.Temporal;
 @Entity
 public class Performance implements Serializable {
    
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Id
     private long id; 
             
@@ -30,16 +34,14 @@ public class Performance implements Serializable {
     private String title;
     private String description;
     
-    @ManyToMany (fetch = FetchType.EAGER)
+    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     private Set<Song> songs = new TreeSet<>();
     
     public Performance() {
-        this.id = -1l;
         this.date = Calendar.getInstance();
     }
     
-    public Performance(long id, String title, String description, Calendar date) {
-        this.id = id;
+    public Performance(String title, String description, Calendar date) {
         this.title = title;
         this.description = description;
         this.date = date;
@@ -47,10 +49,6 @@ public class Performance implements Serializable {
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -79,7 +77,7 @@ public class Performance implements Serializable {
     
     public boolean removeSong(long targetId) {
         for(Song song:songs)
-            if(song.getId()==targetId)
+            if(song.getUniqueId()==targetId)
                 return songs.remove(song);
         return false;
     }

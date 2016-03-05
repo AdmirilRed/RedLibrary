@@ -8,6 +8,8 @@ package redlibrarian.music;
 import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 
@@ -19,8 +21,11 @@ import javax.persistence.Temporal;
 @Entity 
 public class Song implements Comparable, Serializable {
     
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Id
-    private final long id;
+    private long uid;
+    
+    private int pid;
     private String title;
     private String composer;
     private String description;
@@ -29,15 +34,15 @@ public class Song implements Comparable, Serializable {
     private final Calendar dateAdded;
 
     public Song() {
-        this.id = -1l;
+        this.pid = -1;
         this.title = null;
         this.composer = null;
         this.available = false;
         this.dateAdded = Calendar.getInstance();
     }
     
-    public Song(long id, String title, String composer) {
-        this.id = id;
+    public Song(int id, String title, String composer) {
+        this.pid = id;
         this.title = title;
         this.composer = composer;
         this.available = true;
@@ -64,10 +69,13 @@ public class Song implements Comparable, Serializable {
      * @return
      */
 
-    public long getId() {
-        return id;
+    public long getUniqueId() {
+        return uid;
     }
 
+    public int getPseudoId() {
+        return pid;
+    }
     /**
      * Returns the title of the score.
      * @return
@@ -103,6 +111,10 @@ public class Song implements Comparable, Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
+    
+    public void setPseudoId(int id) {
+        this.pid = id;
+    }
 
     /**
      * Sets the composer of the score.
@@ -118,14 +130,16 @@ public class Song implements Comparable, Serializable {
 
     @Override
     public String toString() {
-        return String.format("(Title: %s, Composer: %s | %s %tF)", title, composer, available?"AVAILABLE":"UNAVAILABLE", dateAdded);
+        return String.format("%s", title, composer, available?"AVAILABLE":"UNAVAILABLE", dateAdded);
     }
 
     public int compareTo(Song otherSong) {
-        if(this.getId()!=otherSong.getId())
-            return this.getId()>otherSong.getId()?1:-1;
+        if(this.getUniqueId()!=otherSong.getUniqueId())
+            return this.getUniqueId()>otherSong.getUniqueId()?1:-1;
         if(!this.getTitle().equals(otherSong.getTitle()))
             return this.getTitle().compareTo(otherSong.getTitle());
+        if(this.getPseudoId()!=otherSong.getPseudoId())
+            return this.getPseudoId()>otherSong.getPseudoId()?1:-1;
         if(!this.getComposer().equals(otherSong.getComposer()))
             return this.getComposer().compareTo(otherSong.getComposer());
         if(this.isAvailable()!=otherSong.isAvailable())
@@ -137,7 +151,7 @@ public class Song implements Comparable, Serializable {
 
     @Override
     public int compareTo(Object o) {
-        if(o.getClass().equals("Song"))
+        if(o.getClass().toString().equals("Song"))
             return compareTo((Song)o);
         return this.hashCode()>o.hashCode()?1:this.hashCode()==o.hashCode()?0:-1;
     }

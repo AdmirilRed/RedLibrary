@@ -6,10 +6,11 @@
 package redlibrarian;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import static redlibrarian.RedLibrarian.sessionFactory;
 import redlibrarian.login.LoginForm;
-import redlibrarian.organization.OrgUser;
+import redlibrarian.music.Organization;
 
 /**
  *
@@ -17,11 +18,12 @@ import redlibrarian.organization.OrgUser;
  */
 public class UserInterface extends javax.swing.JFrame {
 
-    private String URL = "jdbc:mysql://redlibrarian.ciwuxwonopze.us-east-1.rds.amazonaws.com:3306/RedLibrarian";
+    private final String URL = "jdbc:mysql://redlibrarian.ciwuxwonopze.us-east-1.rds.amazonaws.com:3306/RedLibrarian";
     private final String connectionUsername = "client";
     private final String connectionPassword = "KrNestsS+4_-J+zU";
     
-    private OrgUser currentUser;
+    private Organization currentOrganization;
+    private boolean admin;
     
     /**
      * Creates new form UserInterface
@@ -44,14 +46,52 @@ public class UserInterface extends javax.swing.JFrame {
             }
         } catch (HibernateException hibernateException) {
             System.out.println("LOAD: "+hibernateException);
+            System.exit(997);
             return false;
         }
         System.out.println("SUCCESS");
-        currentUser = this.login(true);
+        
+        Session session;
+        try {
+            session = sessionFactory.getCurrentSession();
+            session.beginTransaction();
+       
+            
+            //Organization org = new Organization("RFHS", "root");
+            //session.save(org);
+            
+            session.getTransaction().commit();
+        } catch (HibernateException hibernateException) {
+            System.out.println("CREATION: "+hibernateException);
+        }
+        
+        currentOrganization = this.login(true);
+        
+        Organization org = null;
+        
+        try {
+            session = sessionFactory.getCurrentSession();
+            session.beginTransaction();
+            
+            org = (Organization) session.get(Organization.class,1l);
+            //Library lib = new Library("Marching", "");
+            //session.save(lib);
+            
+            //org.addLibrary(lib);
+            //session.save(org);
+            
+            session.getTransaction().commit();
+        } catch (HibernateException hibernateException) {
+            System.out.println("GET: "+hibernateException);
+        }
+        
+        
+        System.out.println(org);
+        System.out.println(admin);
         return true;
     }
     
-    private OrgUser login(boolean modal) {
+    private Organization login(boolean modal) {
         
         LoginForm prompt = new LoginForm(this, modal, sessionFactory);
         prompt.setVisible(true);
@@ -61,9 +101,11 @@ public class UserInterface extends javax.swing.JFrame {
             System.exit(998);
         }  
             
-        OrgUser user = prompt.getUser(); 
+        Organization org = prompt.getOrganization(); 
+        this.admin = prompt.isAdmin();
+      
         prompt.dispose();
-        return user;
+        return org;
     }
     /**
      * This method is called from within the constructor to initialize the form.
