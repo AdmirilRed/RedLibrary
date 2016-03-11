@@ -134,24 +134,18 @@ public class Song implements Comparable, Serializable {
     }
 
     public int compareTo(Song otherSong) {
-        if(this.getUniqueId()!=otherSong.getUniqueId())
-            return this.getUniqueId()>otherSong.getUniqueId()?1:-1;
-        if(!this.getTitle().equals(otherSong.getTitle()))
-            return this.getTitle().compareTo(otherSong.getTitle());
+        System.out.println("Correct!");
         if(this.getPseudoId()!=otherSong.getPseudoId())
-            return this.getPseudoId()>otherSong.getPseudoId()?1:-1;
-        if(!this.getComposer().equals(otherSong.getComposer()))
-            return this.getComposer().compareTo(otherSong.getComposer());
-        if(this.isAvailable()!=otherSong.isAvailable())
-            return this.isAvailable()?1:-1;
-        if(!this.getDateAdded().equals(otherSong.getDateAdded()))
-            return this.getDateAdded().compareTo(otherSong.getDateAdded());
-        return this.getDescription().compareTo(otherSong.getDescription());
+            return this.getPseudoId()>otherSong.getPseudoId()?-1:1;
+        if(this.getUniqueId()!=otherSong.getUniqueId())
+            return this.getUniqueId()>otherSong.getUniqueId()?-1:1;
+        return 0;
     }
 
     @Override
     public int compareTo(Object o) {
-        if(o.getClass().toString().equals("Song"))
+        System.out.println("Oops!");
+        if(o.getClass().toString().equals(this.getClass().toString()))
             return compareTo((Song)o);
         return this.hashCode()>o.hashCode()?1:this.hashCode()==o.hashCode()?0:-1;
     }

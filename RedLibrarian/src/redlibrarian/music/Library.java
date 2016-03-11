@@ -6,15 +6,18 @@
 package redlibrarian.music;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.CascadeType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 
 /**
  *
@@ -31,14 +34,17 @@ public class Library implements Serializable {
     private String description;
     
     @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
-    private Set<Song> contents = new TreeSet<>();
+    @OrderBy("pid ASC")
+    private Set<Song> contents;
     
     public Library(String name, String description) {
+        this.contents = new TreeSet<>();
         this.name = name;
         this.description = description;
     }
     
     public Library() {
+        this.contents = new TreeSet<>();
         
     }    
    
@@ -81,6 +87,10 @@ public class Library implements Serializable {
         return false;        
     }
     
+    /**
+     *
+     * @return
+     */
     public Set<Song> getContents() {
         return contents;
     }

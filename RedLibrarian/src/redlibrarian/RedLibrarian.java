@@ -5,6 +5,7 @@
  */
 package redlibrarian;
 
+import redlibrarian.GUI.UserInterface;
 import org.hibernate.SessionFactory;
 
 /**
@@ -23,7 +24,6 @@ public class RedLibrarian {
         UserInterface window = new UserInterface();
         window.load();
         window.setVisible(true);
-         
         
     }
 

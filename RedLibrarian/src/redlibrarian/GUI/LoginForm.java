@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package redlibrarian.login;
+package redlibrarian.GUI;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
