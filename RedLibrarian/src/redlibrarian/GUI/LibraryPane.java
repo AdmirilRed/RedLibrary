@@ -46,6 +46,8 @@ public class LibraryPane extends javax.swing.JPanel {
             row++;    
         }
     }
+    
+ 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -99,6 +101,11 @@ public class LibraryPane extends javax.swing.JPanel {
 
         for(int x=0; x<model.getColumnCount();x++)
         table.getColumnModel().getColumn(x).setCellRenderer(renderer);
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(table);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -112,6 +119,19 @@ public class LibraryPane extends javax.swing.JPanel {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+        int pid = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0)+"");
+        String title = (String) table.getValueAt(table.getSelectedRow(), 1);
+        String composer = (String) table.getValueAt(table.getSelectedRow(), 2);
+        String library = this.getName();
+
+        Object superParent = this.getParent().getParent().getParent().getParent().getParent().getParent();
+        if(superParent.getClass().toString().equals(UserInterface.class.toString())) {
+            UserInterface userInterface = (UserInterface) superParent;
+            userInterface.updateSelection(pid,title,composer,library);
+        }
+    }//GEN-LAST:event_tableMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -144,4 +164,4 @@ public class LibraryPane extends javax.swing.JPanel {
         
         
     }
-}
+} 

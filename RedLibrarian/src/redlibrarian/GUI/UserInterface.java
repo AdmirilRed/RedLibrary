@@ -29,8 +29,7 @@ public class UserInterface extends javax.swing.JFrame {
      */
     public UserInterface() {
         initComponents();
-        
-        
+        details_panel.setVisible(false);
     }
 
     public boolean load() {
@@ -81,6 +80,15 @@ public class UserInterface extends javax.swing.JFrame {
         }
     }
     
+    void updateSelection(int pid, String title, String composer, String library) {
+        
+        id_label.setText(pid+"");
+        title_label.setText(title);
+        composer_label.setText(composer);
+        details_panel.setVisible(true);
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -95,6 +103,10 @@ public class UserInterface extends javax.swing.JFrame {
         details_panel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        hide_button = new javax.swing.JButton();
+        id_label = new javax.swing.JLabel();
+        title_label = new javax.swing.JLabel();
+        composer_label = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         file_menu = new javax.swing.JMenu();
         edit_menu = new javax.swing.JMenu();
@@ -107,6 +119,19 @@ public class UserInterface extends javax.swing.JFrame {
 
         jLabel1.setText("Song Details");
 
+        hide_button.setText("Hide");
+        hide_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hide_buttonActionPerformed(evt);
+            }
+        });
+
+        id_label.setText("ID");
+
+        title_label.setText("Title");
+
+        composer_label.setText("Composer");
+
         javax.swing.GroupLayout details_panelLayout = new javax.swing.GroupLayout(details_panel);
         details_panel.setLayout(details_panelLayout);
         details_panelLayout.setHorizontalGroup(
@@ -116,17 +141,32 @@ public class UserInterface extends javax.swing.JFrame {
                 .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(details_panelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 319, Short.MAX_VALUE))
-                    .addComponent(jSeparator1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 226, Short.MAX_VALUE)
+                        .addComponent(hide_button))
+                    .addComponent(jSeparator1)
+                    .addGroup(details_panelLayout.createSequentialGroup()
+                        .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(id_label)
+                            .addComponent(title_label)
+                            .addComponent(composer_label))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         details_panelLayout.setVerticalGroup(
             details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(details_panelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(hide_button))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(id_label)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(title_label)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(composer_label)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -146,7 +186,7 @@ public class UserInterface extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(details_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabbedRoot_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+                .addComponent(tabbedRoot_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -161,6 +201,10 @@ public class UserInterface extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void hide_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hide_buttonActionPerformed
+        details_panel.setVisible(false);
+    }//GEN-LAST:event_hide_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -196,15 +240,18 @@ public class UserInterface extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel composer_label;
     private javax.swing.JPanel details_panel;
     private javax.swing.JMenu edit_menu;
     private javax.swing.JMenu file_menu;
+    private javax.swing.JButton hide_button;
+    private javax.swing.JLabel id_label;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane tabbedLibrary_pane;
     private javax.swing.JTabbedPane tabbedRoot_pane;
+    private javax.swing.JLabel title_label;
     // End of variables declaration//GEN-END:variables
-
     
 }
