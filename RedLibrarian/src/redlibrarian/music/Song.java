@@ -134,7 +134,6 @@ public class Song implements Comparable, Serializable {
     }
 
     public int compareTo(Song otherSong) {
-        System.out.println("Correct!");
         if(this.getPseudoId()!=otherSong.getPseudoId())
             return this.getPseudoId()>otherSong.getPseudoId()?-1:1;
         if(this.getUniqueId()!=otherSong.getUniqueId())
@@ -144,7 +143,6 @@ public class Song implements Comparable, Serializable {
 
     @Override
     public int compareTo(Object o) {
-        System.out.println("Oops!");
         if(o.getClass().toString().equals(this.getClass().toString()))
             return compareTo((Song)o);
         return this.hashCode()>o.hashCode()?1:this.hashCode()==o.hashCode()?0:-1;

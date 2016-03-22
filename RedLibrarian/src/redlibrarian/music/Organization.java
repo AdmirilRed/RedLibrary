@@ -83,7 +83,7 @@ public class Organization implements Serializable {
         return libraries.add(item);
     }
     
-    public boolean removeLibray(Library target) {
+    public boolean removeLibrary(Library target) {
         return libraries.remove(target);
     }
     

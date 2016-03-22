@@ -23,7 +23,7 @@ public class RedLibrarian {
         
         UserInterface window = new UserInterface();
         window.load();
-        window.setVisible(true);
+        window.setVisible(true);      
         
     }
 

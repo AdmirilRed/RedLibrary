@@ -31,28 +31,10 @@ public class LibraryPane extends javax.swing.JPanel {
 
     public LibraryPane(Library lib) {
         
-        this();
-        
-        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer(){
-            
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                LibraryTableModel model = (LibraryTableModel) table.getModel();
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                c.setBackground(model.getRowColor(row));
-                return c;
-             }
-            
-        };
-        
-
-        renderer.setHorizontalAlignment(SwingConstants.LEFT);        
-        LibraryTableModel model = (LibraryTableModel) table.getModel();
-
-        for(int x=0; x<model.getColumnCount();x++)
-            table.getColumnModel().getColumn(x).setCellRenderer(renderer);
-        
+        this();        
         int row = 0;
+        
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
         
         for(Song song : lib.getContents()) {
             model.addRow(new Object[]{song.getPseudoId(), song.getTitle(), song.getComposer()});
@@ -100,6 +82,23 @@ public class LibraryPane extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer(){
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                LibraryTableModel model = (LibraryTableModel) table.getModel();
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                c.setBackground(model.getRowColor(row));
+                return c;
+            }
+
+        };
+
+        renderer.setHorizontalAlignment(SwingConstants.LEFT);
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+
+        for(int x=0; x<model.getColumnCount();x++)
+        table.getColumnModel().getColumn(x).setCellRenderer(renderer);
         jScrollPane1.setViewportView(table);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
