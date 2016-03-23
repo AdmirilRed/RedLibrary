@@ -10,6 +10,7 @@ import org.hibernate.cfg.Configuration;
 import static redlibrarian.RedLibrarian.sessionFactory;
 import redlibrarian.music.Library;
 import redlibrarian.music.Organization;
+import redlibrarian.music.Song;
 
 /**
  *
@@ -80,11 +81,14 @@ public class UserInterface extends javax.swing.JFrame {
         }
     }
     
-    void updateSelection(int pid, String title, String composer, String library) {
+    void updateSelection(Song song) {
         
-        id_label.setText(pid+"");
-        title_label.setText(title);
-        composer_label.setText(composer);
+        id_label.setText(song.getPseudoId()+"");
+        title_label.setText(song.getTitle());
+        composer_label.setText(song.getComposer());
+        date_label.setText(String.format("%tF",song.getDateAdded()));
+        library_label.setText(tabbedLibrary_pane.getTitleAt(tabbedLibrary_pane.getSelectedIndex()));
+        description_textArea.setText(song.getDescription());
         details_panel.setVisible(true);
         
     }
@@ -107,6 +111,19 @@ public class UserInterface extends javax.swing.JFrame {
         id_label = new javax.swing.JLabel();
         title_label = new javax.swing.JLabel();
         composer_label = new javax.swing.JLabel();
+        library_label = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        description_textArea = new javax.swing.JTextArea();
+        jLabel2 = new javax.swing.JLabel();
+        date_label = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        performances_tree = new javax.swing.JTree();
+        performances_label = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         file_menu = new javax.swing.JMenu();
         edit_menu = new javax.swing.JMenu();
@@ -117,7 +134,7 @@ public class UserInterface extends javax.swing.JFrame {
 
         details_panel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jLabel1.setText("Song Details");
+        jLabel1.setText("Details");
 
         hide_button.setText("Hide");
         hide_button.addActionListener(new java.awt.event.ActionListener() {
@@ -126,11 +143,35 @@ public class UserInterface extends javax.swing.JFrame {
             }
         });
 
-        id_label.setText("ID");
+        id_label.setText("id");
 
-        title_label.setText("Title");
+        title_label.setText("title");
 
-        composer_label.setText("Composer");
+        composer_label.setText("composer");
+
+        library_label.setText("library");
+
+        description_textArea.setColumns(20);
+        description_textArea.setRows(5);
+        jScrollPane1.setViewportView(description_textArea);
+
+        jLabel2.setText("Description");
+
+        date_label.setText("date");
+
+        jScrollPane2.setViewportView(performances_tree);
+
+        performances_label.setText("Performances");
+
+        jLabel3.setText("ID");
+
+        jLabel4.setText("TITLE");
+
+        jLabel5.setText("COMPOSER");
+
+        jLabel6.setText("LIBRARY");
+
+        jLabel7.setText("DATE ADDED");
 
         javax.swing.GroupLayout details_panelLayout = new javax.swing.GroupLayout(details_panel);
         details_panel.setLayout(details_panelLayout);
@@ -141,14 +182,35 @@ public class UserInterface extends javax.swing.JFrame {
                 .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(details_panelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 226, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(hide_button))
                     .addComponent(jSeparator1)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
                     .addGroup(details_panelLayout.createSequentialGroup()
                         .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(id_label)
-                            .addComponent(title_label)
-                            .addComponent(composer_label))
+                            .addGroup(details_panelLayout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(id_label))
+                            .addGroup(details_panelLayout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(title_label))
+                            .addGroup(details_panelLayout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(composer_label))
+                            .addGroup(details_panelLayout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(library_label))
+                            .addComponent(performances_label)
+                            .addComponent(jLabel2)
+                            .addGroup(details_panelLayout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(date_label)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -162,12 +224,34 @@ public class UserInterface extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(id_label)
+                .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(id_label)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(title_label)
+                .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(title_label)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(composer_label)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(composer_label)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(library_label)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(date_label))
+                .addGap(18, 18, 18)
+                .addComponent(performances_label)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
 
         file_menu.setText("File");
@@ -185,8 +269,8 @@ public class UserInterface extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(details_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabbedRoot_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tabbedRoot_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 754, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -194,7 +278,7 @@ public class UserInterface extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tabbedRoot_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 567, Short.MAX_VALUE)
+                    .addComponent(tabbedRoot_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
                     .addComponent(details_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -241,14 +325,27 @@ public class UserInterface extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel composer_label;
+    private javax.swing.JLabel date_label;
+    private javax.swing.JTextArea description_textArea;
     private javax.swing.JPanel details_panel;
     private javax.swing.JMenu edit_menu;
     private javax.swing.JMenu file_menu;
     private javax.swing.JButton hide_button;
     private javax.swing.JLabel id_label;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel library_label;
+    private javax.swing.JLabel performances_label;
+    private javax.swing.JTree performances_tree;
     private javax.swing.JTabbedPane tabbedLibrary_pane;
     private javax.swing.JTabbedPane tabbedRoot_pane;
     private javax.swing.JLabel title_label;

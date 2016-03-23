@@ -31,20 +31,12 @@ public class LibraryPane extends javax.swing.JPanel {
 
     public LibraryPane(Library lib) {
         
-        this();        
-        int row = 0;
+        this();
         
         LibraryTableModel model = (LibraryTableModel) table.getModel();
         
-        for(Song song : lib.getContents()) {
-            model.addRow(new Object[]{song.getPseudoId(), song.getTitle(), song.getComposer()});
-            if(!song.isAvailable())
-                model.setRowColor(row, Color.RED);
-            else
-                model.setRowColor(row, Color.WHITE);
-                
-            row++;    
-        }
+        for(Song song : lib.getContents())
+            model.addRow(song);
     }
     
  
@@ -121,15 +113,13 @@ public class LibraryPane extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
-        int pid = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 0)+"");
-        String title = (String) table.getValueAt(table.getSelectedRow(), 1);
-        String composer = (String) table.getValueAt(table.getSelectedRow(), 2);
-        String library = this.getName();
-
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        Song selectedSong = model.selectRow(table.getSelectedRow());
+        
         Object superParent = this.getParent().getParent().getParent().getParent().getParent().getParent();
         if(superParent.getClass().toString().equals(UserInterface.class.toString())) {
             UserInterface userInterface = (UserInterface) superParent;
-            userInterface.updateSelection(pid,title,composer,library);
+            userInterface.updateSelection(selectedSong);
         }
     }//GEN-LAST:event_tableMouseClicked
 
@@ -141,13 +131,16 @@ public class LibraryPane extends javax.swing.JPanel {
 
     private static class LibraryTableModel extends DefaultTableModel {
 
-        List<Color> rowColors = new ArrayList<>();      
+        private List<Song> rows = new ArrayList<>();
+        private List<Color> rowColors = new ArrayList<>();   
+        
+        private int lastSelectedRow = 0;
 
         LibraryTableModel(Object [][] obj, String [] str){
             super(obj, str);
         }
         
-        public void setRowColor(int row, Color c) {
+        private void setRowColor(int row, Color c) {
             if(rowColors.size()>row)
                 rowColors.set(row, c);
             else
@@ -159,9 +152,39 @@ public class LibraryPane extends javax.swing.JPanel {
         private Color getRowColor(int row) {
             if(rowColors.size()>0)
                 return rowColors.get(row);
-            return Color.YELLOW;
+            return null;
         }
         
+        public boolean addRow(Song song) {
+            super.addRow(new Object[]{song.getPseudoId(), song.getTitle(), song.getComposer()});
+            if(!song.isAvailable())
+                this.setRowColor(this.getRowCount(), Color.RED);
+            else
+                this.setRowColor(this.getRowCount(), Color.WHITE);
+            return rows.add(song);
+        }
         
+        public Song getRow(int row) {
+            return rows.get(row);
+        }
+        
+        public int getSongRow(Song song) {
+            return rows.indexOf(song);
+        }
+
+        public Song selectRow(int selectedRow) {
+            Song selectedSong = this.getRow(selectedRow);
+            Song previousSong = this.getRow(lastSelectedRow);
+            if(!previousSong.isAvailable())
+                this.setRowColor(lastSelectedRow, Color.RED);
+            else
+                this.setRowColor(lastSelectedRow, Color.WHITE);
+            if(!selectedSong.isAvailable())
+                this.setRowColor(selectedRow, Color.GRAY);
+            else
+                this.setRowColor(selectedRow, Color.YELLOW);
+            this.lastSelectedRow = selectedRow;
+            return  selectedSong;
+        }
     }
 } 
