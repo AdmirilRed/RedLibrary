@@ -5,6 +5,7 @@
  */
 package redlibrarian.GUI;
 
+import java.net.URL;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.Configuration;
 import static redlibrarian.RedLibrarian.sessionFactory;
@@ -31,6 +32,11 @@ public class UserInterface extends javax.swing.JFrame {
     public UserInterface() {
         initComponents();
         details_panel.setVisible(false);
+    }
+
+    public UserInterface(URL url) {
+        this();
+        this.configure(url);
     }
 
     public boolean load() {
@@ -163,15 +169,15 @@ public class UserInterface extends javax.swing.JFrame {
 
         performances_label.setText("Performances");
 
-        jLabel3.setText("ID");
+        jLabel3.setText("ID:");
 
-        jLabel4.setText("TITLE");
+        jLabel4.setText("TITLE:");
 
-        jLabel5.setText("COMPOSER");
+        jLabel5.setText("COMPOSER:");
 
-        jLabel6.setText("LIBRARY");
+        jLabel6.setText("LIBRARY:");
 
-        jLabel7.setText("DATE ADDED");
+        jLabel7.setText("DATE ADDED:");
 
         javax.swing.GroupLayout details_panelLayout = new javax.swing.GroupLayout(details_panel);
         details_panel.setLayout(details_panelLayout);
@@ -350,5 +356,9 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tabbedRoot_pane;
     private javax.swing.JLabel title_label;
     // End of variables declaration//GEN-END:variables
+
+    private void configure(URL url) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

@@ -267,27 +267,27 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
-            <Property name="text" type="java.lang.String" value="ID"/>
+            <Property name="text" type="java.lang.String" value="ID:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
-            <Property name="text" type="java.lang.String" value="TITLE"/>
+            <Property name="text" type="java.lang.String" value="TITLE:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
-            <Property name="text" type="java.lang.String" value="COMPOSER"/>
+            <Property name="text" type="java.lang.String" value="COMPOSER:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
-            <Property name="text" type="java.lang.String" value="LIBRARY"/>
+            <Property name="text" type="java.lang.String" value="LIBRARY:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
-            <Property name="text" type="java.lang.String" value="DATE ADDED"/>
+            <Property name="text" type="java.lang.String" value="DATE ADDED:"/>
           </Properties>
         </Component>
       </SubComponents>
