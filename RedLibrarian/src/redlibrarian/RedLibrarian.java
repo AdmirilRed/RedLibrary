@@ -5,13 +5,8 @@
  */
 package redlibrarian;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.hibernate.SessionFactory;
-import org.ini4j.Ini;
 import redlibrarian.GUI.UserInterface;
 
 /**
@@ -29,7 +24,7 @@ public class RedLibrarian {
     public static void main(String[] args) throws InterruptedException, MalformedURLException {  
         
         
-        UserInterface window = new UserInterface(new URL("config.ini"));
+        UserInterface window = new UserInterface(RedLibrarian.class.getResource("config.ini"));
         window.load();
         window.setVisible(true);  
         

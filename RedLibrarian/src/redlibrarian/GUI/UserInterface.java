@@ -5,9 +5,15 @@
  */
 package redlibrarian.GUI;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.Configuration;
+import org.ini4j.Ini;
 import static redlibrarian.RedLibrarian.sessionFactory;
 import redlibrarian.music.Library;
 import redlibrarian.music.Organization;
@@ -25,6 +31,11 @@ public class UserInterface extends javax.swing.JFrame {
     
     private Organization currentOrganization;
     private boolean admin;
+    
+    private Ini ini;
+    private URL iniURL;
+    //Initializing config elements as default
+    boolean showAdminLogin = true;    
     
     /**
      * Creates new form UserInterface
@@ -50,7 +61,7 @@ public class UserInterface extends javax.swing.JFrame {
                 sessionFactory = cfg.buildSessionFactory();
             }
         } catch (HibernateException hibernateException) {
-            System.out.println("LOAD: "+hibernateException);
+            Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
             System.exit(997);
             return false;
         }
@@ -67,6 +78,7 @@ public class UserInterface extends javax.swing.JFrame {
     private Organization login(boolean modal) {
         
         LoginForm prompt = new LoginForm(this, modal, sessionFactory);
+        prompt.setShowAdminLogin(showAdminLogin);
         prompt.setVisible(true);
         
         if(!prompt.isLoggedIn()) {
@@ -77,6 +89,16 @@ public class UserInterface extends javax.swing.JFrame {
         Organization org = prompt.getOrganization(); 
         this.admin = prompt.isAdmin();
       
+        if(ini != null) {
+           ini.put("preferences", "showAdminLogin", !prompt.getGuestLoginState());
+            try {
+                ini.store(new File(iniURL.toURI()));
+            } catch (IOException | URISyntaxException ex) {
+                Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+            
+            
         prompt.dispose();
         return org;
     }
@@ -358,7 +380,13 @@ public class UserInterface extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void configure(URL url) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            this.iniURL = url;
+            ini = new Ini(url);
+            this.showAdminLogin = ini.get("preferences", "showAdminLogin", boolean.class);
+        } catch (IOException ex) {
+            Logger.getLogger(UserInterface.class.getName()).log(Level.CONFIG, null, ex);
+        }
     }
     
 }

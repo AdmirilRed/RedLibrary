@@ -46,6 +46,10 @@ public class LoginForm extends javax.swing.JDialog {
     public boolean isAdmin() {
         return isAdmin;
     }
+    
+    public boolean getGuestLoginState() {
+        return guest_button.isSelected();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -62,6 +66,7 @@ public class LoginForm extends javax.swing.JDialog {
         password_field = new javax.swing.JPasswordField();
         login_button = new javax.swing.JButton();
         loginStatus_label = new javax.swing.JLabel();
+        guest_button = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -78,6 +83,13 @@ public class LoginForm extends javax.swing.JDialog {
 
         loginStatus_label.setText("LOGIN STATUS");
 
+        guest_button.setText("Login as guest");
+        guest_button.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                guest_buttonStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -86,8 +98,13 @@ public class LoginForm extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(loginStatus_label)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 262, Short.MAX_VALUE)
+                        .addComponent(login_button))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(password_label)
+                            .addComponent(guest_button)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(organization_label, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
@@ -95,11 +112,7 @@ public class LoginForm extends javax.swing.JDialog {
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(organization_field, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                                         .addComponent(password_field)))))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(loginStatus_label)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 186, Short.MAX_VALUE)
-                        .addComponent(login_button)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -113,11 +126,13 @@ public class LoginForm extends javax.swing.JDialog {
                 .addComponent(password_label)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(login_button, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(loginStatus_label, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(guest_button)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(loginStatus_label)
+                    .addComponent(login_button))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -137,7 +152,7 @@ public class LoginForm extends javax.swing.JDialog {
                 
                 Organization remoteOrg = (Organization) query.list().get(0);
                 
-                if(!password_field.getText().trim().equals("")) {
+                if(!guest_button.isSelected()) {
                     if(!remoteOrg.verifyPassword(password_field.getText()))
                         loginStatus_label.setText("Administrator password incorrect.");
                     else {
@@ -167,6 +182,11 @@ public class LoginForm extends javax.swing.JDialog {
                 
         }
     }//GEN-LAST:event_login_buttonActionPerformed
+
+    private void guest_buttonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_guest_buttonStateChanged
+        password_field.setVisible(!guest_button.isSelected()); 
+        password_label.setVisible(!guest_button.isSelected());
+    }//GEN-LAST:event_guest_buttonStateChanged
 
     /**
      * @param args the command line arguments
@@ -209,6 +229,7 @@ public class LoginForm extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox guest_button;
     private javax.swing.JLabel loginStatus_label;
     private javax.swing.JButton login_button;
     private javax.swing.JTextField organization_field;
@@ -216,5 +237,13 @@ public class LoginForm extends javax.swing.JDialog {
     private javax.swing.JPasswordField password_field;
     private javax.swing.JLabel password_label;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     *
+     * @param showAdminLogin
+     */
+    public void setShowAdminLogin(boolean showAdminLogin) {
+        guest_button.setSelected(!showAdminLogin);
+    }
 
 }
