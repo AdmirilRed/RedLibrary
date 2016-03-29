@@ -35,7 +35,8 @@ public class UserInterface extends javax.swing.JFrame {
     private Ini ini;
     private URL iniURL;
     //Initializing config elements as default
-    boolean showAdminLogin = true;    
+    String suggestedOrganizationName = "";
+    boolean showAdminLogin = true; 
     
     /**
      * Creates new form UserInterface
@@ -78,6 +79,7 @@ public class UserInterface extends javax.swing.JFrame {
     private Organization login(boolean modal) {
         
         LoginForm prompt = new LoginForm(this, modal, sessionFactory);
+        prompt.setOrganizationText(suggestedOrganizationName);
         prompt.setShowAdminLogin(showAdminLogin);
         prompt.setVisible(true);
         
@@ -91,6 +93,7 @@ public class UserInterface extends javax.swing.JFrame {
       
         if(ini != null) {
            ini.put("preferences", "showAdminLogin", !prompt.getGuestLoginState());
+           ini.put("preferences","suggestedOrganizationName", prompt.getOrganization().getName());
             try {
                 ini.store(new File(iniURL.toURI()));
             } catch (IOException | URISyntaxException ex) {
@@ -121,6 +124,16 @@ public class UserInterface extends javax.swing.JFrame {
         
     }
     
+    private void configure(URL url) {
+        try {
+            this.iniURL = url;
+            ini = new Ini(url);
+            this.showAdminLogin = ini.get("preferences", "showAdminLogin", boolean.class);
+            this.suggestedOrganizationName = ini.get("preferences", "suggestedOrganizationName", String.class);
+        } catch (IOException ex) {
+            Logger.getLogger(UserInterface.class.getName()).log(Level.CONFIG, null, ex);
+        }
+    }    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -379,14 +392,6 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JLabel title_label;
     // End of variables declaration//GEN-END:variables
 
-    private void configure(URL url) {
-        try {
-            this.iniURL = url;
-            ini = new Ini(url);
-            this.showAdminLogin = ini.get("preferences", "showAdminLogin", boolean.class);
-        } catch (IOException ex) {
-            Logger.getLogger(UserInterface.class.getName()).log(Level.CONFIG, null, ex);
-        }
-    }
+
     
 }

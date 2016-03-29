@@ -160,7 +160,7 @@ public class LibraryPane extends javax.swing.JPanel {
             if(!song.isAvailable())
                 this.setRowColor(this.getRowCount(), Color.RED);
             else
-                this.setRowColor(this.getRowCount(), Color.WHITE);
+                this.setRowColor(this.getRowCount(), ((this.getRowCount()+1)%2==0)?Color.WHITE:Color.LIGHT_GRAY);
             return rows.add(song);
         }
         
@@ -178,7 +178,7 @@ public class LibraryPane extends javax.swing.JPanel {
             if(!previousSong.isAvailable())
                 this.setRowColor(lastSelectedRow, Color.RED);
             else
-                this.setRowColor(lastSelectedRow, Color.WHITE);
+                this.setRowColor(lastSelectedRow, (lastSelectedRow%2==0)?Color.WHITE:Color.LIGHT_GRAY);
             if(!selectedSong.isAvailable())
                 this.setRowColor(selectedRow, Color.GRAY);
             else

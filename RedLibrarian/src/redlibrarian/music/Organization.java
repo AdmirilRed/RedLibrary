@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import redlibrarian.login.Password;
 
 /**
@@ -38,6 +39,9 @@ public class Organization implements Serializable {
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     private Set<Library> libraries;
     
+    @Transient
+    private boolean verifiedAdmin;
+    
     public Organization(String name, String password) {
         this.libraries = new HashSet<>();
         this.performances = new HashSet<>();
@@ -58,6 +62,10 @@ public class Organization implements Serializable {
 
     public long getId() {
         return id;
+    }
+    
+    public String getName() {
+        return name;
     }
     
     public boolean addPerformance(Performance item) {
@@ -99,7 +107,8 @@ public class Organization implements Serializable {
     }
     
     public boolean verifyPassword(String password) {
-        return Password.isExpectedPassword(password.toCharArray(), salt, passwordHash);
+        this.verifiedAdmin = Password.isExpectedPassword(password.toCharArray(), salt, passwordHash);
+        return verifiedAdmin;
     }
     
     @Override
