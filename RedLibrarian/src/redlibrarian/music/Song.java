@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -32,6 +33,9 @@ public class Song implements Comparable, Serializable {
     private boolean available;
     @Temporal(javax.persistence.TemporalType.DATE)
     private final Calendar dateAdded;
+    
+    @ManyToOne
+    private Library parent;
 
     public Song() {
         this.pid = -1;
@@ -41,12 +45,13 @@ public class Song implements Comparable, Serializable {
         this.dateAdded = Calendar.getInstance();
     }
     
-    public Song(int id, String title, String composer) {
+    public Song(int id, String title, String composer, Library parent) {
         this.pid = id;
         this.title = title;
         this.composer = composer;
         this.available = true;
         this.dateAdded = Calendar.getInstance();
+        this.parent = parent;
     }
     /**
      * Returns if the score is checked out of the library.
@@ -146,5 +151,9 @@ public class Song implements Comparable, Serializable {
         if(o.getClass().toString().equals(this.getClass().toString()))
             return compareTo((Song)o);
         return this.hashCode()>o.hashCode()?1:this.hashCode()==o.hashCode()?0:-1;
+    }
+
+    public Library getLibrary() {
+        return parent;
     }
 }

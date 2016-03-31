@@ -32,6 +32,8 @@ public class UserInterface extends javax.swing.JFrame {
     private Organization currentOrganization;
     private boolean admin;
     
+    private Song selectedSong;
+    
     private Ini ini;
     private URL iniURL;
     //Initializing config elements as default
@@ -63,12 +65,18 @@ public class UserInterface extends javax.swing.JFrame {
             }
         } catch (HibernateException hibernateException) {
             Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
-            System.exit(997);
+            Integer errorCode = 997;
+            CrashDialogue crash = new CrashDialogue("Database connection could not be established. "
+            +"Please ensure that a valid internet connection is available.", errorCode.toString(), this);
+            crash.setVisible(true);
+            System.exit(errorCode);
             return false;
         }
         System.out.println("SUCCESS");
         
         currentOrganization = this.login(true);
+        deleteSong_button.setVisible(admin);
+        editSong_button.setVisible(admin);
         
         loadLibraries();
         
@@ -114,7 +122,10 @@ public class UserInterface extends javax.swing.JFrame {
     
     void updateSelection(Song song) {
         
+        this.selectedSong = song;
+        
         id_label.setText(song.getPseudoId()+"");
+        uid_label.setText("(Unique ID: "+song.getUniqueId()+")");
         title_label.setText(song.getTitle());
         composer_label.setText(song.getComposer());
         date_label.setText(String.format("%tF",song.getDateAdded()));
@@ -165,11 +176,15 @@ public class UserInterface extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        deleteSong_button = new javax.swing.JButton();
+        editSong_button = new javax.swing.JButton();
+        uid_label = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         file_menu = new javax.swing.JMenu();
         edit_menu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         tabbedRoot_pane.addTab("Libraries", tabbedLibrary_pane);
 
@@ -214,6 +229,22 @@ public class UserInterface extends javax.swing.JFrame {
 
         jLabel7.setText("DATE ADDED:");
 
+        deleteSong_button.setText("Delete Song");
+        deleteSong_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteSong_buttonActionPerformed(evt);
+            }
+        });
+
+        editSong_button.setText("Edit Song");
+        editSong_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editSong_buttonActionPerformed(evt);
+            }
+        });
+
+        uid_label.setText("(Unique ID: )");
+
         javax.swing.GroupLayout details_panelLayout = new javax.swing.GroupLayout(details_panel);
         details_panel.setLayout(details_panelLayout);
         details_panelLayout.setHorizontalGroup(
@@ -221,6 +252,7 @@ public class UserInterface extends javax.swing.JFrame {
             .addGroup(details_panelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(deleteSong_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(details_panelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -228,12 +260,9 @@ public class UserInterface extends javax.swing.JFrame {
                     .addComponent(jSeparator1)
                     .addComponent(jScrollPane2)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                    .addComponent(editSong_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(details_panelLayout.createSequentialGroup()
                         .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(details_panelLayout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(id_label))
                             .addGroup(details_panelLayout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -251,7 +280,13 @@ public class UserInterface extends javax.swing.JFrame {
                             .addGroup(details_panelLayout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(date_label)))
+                                .addComponent(date_label))
+                            .addGroup(details_panelLayout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(id_label)
+                                .addGap(18, 18, 18)
+                                .addComponent(uid_label)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -267,7 +302,8 @@ public class UserInterface extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(id_label)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(uid_label))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(title_label)
@@ -292,6 +328,10 @@ public class UserInterface extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editSong_button)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deleteSong_button)
                 .addContainerGap())
         );
 
@@ -311,7 +351,7 @@ public class UserInterface extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(details_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tabbedRoot_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 754, Short.MAX_VALUE)
+                .addComponent(tabbedRoot_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 820, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -319,7 +359,7 @@ public class UserInterface extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tabbedRoot_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
+                    .addComponent(tabbedRoot_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
                     .addComponent(details_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -330,6 +370,18 @@ public class UserInterface extends javax.swing.JFrame {
     private void hide_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hide_buttonActionPerformed
         details_panel.setVisible(false);
     }//GEN-LAST:event_hide_buttonActionPerformed
+
+    private void deleteSong_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSong_buttonActionPerformed
+        currentOrganization.removeSong(selectedSong);
+    }//GEN-LAST:event_deleteSong_buttonActionPerformed
+
+    private void editSong_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSong_buttonActionPerformed
+        SongForm form = new SongForm(selectedSong, currentOrganization.getLibraries(), this, true);
+        form.setVisible(true);
+        if(form.wasSaved())
+            System.out.println(form.getSong());
+        form.dispose();
+    }//GEN-LAST:event_editSong_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -367,8 +419,10 @@ public class UserInterface extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel composer_label;
     private javax.swing.JLabel date_label;
+    private javax.swing.JButton deleteSong_button;
     private javax.swing.JTextArea description_textArea;
     private javax.swing.JPanel details_panel;
+    private javax.swing.JButton editSong_button;
     private javax.swing.JMenu edit_menu;
     private javax.swing.JMenu file_menu;
     private javax.swing.JButton hide_button;
@@ -390,6 +444,7 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tabbedLibrary_pane;
     private javax.swing.JTabbedPane tabbedRoot_pane;
     private javax.swing.JLabel title_label;
+    private javax.swing.JLabel uid_label;
     // End of variables declaration//GEN-END:variables
 
 

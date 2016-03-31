@@ -14,7 +14,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
 /**
@@ -31,14 +32,18 @@ public class Library implements Serializable {
     private String name;
     private String description;
     
-    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
+    @ManyToOne
+    private Organization parent;
+    
+    @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     @OrderBy("pid ASC")
     private Set<Song> contents;
     
-    public Library(String name, String description) {
+    public Library(String name, String description, Organization parent) {
         this.contents = new TreeSet<>();
         this.name = name;
         this.description = description;
+        this.parent = parent;
     }
     
     public Library() {
@@ -70,15 +75,19 @@ public class Library implements Serializable {
         this.description = description;
     }
     
-    public boolean addSong(Song item) {
+    public Organization getOrganization() {
+        return parent;
+    }
+    
+    protected boolean addSong(Song item) {
         return contents.add(item);
     }
     
-    public boolean removeSong(Song target) {
+    protected boolean removeSong(Song target) {
         return contents.remove(target);
     }
     
-    public boolean removeSong(long targetId) {
+    protected boolean removeSong(long targetId) {
         for(Song song:contents)
             if(song.getUniqueId()==targetId)
                 return contents.remove(song);

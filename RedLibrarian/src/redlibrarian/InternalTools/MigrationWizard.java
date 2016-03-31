@@ -45,7 +45,7 @@ public class MigrationWizard {
         
         for(Object [] song:songs)
         {
-            songList.add(new Song((int)song[0],(String)song[1],(String)song[2]));
+            songList.add(new Song((int)song[0],(String)song[1],(String)song[2], null));
         }    
          
         System.out.println(songList);

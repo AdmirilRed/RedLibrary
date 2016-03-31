@@ -87,6 +87,18 @@ public class Organization implements Serializable {
         return performances;
     }
     
+    public boolean addSong(Song song, Library lib) {
+        if(verifiedAdmin)
+            return lib.addSong(song);
+        return false;            
+    }
+
+    public boolean removeSong(Song song) {
+        if(verifiedAdmin)
+            return song.getLibrary().removeSong(song);
+        return false;
+    }
+    
     public boolean addLibrary(Library item) {
         return libraries.add(item);
     }
@@ -115,4 +127,7 @@ public class Organization implements Serializable {
     public String toString() {
         return String.format("ORGANIZATION< %s | LIBRARIES%s>", name, libraries);
     }
+    
+
+    
 }
