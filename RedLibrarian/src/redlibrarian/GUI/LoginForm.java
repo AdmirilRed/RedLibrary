@@ -281,7 +281,17 @@ public class LoginForm extends javax.swing.JDialog {
         OrganizationForm form = new OrganizationForm((Frame) this.getParent(), true);
         form.setVisible(true);
         
+        if(form.wasSaved()) {
+            Session session = sessionFactory.getCurrentSession();
+            session.beginTransaction();
+            
+            session.save(form.getOrganization());
+            session.save(form.getContact());
+            
+            session.getTransaction().commit();
+        }
         
+        form.dispose();
     }//GEN-LAST:event_createAccount_labelMouseClicked
 
     /**

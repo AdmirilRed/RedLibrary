@@ -8,6 +8,8 @@ package redlibrarian.GUI;
 import redlibrarian.GUI.textVerification.ContiguityVerifier;
 import redlibrarian.GUI.textVerification.EmailVerifier;
 import redlibrarian.GUI.textVerification.PasswordVerifier;
+import redlibrarian.login.ContactDetails;
+import redlibrarian.music.Organization;
 
 /**
  *
@@ -15,6 +17,8 @@ import redlibrarian.GUI.textVerification.PasswordVerifier;
  */
 public class OrganizationForm extends javax.swing.JDialog {
 
+    private boolean saved;
+    
     /**
      * Creates new form OrganizationForm
      * @param parent
@@ -24,6 +28,34 @@ public class OrganizationForm extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         organization_field.isValid();
+    }
+    
+    public Organization getOrganization(){
+        return new Organization(organization_field.getText(), password_field.getText());
+    }
+    
+    public ContactDetails getContact() {
+        return new ContactDetails(name_field.getText(), email_field.getText());
+    }
+    
+    @Override
+    public boolean isValid() {
+        if(password_field.getText().equals(confirmPassword_field.getText()) && super.isValid())
+            return true;
+        return false;
+                 
+        
+    }
+        
+    private void validateInput() {
+        if(this.isValid())
+            submit_button.setEnabled(true);
+        else
+            submit_button.setEnabled(false);
+    }
+    
+    public boolean wasSaved() {
+        return saved;
     }
 
     /**
@@ -54,20 +86,51 @@ public class OrganizationForm extends javax.swing.JDialog {
         jLabel1.setText("Organization Name");
 
         organization_field.setInputVerifier(new ContiguityVerifier());
+        organization_field.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                organization_fieldPropertyChange(evt);
+            }
+        });
 
         jLabel2.setText("Password");
 
         jLabel3.setText("Confirm Password");
 
         password_field.setInputVerifier(new PasswordVerifier());
+        password_field.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                password_fieldPropertyChange(evt);
+            }
+        });
 
         confirmPassword_field.setInputVerifier(new PasswordVerifier());
+        confirmPassword_field.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                confirmPassword_fieldPropertyChange(evt);
+            }
+        });
 
         email_field.setInputVerifier(new EmailVerifier());
+        email_field.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                email_fieldPropertyChange(evt);
+            }
+        });
 
         jLabel4.setText("Contact Email");
 
         submit_button.setText("Submit");
+        submit_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submit_buttonActionPerformed(evt);
+            }
+        });
+
+        name_field.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                name_fieldPropertyChange(evt);
+            }
+        });
 
         jLabel5.setText("Full Name");
 
@@ -159,6 +222,31 @@ public class OrganizationForm extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void submit_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submit_buttonActionPerformed
+        saved = true;
+        this.setVisible(false);
+    }//GEN-LAST:event_submit_buttonActionPerformed
+
+    private void password_fieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_password_fieldPropertyChange
+        validateInput();
+    }//GEN-LAST:event_password_fieldPropertyChange
+
+    private void confirmPassword_fieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_confirmPassword_fieldPropertyChange
+        validateInput();
+    }//GEN-LAST:event_confirmPassword_fieldPropertyChange
+
+    private void name_fieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_name_fieldPropertyChange
+        validateInput();
+    }//GEN-LAST:event_name_fieldPropertyChange
+
+    private void email_fieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_email_fieldPropertyChange
+        validateInput();
+    }//GEN-LAST:event_email_fieldPropertyChange
+
+    private void organization_fieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_organization_fieldPropertyChange
+        validateInput();
+    }//GEN-LAST:event_organization_fieldPropertyChange
+
     /**
      * @param args the command line arguments
      */
@@ -214,4 +302,5 @@ public class OrganizationForm extends javax.swing.JDialog {
     private javax.swing.JPasswordField password_field;
     private javax.swing.JButton submit_button;
     // End of variables declaration//GEN-END:variables
+
 }

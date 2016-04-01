@@ -144,6 +144,9 @@
           <Connection code="new ContiguityVerifier()" type="code"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="organization_fieldPropertyChange"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
@@ -161,6 +164,9 @@
           <Connection code="new PasswordVerifier()" type="code"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="password_fieldPropertyChange"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="confirmPassword_field">
       <Properties>
@@ -168,6 +174,9 @@
           <Connection code="new PasswordVerifier()" type="code"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="confirmPassword_fieldPropertyChange"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="email_field">
       <Properties>
@@ -175,6 +184,9 @@
           <Connection code="new EmailVerifier()" type="code"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="email_fieldPropertyChange"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
@@ -185,12 +197,18 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Submit"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="submit_buttonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator1">
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator2">
     </Component>
     <Component class="javax.swing.JTextField" name="name_field">
+      <Events>
+        <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="name_fieldPropertyChange"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
