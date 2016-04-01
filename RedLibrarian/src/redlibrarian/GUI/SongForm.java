@@ -5,6 +5,7 @@
  */
 package redlibrarian.GUI;
 
+import redlibrarian.GUI.textVerification.IntegerVerifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -120,6 +121,8 @@ public class SongForm extends javax.swing.JDialog {
         });
 
         jLabel5.setText("ID:");
+
+        id_field.setInputVerifier(new IntegerVerifier());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

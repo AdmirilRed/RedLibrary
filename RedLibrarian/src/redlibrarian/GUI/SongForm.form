@@ -180,6 +180,11 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="id_field">
+      <Properties>
+        <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new IntegerVerifier()" type="code"/>
+        </Property>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

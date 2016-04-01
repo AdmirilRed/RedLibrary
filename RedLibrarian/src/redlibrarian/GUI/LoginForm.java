@@ -6,11 +6,13 @@
 package redlibrarian.GUI;
 
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import redlibrarian.GUI.textVerification.PasswordVerifier;
 import redlibrarian.music.Organization;
 
 /**
@@ -115,7 +117,7 @@ public class LoginForm extends javax.swing.JDialog {
         }
     }
 
-    private void useKeyPress(java.awt.event.KeyEvent evt) {
+    private void processKeyPress(java.awt.event.KeyEvent evt) {
         if (evt.getKeyChar() == (KeyEvent.VK_ENTER)) {
             KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             manager.focusNextComponent();
@@ -141,6 +143,7 @@ public class LoginForm extends javax.swing.JDialog {
         password_label = new javax.swing.JLabel();
         loginStatus_label = new javax.swing.JLabel();
         guest_button = new javax.swing.JCheckBox();
+        createAccount_label = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -151,6 +154,7 @@ public class LoginForm extends javax.swing.JDialog {
             }
         });
 
+        password_field.setInputVerifier(new PasswordVerifier());
         password_field.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 password_fieldKeyPressed(evt);
@@ -169,8 +173,10 @@ public class LoginForm extends javax.swing.JDialog {
             }
         });
 
+        organization_label.setLabelFor(organization_field);
         organization_label.setText("Organization");
 
+        password_label.setLabelFor(password_field);
         password_label.setText("Password");
 
         loginStatus_label.setText("LOGIN STATUS");
@@ -180,6 +186,14 @@ public class LoginForm extends javax.swing.JDialog {
         guest_button.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 guest_buttonStateChanged(evt);
+            }
+        });
+
+        createAccount_label.setForeground(new java.awt.Color(51, 51, 255));
+        createAccount_label.setText("Create Account?");
+        createAccount_label.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                createAccount_labelMouseClicked(evt);
             }
         });
 
@@ -200,25 +214,30 @@ public class LoginForm extends javax.swing.JDialog {
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(login_button))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(organization_label, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(10, 10, 10)
-                                            .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(password_label)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(loginStatus_label)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(organization_label, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(password_label)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(loginStatus_label))
-                                    .addComponent(guest_button))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                                        .addGap(10, 10, 10)
+                                        .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(createAccount_label)))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(guest_button)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(organization_label)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(organization_label)
+                    .addComponent(createAccount_label))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(organization_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -227,9 +246,9 @@ public class LoginForm extends javax.swing.JDialog {
                     .addComponent(loginStatus_label))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(19, 19, 19)
                 .addComponent(guest_button)
-                .addGap(6, 6, 6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(login_button)
                 .addContainerGap())
         );
@@ -247,16 +266,23 @@ public class LoginForm extends javax.swing.JDialog {
     }//GEN-LAST:event_guest_buttonStateChanged
 
     private void organization_fieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_organization_fieldKeyPressed
-        useKeyPress(evt);
+        processKeyPress(evt);
     }//GEN-LAST:event_organization_fieldKeyPressed
 
     private void password_fieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_password_fieldKeyPressed
-        useKeyPress(evt);
+        processKeyPress(evt);
     }//GEN-LAST:event_password_fieldKeyPressed
 
     private void login_buttonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_login_buttonKeyPressed
-        useKeyPress(evt);
+        processKeyPress(evt);
     }//GEN-LAST:event_login_buttonKeyPressed
+
+    private void createAccount_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createAccount_labelMouseClicked
+        OrganizationForm form = new OrganizationForm((Frame) this.getParent(), true);
+        form.setVisible(true);
+        
+        
+    }//GEN-LAST:event_createAccount_labelMouseClicked
 
     /**
      * @param args the command line arguments
@@ -299,6 +325,7 @@ public class LoginForm extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel createAccount_label;
     private javax.swing.JCheckBox guest_button;
     private javax.swing.JLabel loginStatus_label;
     private javax.swing.JButton login_button;
