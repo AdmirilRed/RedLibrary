@@ -378,8 +378,10 @@ public class UserInterface extends javax.swing.JFrame {
     private void editSong_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSong_buttonActionPerformed
         SongForm form = new SongForm(selectedSong, currentOrganization.getLibraries(), this, true);
         form.setVisible(true);
-        if(form.wasSaved())
-            System.out.println(form.getSong());
+        if(form.wasSaved()) {
+            LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
+            pane.updateSong(selectedSong, form.getSong());
+        }
         form.dispose();
     }//GEN-LAST:event_editSong_buttonActionPerformed
 

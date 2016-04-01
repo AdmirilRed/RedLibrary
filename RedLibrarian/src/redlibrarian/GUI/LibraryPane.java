@@ -39,7 +39,10 @@ public class LibraryPane extends javax.swing.JPanel {
             model.addRow(song);
     }
     
- 
+    public void updateSong(Song target, Song item) {
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        model.updateRow(model.getSongRow(target), item);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -155,13 +158,35 @@ public class LibraryPane extends javax.swing.JPanel {
             return null;
         }
         
+        private Color determineColor(Song song) {
+            if(!song.isAvailable())
+                return Color.RED;
+            else
+                return ((this.getRowCount()+1)%2==0)?Color.WHITE:Color.LIGHT_GRAY;
+                
+        }
+        
+        private Color determineColor(Song song, boolean isSelected) {
+            if(!isSelected)
+                return determineColor(song);
+            if(!song.isAvailable())
+                return Color.GRAY;
+            return Color.YELLOW;
+                
+        }
+        
+        
         public boolean addRow(Song song) {
             super.addRow(new Object[]{song.getPseudoId(), song.getTitle(), song.getComposer()});
-            if(!song.isAvailable())
-                this.setRowColor(this.getRowCount(), Color.RED);
-            else
-                this.setRowColor(this.getRowCount(), ((this.getRowCount()+1)%2==0)?Color.WHITE:Color.LIGHT_GRAY);
+            this.setRowColor(this.getRowCount(), this.determineColor(song));
             return rows.add(song);
+        }
+        
+        public void updateRow(int row, Song song) {
+            super.removeRow(row);
+            super.insertRow(row, new Object[]{song.getPseudoId(), song.getTitle(), song.getComposer()});
+            this.setRowColor(row, this.determineColor(song));
+            rows.set(row, song);
         }
         
         public Song getRow(int row) {
@@ -175,15 +200,9 @@ public class LibraryPane extends javax.swing.JPanel {
         public Song selectRow(int selectedRow) {
             Song selectedSong = this.getRow(selectedRow);
             Song previousSong = this.getRow(lastSelectedRow);
-            if(!previousSong.isAvailable())
-                this.setRowColor(lastSelectedRow, Color.RED);
-            else
-                this.setRowColor(lastSelectedRow, (lastSelectedRow%2==0)?Color.WHITE:Color.LIGHT_GRAY);
-            if(!selectedSong.isAvailable())
-                this.setRowColor(selectedRow, Color.GRAY);
-            else
-                this.setRowColor(selectedRow, Color.YELLOW);
-            this.lastSelectedRow = selectedRow;
+            this.setRowColor(lastSelectedRow, this.determineColor(previousSong));
+            this.setRowColor(selectedRow, this.determineColor(selectedSong, true));
+            lastSelectedRow = selectedRow;
             return  selectedSong;
         }
     }
