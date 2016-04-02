@@ -18,6 +18,8 @@ import redlibrarian.music.Organization;
 public class OrganizationForm extends javax.swing.JDialog {
 
     private boolean saved;
+    private boolean password1Initialized;
+    private boolean password2Initialized;
     
     /**
      * Creates new form OrganizationForm
@@ -27,7 +29,7 @@ public class OrganizationForm extends javax.swing.JDialog {
     public OrganizationForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        organization_field.isValid();
+        submit_button.setEnabled(false);
     }
     
     public Organization getOrganization(){
@@ -37,19 +39,10 @@ public class OrganizationForm extends javax.swing.JDialog {
     public ContactDetails getContact() {
         return new ContactDetails(name_field.getText(), email_field.getText());
     }
-    
-    @Override
-    public boolean isValid() {
-        if(password_field.getText().equals(confirmPassword_field.getText()) && super.isValid())
-            return true;
-        return false;
-                 
-        
-    }
         
     private void validateInput() {
-        if(this.isValid())
-            submit_button.setEnabled(true);
+        if(password_field.getText().length()>0 &&password_field.getText().equals(confirmPassword_field.getText()))
+            submit_button.setEnabled(password1Initialized && password2Initialized);
         else
             submit_button.setEnabled(false);
     }
@@ -86,9 +79,9 @@ public class OrganizationForm extends javax.swing.JDialog {
         jLabel1.setText("Organization Name");
 
         organization_field.setInputVerifier(new ContiguityVerifier());
-        organization_field.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                organization_fieldPropertyChange(evt);
+        organization_field.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                organization_fieldCaretUpdate(evt);
             }
         });
 
@@ -97,23 +90,23 @@ public class OrganizationForm extends javax.swing.JDialog {
         jLabel3.setText("Confirm Password");
 
         password_field.setInputVerifier(new PasswordVerifier());
-        password_field.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                password_fieldPropertyChange(evt);
+        password_field.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                password_fieldCaretUpdate(evt);
             }
         });
 
         confirmPassword_field.setInputVerifier(new PasswordVerifier());
-        confirmPassword_field.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                confirmPassword_fieldPropertyChange(evt);
+        confirmPassword_field.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                confirmPassword_fieldCaretUpdate(evt);
             }
         });
 
         email_field.setInputVerifier(new EmailVerifier());
-        email_field.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                email_fieldPropertyChange(evt);
+        email_field.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                email_fieldCaretUpdate(evt);
             }
         });
 
@@ -126,9 +119,9 @@ public class OrganizationForm extends javax.swing.JDialog {
             }
         });
 
-        name_field.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                name_fieldPropertyChange(evt);
+        name_field.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                name_fieldCaretUpdate(evt);
             }
         });
 
@@ -227,25 +220,27 @@ public class OrganizationForm extends javax.swing.JDialog {
         this.setVisible(false);
     }//GEN-LAST:event_submit_buttonActionPerformed
 
-    private void password_fieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_password_fieldPropertyChange
+    private void organization_fieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_organization_fieldCaretUpdate
         validateInput();
-    }//GEN-LAST:event_password_fieldPropertyChange
+    }//GEN-LAST:event_organization_fieldCaretUpdate
 
-    private void confirmPassword_fieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_confirmPassword_fieldPropertyChange
+    private void name_fieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_name_fieldCaretUpdate
         validateInput();
-    }//GEN-LAST:event_confirmPassword_fieldPropertyChange
+    }//GEN-LAST:event_name_fieldCaretUpdate
 
-    private void name_fieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_name_fieldPropertyChange
+    private void email_fieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_email_fieldCaretUpdate
         validateInput();
-    }//GEN-LAST:event_name_fieldPropertyChange
+    }//GEN-LAST:event_email_fieldCaretUpdate
 
-    private void email_fieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_email_fieldPropertyChange
+    private void password_fieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_password_fieldCaretUpdate
+        password1Initialized = true;
         validateInput();
-    }//GEN-LAST:event_email_fieldPropertyChange
+    }//GEN-LAST:event_password_fieldCaretUpdate
 
-    private void organization_fieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_organization_fieldPropertyChange
+    private void confirmPassword_fieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_confirmPassword_fieldCaretUpdate
+        password2Initialized = true;
         validateInput();
-    }//GEN-LAST:event_organization_fieldPropertyChange
+    }//GEN-LAST:event_confirmPassword_fieldCaretUpdate
 
     /**
      * @param args the command line arguments

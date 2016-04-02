@@ -38,5 +38,6 @@
     <mapping class="redlibrarian.music.Song"/>
     <mapping class="redlibrarian.music.Performance"/>
     <mapping class="redlibrarian.music.Organization"/>
+    <mapping class="redlibrarian.login.ContactDetails"/>
   </session-factory>
 </hibernate-configuration>
