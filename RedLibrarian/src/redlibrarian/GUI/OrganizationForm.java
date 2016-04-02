@@ -18,6 +18,7 @@ import redlibrarian.music.Organization;
 public class OrganizationForm extends javax.swing.JDialog {
 
     private boolean saved;
+    
     private boolean password1Initialized;
     private boolean password2Initialized;
     
