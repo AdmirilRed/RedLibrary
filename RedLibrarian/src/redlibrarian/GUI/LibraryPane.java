@@ -42,6 +42,29 @@ public class LibraryPane extends javax.swing.JPanel {
     public void updateSong(Song target, Song item) {
         LibraryTableModel model = (LibraryTableModel) table.getModel();
         model.updateRow(model.getSongRow(target), item);
+        model.selectRow(model.getSongRow(item));
+        this.superUpdate(item);
+    }
+    
+    public void removeSong(Song target) {
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        
+        int row = model.getSongRow(target);
+        model.removeRow(row);
+        
+        if(row == model.getRowCount())
+            row-=1;
+        
+        model.renderRowColors();
+        this.superUpdate(model.selectRow(row, true));
+    }
+    
+    private void superUpdate(Song song) {
+        Object superParent = this.getParent().getParent().getParent().getParent().getParent().getParent();
+        if(superParent.getClass().toString().equals(UserInterface.class.toString())) {
+            UserInterface userInterface = (UserInterface) superParent;
+            userInterface.updateSelection(song);
+        }
     }
 
     /**
@@ -119,11 +142,7 @@ public class LibraryPane extends javax.swing.JPanel {
         LibraryTableModel model = (LibraryTableModel) table.getModel();
         Song selectedSong = model.selectRow(table.getSelectedRow());
         
-        Object superParent = this.getParent().getParent().getParent().getParent().getParent().getParent();
-        if(superParent.getClass().toString().equals(UserInterface.class.toString())) {
-            UserInterface userInterface = (UserInterface) superParent;
-            userInterface.updateSelection(selectedSong);
-        }
+        this.superUpdate(selectedSong);
     }//GEN-LAST:event_tableMouseClicked
 
 
@@ -134,8 +153,8 @@ public class LibraryPane extends javax.swing.JPanel {
 
     private static class LibraryTableModel extends DefaultTableModel {
 
-        private List<Song> rows = new ArrayList<>();
-        private List<Color> rowColors = new ArrayList<>();   
+        private final List<Song> rows = new ArrayList<>();
+        private final List<Color> rowColors = new ArrayList<>();   
         
         private int lastSelectedRow = 0;
 
@@ -162,7 +181,7 @@ public class LibraryPane extends javax.swing.JPanel {
             if(!song.isAvailable())
                 return Color.RED;
             else
-                return ((this.getRowCount()+1)%2==0)?Color.WHITE:Color.LIGHT_GRAY;
+                return (this.getSongRow(song)%2==0)?Color.WHITE:Color.LIGHT_GRAY;
                 
         }
         
@@ -175,18 +194,36 @@ public class LibraryPane extends javax.swing.JPanel {
                 
         }
         
+        public void renderRowColors() {
+            int row = 0;
+            for(Song s:rows) {
+               this.setRowColor(row++, this.determineColor(s)); 
+            }
+                
+        }
         
         public boolean addRow(Song song) {
             super.addRow(new Object[]{song.getPseudoId(), song.getTitle(), song.getComposer()});
+            boolean result = rows.add(song);
             this.setRowColor(this.getRowCount(), this.determineColor(song));
-            return rows.add(song);
+            fireTableRowsUpdated(this.getSongRow(song), this.getSongRow(song));
+            return result;
+        }
+        
+        @Override
+        public void removeRow(int row) {
+            super.removeRow(row);
+            rows.remove(row);
+            rowColors.remove(row);
+            fireTableRowsUpdated(row, row);
         }
         
         public void updateRow(int row, Song song) {
             super.removeRow(row);
             super.insertRow(row, new Object[]{song.getPseudoId(), song.getTitle(), song.getComposer()});
-            this.setRowColor(row, this.determineColor(song));
             rows.set(row, song);
+            this.setRowColor(row, this.determineColor(song));
+            fireTableRowsUpdated(row, row);
         }
         
         public Song getRow(int row) {
@@ -198,12 +235,18 @@ public class LibraryPane extends javax.swing.JPanel {
         }
 
         public Song selectRow(int selectedRow) {
+            return selectRow(selectedRow, false);
+        }
+        
+        public Song selectRow(int selectedRow, boolean ignorePrevious) {
             Song selectedSong = this.getRow(selectedRow);
-            Song previousSong = this.getRow(lastSelectedRow);
-            this.setRowColor(lastSelectedRow, this.determineColor(previousSong));
             this.setRowColor(selectedRow, this.determineColor(selectedSong, true));
+            if(!ignorePrevious) {
+                Song previousSong = this.getRow(lastSelectedRow);
+                this.setRowColor(lastSelectedRow, this.determineColor(previousSong));
+            }
             lastSelectedRow = selectedRow;
-            return  selectedSong;
+            return selectedSong;
         }
     }
 } 

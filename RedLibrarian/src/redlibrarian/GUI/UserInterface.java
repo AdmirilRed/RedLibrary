@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.ini4j.Ini;
 import static redlibrarian.RedLibrarian.sessionFactory;
@@ -40,11 +41,14 @@ public class UserInterface extends javax.swing.JFrame {
     String suggestedOrganizationName = "";
     boolean showAdminLogin = true; 
     
+    TabbedLibraryPane tabbedLibrary_pane = new TabbedLibraryPane();
+    
     /**
      * Creates new form UserInterface
      */
     public UserInterface() {
         initComponents();
+        tabbedRoot_pane.add("Libraries", tabbedLibrary_pane);
         details_panel.setVisible(false);
     }
 
@@ -116,7 +120,8 @@ public class UserInterface extends javax.swing.JFrame {
     
     private void loadLibraries() {
         for (Library lib : currentOrganization.getLibraries()) {
-            tabbedLibrary_pane.addTab(lib.getName(), new LibraryPane(lib));
+            LibraryPane pane = new LibraryPane(lib);
+            tabbedLibrary_pane.addLibrary(lib, pane);
         }
     }
     
@@ -155,7 +160,6 @@ public class UserInterface extends javax.swing.JFrame {
     private void initComponents() {
 
         tabbedRoot_pane = new javax.swing.JTabbedPane();
-        tabbedLibrary_pane = new javax.swing.JTabbedPane();
         details_panel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -185,8 +189,6 @@ public class UserInterface extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        tabbedRoot_pane.addTab("Libraries", tabbedLibrary_pane);
 
         details_panel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -372,7 +374,22 @@ public class UserInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_hide_buttonActionPerformed
 
     private void deleteSong_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSong_buttonActionPerformed
-        currentOrganization.removeSong(selectedSong);
+        LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
+        currentOrganization.removeSong(selectedSong, tabbedLibrary_pane.getLibrary(tabbedLibrary_pane.getSelectedIndex()));
+        pane.removeSong(selectedSong);      
+        
+        try {
+            
+            Session session = sessionFactory.getCurrentSession();
+            session.beginTransaction();
+            
+            session.merge(currentOrganization);
+            
+            session.getTransaction().commit();
+        }
+        catch(HibernateException hibernateException) {
+            Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+        }
     }//GEN-LAST:event_deleteSong_buttonActionPerformed
 
     private void editSong_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSong_buttonActionPerformed
@@ -381,6 +398,20 @@ public class UserInterface extends javax.swing.JFrame {
         if(form.wasSaved()) {
             LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
             pane.updateSong(selectedSong, form.getSong());
+            
+            try {
+                
+                Session session = sessionFactory.getCurrentSession();
+                session.beginTransaction();
+            
+                session.merge(form.getSong());
+            
+                session.getTransaction().commit();
+            }
+            catch(HibernateException hibernateException) {
+                Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+            }
+            
         }
         form.dispose();
     }//GEN-LAST:event_editSong_buttonActionPerformed
@@ -443,7 +474,6 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JLabel library_label;
     private javax.swing.JLabel performances_label;
     private javax.swing.JTree performances_tree;
-    private javax.swing.JTabbedPane tabbedLibrary_pane;
     private javax.swing.JTabbedPane tabbedRoot_pane;
     private javax.swing.JLabel title_label;
     private javax.swing.JLabel uid_label;

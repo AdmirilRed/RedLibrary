@@ -18,7 +18,7 @@ public class PasswordVerifier extends InputVerifier {
     @Override
     public boolean verify(JComponent input) {
         String text = ((JTextField) input).getText();
-        return text.length()>4;
+        return text.length()>=4;
     }
     
 }

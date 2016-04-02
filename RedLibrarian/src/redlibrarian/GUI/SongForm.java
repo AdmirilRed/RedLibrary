@@ -5,10 +5,10 @@
  */
 package redlibrarian.GUI;
 
-import redlibrarian.GUI.textVerification.IntegerVerifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import redlibrarian.GUI.textVerification.IntegerVerifier;
 import redlibrarian.music.Library;
 import redlibrarian.music.Song;
 
@@ -19,9 +19,9 @@ import redlibrarian.music.Song;
 public class SongForm extends javax.swing.JDialog {
 
     private boolean saved;
-    private Song savedSong;
+    private Song song;
     
-    private List<Library> libraries = new ArrayList<>();
+    private final List<Library> libraries = new ArrayList<>();
     private Library selectedLibrary;
 
     /**
@@ -38,6 +38,7 @@ public class SongForm extends javax.swing.JDialog {
     
     public SongForm(Song song, Set<Library> libraries, java.awt.Frame parent, boolean modal) {
         this(libraries, parent, modal);
+        this.song = song;
         id_field.setText(song.getPseudoId()+"");
         title_field.setText(song.getTitle());
         composer_field.setText(song.getComposer());
@@ -55,8 +56,13 @@ public class SongForm extends javax.swing.JDialog {
     
     private boolean verifySong() {
         try {
-            this.savedSong = new Song(Integer.parseInt(id_field.getText()), title_field.getText(), composer_field.getText(), libraries.get(library_box.getSelectedIndex()));
-            return true;
+                song.setPseudoId(Integer.parseInt(id_field.getText()));
+                song.setTitle(title_field.getText());
+                song.setComposer(composer_field.getText());
+                libraries.get(library_box.getSelectedIndex());
+                song.setAvailable(available_checkbox.isSelected());
+                song.setDescription(description_field.getText());
+                return true;
         }
         catch(Exception e) {
             return false;
@@ -64,7 +70,7 @@ public class SongForm extends javax.swing.JDialog {
     }
     
     public Song getSong() {
-        return savedSong;
+        return song;
     }
     
     public boolean wasSaved() {
@@ -101,8 +107,6 @@ public class SongForm extends javax.swing.JDialog {
         jLabel2.setText("Composer:");
 
         jLabel3.setText("Library:");
-
-        library_box.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         description_field.setColumns(20);
         description_field.setRows(5);
@@ -194,8 +198,10 @@ public class SongForm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void save_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_buttonActionPerformed
-        if(verifySong())
+        if(verifySong()) {
+            this.saved = true;
             this.setVisible(false);
+        }            
     }//GEN-LAST:event_save_buttonActionPerformed
 
     /**
