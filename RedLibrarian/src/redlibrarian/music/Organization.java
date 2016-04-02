@@ -93,9 +93,9 @@ public class Organization implements Serializable {
         return false;            
     }
 
-    public boolean removeSong(Song song, Library lib) {
+    public boolean removeSong(Song song) {
         if(verifiedAdmin)
-            return lib.removeSong(song);
+            return song.getLibrary().removeSong(song);
         return false;
     }
     
