@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 import redlibrarian.login.Password;
 
@@ -37,6 +38,7 @@ public class Organization implements Serializable {
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     private Set<Performance> performances;
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
+    @OrderBy("name ASC")
     private Set<Library> libraries;
     
     @Transient
@@ -87,9 +89,9 @@ public class Organization implements Serializable {
         return performances;
     }
     
-    public boolean addSong(Song song, Library lib) {
+    public boolean addSong(Song song) {
         if(verifiedAdmin)
-            return lib.addSong(song);
+            return song.getLibrary().addSong(song);
         return false;            
     }
 

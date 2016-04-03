@@ -39,6 +39,13 @@ public class LibraryPane extends javax.swing.JPanel {
             model.addRow(song);
     }
     
+    public void addSongs(Library lib) {
+        System.out.println("ADDING ROWS BACK");
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        for(Song s:lib.getContents())
+            model.addRow(s);
+    }
+    
     public void updateSong(Song target, Song item) {
         LibraryTableModel model = (LibraryTableModel) table.getModel();
         model.updateRow(model.getSongRow(target), item);
@@ -56,7 +63,16 @@ public class LibraryPane extends javax.swing.JPanel {
             row-=1;
         
         model.renderRowColors();
-        this.superUpdate(model.selectRow(row, true));
+        if(model.getRowCount() > 0)
+            this.superUpdate(model.selectRow(row, true));
+    }
+    
+    @Override
+    public void removeAll() {
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+
+        while(model.getRowCount()>0)
+            model.removeRow(0);
     }
     
     private void superUpdate(Song song) {

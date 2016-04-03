@@ -37,7 +37,7 @@ public class Library implements Serializable {
     
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     @OrderBy("pid ASC")
-    private Set<Song> contents;
+    private final Set<Song> contents;
     
     public Library(String name, String description, Organization parent) {
         this.contents = new TreeSet<>();

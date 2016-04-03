@@ -8,6 +8,8 @@ package redlibrarian.GUI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import redlibrarian.GUI.textVerification.IntegerVerifier;
 import redlibrarian.music.Library;
 import redlibrarian.music.Song;
@@ -34,6 +36,8 @@ public class SongForm extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.libraries.addAll(libraries);
+        
+        initializeDropdown(libraries);
     }
     
     public SongForm(Song song, Set<Library> libraries, java.awt.Frame parent, boolean modal) {
@@ -46,25 +50,27 @@ public class SongForm extends javax.swing.JDialog {
         available_checkbox.setSelected(song.isAvailable());
         selectedLibrary = song.getLibrary();
         
+        initializeDropdown(libraries);
+        
+    }
+    
+    private void initializeDropdown(Set<Library> libraries) {
         for(Library lib:libraries)
             library_box.addItem(lib.getName());
         
         if(selectedLibrary != null)
             library_box.setSelectedItem(selectedLibrary.getName());
-        
     }
     
     private boolean verifySong() {
         try {
-                song.setPseudoId(Integer.parseInt(id_field.getText()));
-                song.setTitle(title_field.getText());
-                song.setComposer(composer_field.getText());
-                libraries.get(library_box.getSelectedIndex());
+                song = new Song(Integer.parseInt(id_field.getText()), title_field.getText(), composer_field.getText(), libraries.get(library_box.getSelectedIndex()));
                 song.setAvailable(available_checkbox.isSelected());
                 song.setDescription(description_field.getText());
                 return true;
         }
         catch(Exception e) {
+            Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, e);
             return false;
         }
     }

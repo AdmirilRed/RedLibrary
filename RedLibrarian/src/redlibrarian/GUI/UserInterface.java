@@ -5,12 +5,16 @@
  */
 package redlibrarian.GUI;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
@@ -41,15 +45,15 @@ public class UserInterface extends javax.swing.JFrame {
     String suggestedOrganizationName = "";
     boolean showAdminLogin = true; 
     
-    TabbedLibraryPane tabbedLibrary_pane = new TabbedLibraryPane();
+    TabbedLibraryPane tabbedLibrary_pane;
     
     /**
      * Creates new form UserInterface
      */
     public UserInterface() {
         initComponents();
-        tabbedRoot_pane.add("Libraries", tabbedLibrary_pane);
         details_panel.setVisible(false);
+        
     }
 
     public UserInterface(URL url) {
@@ -58,6 +62,7 @@ public class UserInterface extends javax.swing.JFrame {
     }
 
     public boolean load() {
+                
         try {
             if (sessionFactory == null) {
                 Configuration cfg = new Configuration();
@@ -102,23 +107,24 @@ public class UserInterface extends javax.swing.JFrame {
             
         Organization org = prompt.getOrganization(); 
         this.admin = prompt.isAdmin();
-      
+        
         if(ini != null) {
            ini.put("preferences", "showAdminLogin", !prompt.getGuestLoginState());
-           ini.put("preferences","suggestedOrganizationName", prompt.getOrganization().getName());
+           ini.put("preferences", "suggestedOrganizationName", prompt.getOrganization().getName());
             try {
                 ini.store(new File(iniURL.toURI()));
             } catch (IOException | URISyntaxException ex) {
                 Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-            
-            
+        
         prompt.dispose();
         return org;
     }
     
     private void loadLibraries() {
+        tabbedLibrary_pane = new TabbedLibraryPane();
+        tabbedRoot_pane.add("Libraries", tabbedLibrary_pane);
         for (Library lib : currentOrganization.getLibraries()) {
             LibraryPane pane = new LibraryPane(lib);
             tabbedLibrary_pane.addLibrary(lib, pane);
@@ -187,6 +193,9 @@ public class UserInterface extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         file_menu = new javax.swing.JMenu();
+        new_menu = new javax.swing.JMenu();
+        newSong_menuItem = new javax.swing.JMenuItem();
+        newLibrary_menuItem = new javax.swing.JMenuItem();
         edit_menu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -342,6 +351,27 @@ public class UserInterface extends javax.swing.JFrame {
         jButton1.setText("Search");
 
         file_menu.setText("File");
+
+        new_menu.setText("New");
+
+        newSong_menuItem.setText("Song");
+        newSong_menuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newSong_menuItemActionPerformed(evt);
+            }
+        });
+        new_menu.add(newSong_menuItem);
+
+        newLibrary_menuItem.setText("Library");
+        newLibrary_menuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newLibrary_menuItemActionPerformed(evt);
+            }
+        });
+        new_menu.add(newLibrary_menuItem);
+
+        file_menu.add(new_menu);
+
         jMenuBar1.add(file_menu);
 
         edit_menu.setText("Edit");
@@ -431,6 +461,53 @@ public class UserInterface extends javax.swing.JFrame {
         form.dispose();
     }//GEN-LAST:event_editSong_buttonActionPerformed
 
+    private void newLibrary_menuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newLibrary_menuItemActionPerformed
+        LibraryForm form = new LibraryForm(currentOrganization, this, true);
+        form.setVisible(true);
+        if(form.wasSaved()) {
+            Library lib = form.getLibrary();
+            tabbedLibrary_pane.addLibrary(lib, new LibraryPane(lib));
+            currentOrganization.addLibrary(lib);
+            try {
+                Session session = sessionFactory.getCurrentSession();
+                session.beginTransaction();
+                
+                session.save(lib);
+                session.merge(currentOrganization);
+                
+                session.getTransaction().commit();
+            }
+            catch(HibernateException hibernateException) {
+                Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+            }
+        }
+        form.dispose();
+    }//GEN-LAST:event_newLibrary_menuItemActionPerformed
+
+    private void newSong_menuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSong_menuItemActionPerformed
+        SongForm form = new SongForm(currentOrganization.getLibraries(), this, true);
+        form.setVisible(true);
+        if(form.wasSaved()) {
+            Song song = form.getSong();
+            currentOrganization.addSong(song);
+            
+            try {
+                Session session = sessionFactory.getCurrentSession();
+                session.beginTransaction();
+                
+                session.save(song);
+                session.merge(currentOrganization);
+                
+                session.getTransaction().commit();
+            }
+            catch(HibernateException hibernateException) {
+                Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+            }
+            
+            tabbedLibrary_pane.refresh(song.getLibrary());
+        }
+    }//GEN-LAST:event_newSong_menuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -489,6 +566,9 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel library_label;
+    private javax.swing.JMenuItem newLibrary_menuItem;
+    private javax.swing.JMenuItem newSong_menuItem;
+    private javax.swing.JMenu new_menu;
     private javax.swing.JLabel performances_label;
     private javax.swing.JTree performances_tree;
     private javax.swing.JTabbedPane tabbedRoot_pane;
