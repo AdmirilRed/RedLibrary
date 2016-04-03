@@ -64,7 +64,14 @@ public class SongForm extends javax.swing.JDialog {
     
     private boolean verifySong() {
         try {
-                song = new Song(Integer.parseInt(id_field.getText()), title_field.getText(), composer_field.getText(), libraries.get(library_box.getSelectedIndex()));
+                if(song == null)
+                    song = new Song(Integer.parseInt(id_field.getText()), title_field.getText(), composer_field.getText(), libraries.get(library_box.getSelectedIndex()));
+                else {
+                    song.setPseudoId(Integer.parseInt(id_field.getText()));
+                    song.setTitle(title_field.getText());
+                    song.setComposer(composer_field.getText());
+                    song.setLibrary(libraries.get(library_box.getSelectedIndex()));
+                }
                 song.setAvailable(available_checkbox.isSelected());
                 song.setDescription(description_field.getText());
                 return true;

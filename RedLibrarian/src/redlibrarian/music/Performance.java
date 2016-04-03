@@ -9,14 +9,14 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
-import javax.persistence.CascadeType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 
 /**
  *
@@ -34,7 +34,7 @@ public class Performance implements Serializable {
     private String title;
     private String description;
     
-    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
+    @ManyToMany(cascade= {CascadeType.ALL}, fetch=FetchType.EAGER)
     private Set<Song> songs = new TreeSet<>();
     
     public Performance() {

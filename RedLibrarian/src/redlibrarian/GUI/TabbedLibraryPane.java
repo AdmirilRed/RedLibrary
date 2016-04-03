@@ -31,6 +31,7 @@ public class TabbedLibraryPane extends JTabbedPane {
     }
     
     public void refresh(Library lib) {
+        System.out.println("refresh()");
         ((LibraryPane) this.getComponent(this.getIndex(lib))).removeAll();
         ((LibraryPane) this.getComponent(this.getIndex(lib))).addSongs(lib);
     }

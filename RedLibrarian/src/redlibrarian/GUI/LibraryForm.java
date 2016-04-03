@@ -30,7 +30,7 @@ public class LibraryForm extends javax.swing.JDialog {
     }
     
     public Library getLibrary() {
-        return new Library(title_field.getText(), description_field.getText(), organization);
+        return new Library(title_field.getText(), description_field.getText());
     }
     
     public boolean wasSaved() {

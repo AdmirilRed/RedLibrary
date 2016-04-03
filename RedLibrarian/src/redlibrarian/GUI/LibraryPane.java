@@ -255,12 +255,12 @@ public class LibraryPane extends javax.swing.JPanel {
         }
         
         public Song selectRow(int selectedRow, boolean ignorePrevious) {
-            Song selectedSong = this.getRow(selectedRow);
-            this.setRowColor(selectedRow, this.determineColor(selectedSong, true));
             if(!ignorePrevious) {
                 Song previousSong = this.getRow(lastSelectedRow);
                 this.setRowColor(lastSelectedRow, this.determineColor(previousSong));
             }
+            Song selectedSong = this.getRow(selectedRow);
+            this.setRowColor(selectedRow, this.determineColor(selectedSong, true));
             lastSelectedRow = selectedRow;
             return selectedSong;
         }

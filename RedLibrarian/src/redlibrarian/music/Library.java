@@ -14,7 +14,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
@@ -31,19 +30,16 @@ public class Library implements Serializable {
     
     private String name;
     private String description;
-    
-    @ManyToOne
-    private Organization parent;
+
     
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     @OrderBy("pid ASC")
     private final Set<Song> contents;
     
-    public Library(String name, String description, Organization parent) {
+    public Library(String name, String description) {
         this.contents = new TreeSet<>();
         this.name = name;
         this.description = description;
-        this.parent = parent;
     }
     
     public Library() {
@@ -53,10 +49,6 @@ public class Library implements Serializable {
    
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
     
     public String getName() {
@@ -75,9 +67,6 @@ public class Library implements Serializable {
         this.description = description;
     }
     
-    public Organization getOrganization() {
-        return parent;
-    }
     
     protected boolean addSong(Song item) {
         return contents.add(item);

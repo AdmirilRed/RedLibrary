@@ -5,8 +5,6 @@
  */
 package redlibrarian.GUI;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -14,7 +12,6 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
@@ -89,7 +86,6 @@ public class UserInterface extends javax.swing.JFrame {
         
         loadLibraries();
         
-        System.out.println(currentOrganization);
         return true;
     }
     
@@ -123,6 +119,7 @@ public class UserInterface extends javax.swing.JFrame {
     }
     
     private void loadLibraries() {
+        System.out.println("loadLibraries()");
         tabbedLibrary_pane = new TabbedLibraryPane();
         tabbedRoot_pane.add("Libraries", tabbedLibrary_pane);
         for (Library lib : currentOrganization.getLibraries()) {
@@ -419,21 +416,26 @@ public class UserInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_hide_buttonActionPerformed
 
     private void deleteSong_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSong_buttonActionPerformed
-        LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
-        currentOrganization.removeSong(selectedSong);
-        pane.removeSong(selectedSong);      
         
-        try {
-            
-            Session session = sessionFactory.getCurrentSession();
-            session.beginTransaction();
-            
-            session.merge(currentOrganization);
-            
-            session.getTransaction().commit();
-        }
-        catch(HibernateException hibernateException) {
-            Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+        if(JOptionPane.showConfirmDialog(null,
+            "Are you sure you wish to delete "+selectedSong+"?", "Delete "+selectedSong+"?", JOptionPane.YES_NO_OPTION) == 0) {
+            LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
+            currentOrganization.removeSong(selectedSong);
+            pane.removeSong(selectedSong);      
+
+            try {
+
+                Session session = sessionFactory.getCurrentSession();
+                session.beginTransaction();
+
+                session.saveOrUpdate(currentOrganization);
+                System.out.println("DELETE: Updating "+currentOrganization);
+
+                session.getTransaction().commit();
+            }
+            catch(HibernateException hibernateException) {
+                Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+            }
         }
     }//GEN-LAST:event_deleteSong_buttonActionPerformed
 
@@ -449,7 +451,8 @@ public class UserInterface extends javax.swing.JFrame {
                 Session session = sessionFactory.getCurrentSession();
                 session.beginTransaction();
             
-                session.merge(form.getSong());
+                session.saveOrUpdate(form.getSong());
+                System.out.println("EDIT: Updating "+form.getSong());
             
                 session.getTransaction().commit();
             }
@@ -473,7 +476,9 @@ public class UserInterface extends javax.swing.JFrame {
                 session.beginTransaction();
                 
                 session.save(lib);
-                session.merge(currentOrganization);
+                System.out.println("NEW LIBRARY: Saving "+lib);
+                session.saveOrUpdate(currentOrganization);
+                System.out.println("NEW LIBRARY: Updating "+lib);
                 
                 session.getTransaction().commit();
             }
@@ -496,7 +501,9 @@ public class UserInterface extends javax.swing.JFrame {
                 session.beginTransaction();
                 
                 session.save(song);
-                session.merge(currentOrganization);
+                System.out.println("NEW SONG: Saving "+song);
+                session.saveOrUpdate(currentOrganization);
+                System.out.println("NEW SONG: Updating "+currentOrganization);
                 
                 session.getTransaction().commit();
             }
