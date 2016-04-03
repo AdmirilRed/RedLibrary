@@ -36,10 +36,10 @@ public class Organization implements Serializable {
     private final byte [] salt;  
     
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
-    private Set<Performance> performances;
+    private final Set<Performance> performances;
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     @OrderBy("name ASC")
-    private Set<Library> libraries;
+    private final Set<Library> libraries;
     
     @Transient
     private boolean verifiedAdmin;

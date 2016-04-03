@@ -430,6 +430,8 @@ public class UserInterface extends javax.swing.JFrame {
 
                 session.saveOrUpdate(currentOrganization);
                 System.out.println("DELETE: Updating "+currentOrganization);
+                session.delete(selectedSong);
+                System.out.println("DELETE: Deleting "+selectedSong);
 
                 session.getTransaction().commit();
             }
