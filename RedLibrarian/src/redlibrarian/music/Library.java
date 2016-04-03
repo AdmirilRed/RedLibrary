@@ -59,7 +59,7 @@ public class Library implements Serializable {
         this.name = name;
     }
     
-    public String getDesciption() {
+    public String getDescription() {
         return description;
     }
     

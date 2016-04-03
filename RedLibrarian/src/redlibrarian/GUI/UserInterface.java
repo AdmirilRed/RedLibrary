@@ -5,6 +5,8 @@
  */
 package redlibrarian.GUI;
 
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -84,6 +86,7 @@ public class UserInterface extends javax.swing.JFrame {
         deleteSong_button.setVisible(admin);
         editSong_button.setVisible(admin);
         
+        this.setTitle("RedLibrarian - "+currentOrganization.getName());
         loadLibraries();
         
         return true;
@@ -120,12 +123,8 @@ public class UserInterface extends javax.swing.JFrame {
     
     private void loadLibraries() {
         System.out.println("loadLibraries()");
-        tabbedLibrary_pane = new TabbedLibraryPane();
+        tabbedLibrary_pane = new TabbedLibraryPane(currentOrganization);
         tabbedRoot_pane.add("Libraries", tabbedLibrary_pane);
-        for (Library lib : currentOrganization.getLibraries()) {
-            LibraryPane pane = new LibraryPane(lib);
-            tabbedLibrary_pane.addLibrary(lib, pane);
-        }
     }
     
     void updateSelection(Song song) {
@@ -153,6 +152,12 @@ public class UserInterface extends javax.swing.JFrame {
             Logger.getLogger(UserInterface.class.getName()).log(Level.CONFIG, null, ex);
         }
     }    
+    
+    private void search() {
+        SearchResults pane = new SearchResults(search_field.getText() , currentOrganization);
+        pane.load();
+        pane.setVisible(true);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -186,8 +191,8 @@ public class UserInterface extends javax.swing.JFrame {
         deleteSong_button = new javax.swing.JButton();
         editSong_button = new javax.swing.JButton();
         uid_label = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        search_button = new javax.swing.JButton();
+        search_field = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         file_menu = new javax.swing.JMenu();
         new_menu = new javax.swing.JMenu();
@@ -196,6 +201,7 @@ public class UserInterface extends javax.swing.JFrame {
         edit_menu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("RedLibrarian");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         details_panel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -345,7 +351,23 @@ public class UserInterface extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jButton1.setText("Search");
+        search_button.setText("Search");
+        search_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                search_buttonActionPerformed(evt);
+            }
+        });
+        search_button.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                search_buttonKeyPressed(evt);
+            }
+        });
+
+        search_field.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                search_fieldKeyPressed(evt);
+            }
+        });
 
         file_menu.setText("File");
 
@@ -389,9 +411,9 @@ public class UserInterface extends javax.swing.JFrame {
                         .addComponent(tabbedRoot_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 1062, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(search_field, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(search_button)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -399,8 +421,8 @@ public class UserInterface extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(search_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(search_button))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tabbedRoot_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 832, Short.MAX_VALUE)
@@ -517,6 +539,18 @@ public class UserInterface extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_newSong_menuItemActionPerformed
 
+    private void search_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_buttonActionPerformed
+        search();
+    }//GEN-LAST:event_search_buttonActionPerformed
+
+    private void search_fieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_search_fieldKeyPressed
+        processKeyPress(evt); 
+    }//GEN-LAST:event_search_fieldKeyPressed
+
+    private void search_buttonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_search_buttonKeyPressed
+        processKeyPress(evt);
+    }//GEN-LAST:event_search_buttonKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -561,7 +595,6 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JMenu file_menu;
     private javax.swing.JButton hide_button;
     private javax.swing.JLabel id_label;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -573,17 +606,28 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel library_label;
     private javax.swing.JMenuItem newLibrary_menuItem;
     private javax.swing.JMenuItem newSong_menuItem;
     private javax.swing.JMenu new_menu;
     private javax.swing.JLabel performances_label;
     private javax.swing.JTree performances_tree;
+    private javax.swing.JButton search_button;
+    private javax.swing.JTextField search_field;
     private javax.swing.JTabbedPane tabbedRoot_pane;
     private javax.swing.JLabel title_label;
     private javax.swing.JLabel uid_label;
     // End of variables declaration//GEN-END:variables
+
+    private void processKeyPress(KeyEvent evt) {
+        if (evt.getKeyChar() == (KeyEvent.VK_ENTER)) {
+            KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            manager.focusNextComponent();
+            
+            if(manager.getFocusOwner().equals(search_button))
+                search();
+        }
+    }
 
 
     

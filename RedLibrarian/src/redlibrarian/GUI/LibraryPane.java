@@ -40,9 +40,14 @@ public class LibraryPane extends javax.swing.JPanel {
     }
     
     public void addSongs(Library lib) {
-        System.out.println("ADDING ROWS BACK");
         LibraryTableModel model = (LibraryTableModel) table.getModel();
         for(Song s:lib.getContents())
+            model.addRow(s);
+    }
+    
+    public void addSongs(List<Song> songs) {
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        for(Song s:songs)
             model.addRow(s);
     }
     
@@ -76,10 +81,15 @@ public class LibraryPane extends javax.swing.JPanel {
     }
     
     private void superUpdate(Song song) {
-        Object superParent = this.getParent().getParent().getParent().getParent().getParent().getParent();
-        if(superParent.getClass().toString().equals(UserInterface.class.toString())) {
-            UserInterface userInterface = (UserInterface) superParent;
-            userInterface.updateSelection(song);
+        try{
+            Object superParent = this.getParent().getParent().getParent().getParent().getParent().getParent();
+            if(superParent.getClass().toString().equals(UserInterface.class.toString())) {
+                UserInterface userInterface = (UserInterface) superParent;
+                userInterface.updateSelection(song);
+            }
+        }    
+        catch(Exception ex) {
+            
         }
     }
 
