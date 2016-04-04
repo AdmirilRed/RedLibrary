@@ -41,16 +41,16 @@ public class Performance implements Serializable {
         this.date = Calendar.getInstance();
     }
     
-    public Performance(String title, String description, Calendar date) {
-        this.title = title;
-        this.description = description;
-        this.date = date;
-    }
-    
     public Performance(String title, String description) {
         this();
         this.title = title;
         this.description = description;
+    }
+        
+    public Performance(String title, String description, Calendar date) {
+        this.title = title;
+        this.description = description;
+        this.date = date;
     }
 
     public long getId() {

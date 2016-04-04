@@ -14,10 +14,8 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
@@ -88,10 +86,11 @@ public class UserInterface extends javax.swing.JFrame {
         System.out.println("SUCCESS");
         
         currentOrganization = this.login(true);
-        deleteSong_button.setVisible(admin);
-        editSong_button.setVisible(admin);
-        
-        this.setTitle("RedLibrarian - "+currentOrganization.getName());
+        deleteSong_button.setEnabled(admin);
+        editSong_button.setEnabled(admin);
+        new_menu.setEnabled(admin);  
+                
+        this.setTitle("RedLibrarian - "+currentOrganization.getName()+" "+(admin?"(ADMIN)":"(GUEST)"));
         loadLibraries();
         
         return true;
@@ -133,6 +132,9 @@ public class UserInterface extends javax.swing.JFrame {
     }
     
     private void loadPerformances(Song song) {
+        
+        System.out.println("loadPerformances("+song+")");
+        
         DefaultTreeModel model = (DefaultTreeModel) performances_tree.getModel();
         DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) model.getRoot();
         rootNode.removeAllChildren();
@@ -147,10 +149,13 @@ public class UserInterface extends javax.swing.JFrame {
                 }
             }
         }
+        performances_tree.repaint();
         model.reload();
     }
     
     void updateSelection(Song song) {
+        
+        System.out.println("updateSelection("+song+")");
         
         this.selectedSong = song;
         
@@ -182,6 +187,16 @@ public class UserInterface extends javax.swing.JFrame {
         SearchResults pane = new SearchResults(search_field.getText() , currentOrganization);
         pane.load();
         pane.setVisible(true);
+    }
+    
+    private void processKeyPress(KeyEvent evt) {
+        if (evt.getKeyChar() == (KeyEvent.VK_ENTER)) {
+            KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            manager.focusNextComponent();
+            
+            if(manager.getFocusOwner().equals(search_button))
+                search();
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -464,104 +479,111 @@ public class UserInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_hide_buttonActionPerformed
 
     private void deleteSong_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSong_buttonActionPerformed
-        
-        if(JOptionPane.showConfirmDialog(null,
-            "Are you sure you wish to delete "+selectedSong+"?", "Delete "+selectedSong+"?", JOptionPane.YES_NO_OPTION) == 0) {
-            LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
-            currentOrganization.removeSong(selectedSong);
-            pane.removeSong(selectedSong);      
+        if(admin) {
+            if(JOptionPane.showConfirmDialog(null,
+                "Are you sure you wish to delete "+selectedSong+"?", "Delete "+selectedSong+"?", JOptionPane.YES_NO_OPTION) == 0) {
+                LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
+                currentOrganization.removeSong(selectedSong);
+                pane.removeSong(selectedSong);      
 
-            try {
+                try {
 
-                Session session = sessionFactory.getCurrentSession();
-                session.beginTransaction();
+                    Session session = sessionFactory.getCurrentSession();
+                    session.beginTransaction();
 
-                session.saveOrUpdate(currentOrganization);
-                System.out.println("DELETE: Updating "+currentOrganization);
-                session.delete(selectedSong);
-                System.out.println("DELETE: Deleting "+selectedSong);
+                    session.saveOrUpdate(currentOrganization);
+                    System.out.println("DELETE: Updating "+currentOrganization);
+                    session.delete(selectedSong);
+                    System.out.println("DELETE: Deleting "+selectedSong);
 
-                session.getTransaction().commit();
-            }
-            catch(HibernateException hibernateException) {
-                Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+                    session.getTransaction().commit();
+                }
+                catch(HibernateException hibernateException) {
+                    Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+                }
             }
         }
     }//GEN-LAST:event_deleteSong_buttonActionPerformed
 
     private void editSong_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSong_buttonActionPerformed
-        SongForm form = new SongForm(selectedSong, currentOrganization.getLibraries(), this, true);
-        form.setVisible(true);
-        if(form.wasSaved()) {
-            LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
-            pane.updateSong(selectedSong, form.getSong());
-            
-            try {
-                
-                Session session = sessionFactory.getCurrentSession();
-                session.beginTransaction();
-            
-                session.saveOrUpdate(form.getSong());
-                System.out.println("EDIT: Updating "+form.getSong());
-            
-                session.getTransaction().commit();
+        if(admin) {
+            SongForm form = new SongForm(selectedSong, currentOrganization.getLibraries(), this, true);
+            form.setVisible(true);
+            if(form.wasSaved()) {
+                LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
+                pane.updateSong(selectedSong, form.getSong());
+
+                try {
+
+                    Session session = sessionFactory.getCurrentSession();
+                    session.beginTransaction();
+
+                    session.saveOrUpdate(form.getSong());
+                    System.out.println("EDIT: Updating "+form.getSong());
+
+                    session.getTransaction().commit();
+                }
+                catch(HibernateException hibernateException) {
+                    Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+                }
+
             }
-            catch(HibernateException hibernateException) {
-                Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
-            }
-            
+            form.dispose();
         }
-        form.dispose();
     }//GEN-LAST:event_editSong_buttonActionPerformed
 
     private void newLibrary_menuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newLibrary_menuItemActionPerformed
-        LibraryForm form = new LibraryForm(currentOrganization, this, true);
-        form.setVisible(true);
-        if(form.wasSaved()) {
-            Library lib = form.getLibrary();
-            tabbedLibrary_pane.addLibrary(lib, new LibraryPane(lib));
-            currentOrganization.addLibrary(lib);
-            try {
-                Session session = sessionFactory.getCurrentSession();
-                session.beginTransaction();
-                
-                session.save(lib);
-                System.out.println("NEW LIBRARY: Saving "+lib);
-                session.saveOrUpdate(currentOrganization);
-                System.out.println("NEW LIBRARY: Updating "+lib);
-                
-                session.getTransaction().commit();
+        if(admin) {
+            LibraryForm form = new LibraryForm(currentOrganization, this, true);
+            form.setVisible(true);
+            if(form.wasSaved()) {
+                Library lib = form.getLibrary();
+                tabbedLibrary_pane.addLibrary(lib, new LibraryPane(lib));
+                currentOrganization.addLibrary(lib);
+                try {
+                    Session session = sessionFactory.getCurrentSession();
+                    session.beginTransaction();
+
+                    session.save(lib);
+                    System.out.println("NEW LIBRARY: Saving "+lib);
+                    session.saveOrUpdate(currentOrganization);
+                    System.out.println("NEW LIBRARY: Updating "+lib);
+
+                    session.getTransaction().commit();
+                }
+                catch(HibernateException hibernateException) {
+                    Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+                }
             }
-            catch(HibernateException hibernateException) {
-                Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
-            }
+            form.dispose();
         }
-        form.dispose();
     }//GEN-LAST:event_newLibrary_menuItemActionPerformed
 
     private void newSong_menuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSong_menuItemActionPerformed
-        SongForm form = new SongForm(currentOrganization.getLibraries(), this, true);
-        form.setVisible(true);
-        if(form.wasSaved()) {
-            Song song = form.getSong();
-            currentOrganization.addSong(song);
-            
-            try {
-                Session session = sessionFactory.getCurrentSession();
-                session.beginTransaction();
-                
-                session.save(song);
-                System.out.println("NEW SONG: Saving "+song);
-                session.saveOrUpdate(currentOrganization);
-                System.out.println("NEW SONG: Updating "+currentOrganization);
-                
-                session.getTransaction().commit();
-            }
-            catch(HibernateException hibernateException) {
-                Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
-            }
-            
-            tabbedLibrary_pane.refresh(song.getLibrary());
+        if(admin) {
+            SongForm form = new SongForm(currentOrganization.getLibraries(), this, true);
+            form.setVisible(true);
+            if(form.wasSaved()) {
+                Song song = form.getSong();
+                currentOrganization.addSong(song);
+
+                try {
+                    Session session = sessionFactory.getCurrentSession();
+                    session.beginTransaction();
+
+                    session.save(song);
+                    System.out.println("NEW SONG: Saving "+song);
+                    session.saveOrUpdate(currentOrganization);
+                    System.out.println("NEW SONG: Updating "+currentOrganization);
+
+                    session.getTransaction().commit();
+                }
+                catch(HibernateException hibernateException) {
+                    Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+                }
+
+                tabbedLibrary_pane.refresh(song.getLibrary());
+        }
         }
     }//GEN-LAST:event_newSong_menuItemActionPerformed
 
@@ -651,17 +673,5 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JLabel title_label;
     private javax.swing.JLabel uid_label;
     // End of variables declaration//GEN-END:variables
-
-    private void processKeyPress(KeyEvent evt) {
-        if (evt.getKeyChar() == (KeyEvent.VK_ENTER)) {
-            KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-            manager.focusNextComponent();
-            
-            if(manager.getFocusOwner().equals(search_button))
-                search();
-        }
-    }
-
-
-    
+   
 }
