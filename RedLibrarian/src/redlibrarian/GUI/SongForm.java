@@ -32,7 +32,7 @@ public class SongForm extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public SongForm(Set<Library> libraries, java.awt.Frame parent, boolean modal) {
+    public SongForm(List<Library> libraries, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.libraries.addAll(libraries);
@@ -40,7 +40,7 @@ public class SongForm extends javax.swing.JDialog {
         initializeDropdown(libraries);
     }
     
-    public SongForm(Song song, Set<Library> libraries, java.awt.Frame parent, boolean modal) {
+    public SongForm(Song song, List<Library> libraries, java.awt.Frame parent, boolean modal) {
         this(libraries, parent, modal);
         this.song = song;
         id_field.setText(song.getPseudoId()+"");
@@ -54,7 +54,7 @@ public class SongForm extends javax.swing.JDialog {
         
     }
     
-    private void initializeDropdown(Set<Library> libraries) {
+    private void initializeDropdown(List<Library> libraries) {
         for(Library lib:libraries)
             library_box.addItem(lib.getName());
         

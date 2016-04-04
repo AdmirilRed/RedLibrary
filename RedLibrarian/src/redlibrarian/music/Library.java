@@ -6,8 +6,8 @@
 package redlibrarian.music;
 
 import java.io.Serializable;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,16 +34,16 @@ public class Library implements Serializable {
     
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     @OrderBy("pid ASC")
-    private final Set<Song> contents;
+    private final List<Song> contents;
     
     public Library(String name, String description) {
-        this.contents = new TreeSet<>();
+        this.contents = new ArrayList<>();
         this.name = name;
         this.description = description;
     }
     
     public Library() {
-        this.contents = new TreeSet<>();
+        this.contents = new ArrayList<>();
         
     }    
    
@@ -87,7 +87,7 @@ public class Library implements Serializable {
      *
      * @return
      */
-    public Set<Song> getContents() {
+    public List<Song> getContents() {
         return contents;
     }
             

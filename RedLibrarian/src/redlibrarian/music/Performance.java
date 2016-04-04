@@ -46,6 +46,12 @@ public class Performance implements Serializable {
         this.description = description;
         this.date = date;
     }
+    
+    public Performance(String title, String description) {
+        this();
+        this.title = title;
+        this.description = description;
+    }
 
     public long getId() {
         return id;
@@ -88,6 +94,6 @@ public class Performance implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("PERFORMANCE<%s, %s | %tF | %s>", title, description, date, songs);
+        return String.format("%s %tF", title, date);
     }
 }

@@ -72,6 +72,12 @@ public class LibraryPane extends javax.swing.JPanel {
             this.superUpdate(model.selectRow(row, true));
     }
     
+    public void selectSong(Song song) {
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        model.selectRow(model.getSongRow(song));
+        this.superUpdate(song);
+    }
+    
     @Override
     public void removeAll() {
         LibraryTableModel model = (LibraryTableModel) table.getModel();

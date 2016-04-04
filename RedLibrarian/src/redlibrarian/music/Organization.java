@@ -6,8 +6,8 @@
 package redlibrarian.music;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -36,25 +36,27 @@ public class Organization implements Serializable {
     private final byte [] salt;  
     
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
-    private final Set<Performance> performances;
+    @OrderBy("date ASC")
+    private final List<Performance> performances;
+    
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     @OrderBy("name ASC")
-    private final Set<Library> libraries;
+    private final List<Library> libraries;
     
     @Transient
     private boolean verifiedAdmin;
     
     public Organization(String name, String password) {
-        this.libraries = new HashSet<>();
-        this.performances = new HashSet<>();
+        this.libraries = new ArrayList<>();
+        this.performances = new ArrayList<>();
         this.name = name;
         this.salt = Password.getNextSalt();
         this.passwordHash = Password.hash(password.toCharArray(), salt);
     }
     
     public Organization() {
-        this.libraries = new HashSet<>();
-        this.performances = new HashSet<>();
+        this.libraries = new ArrayList<>();
+        this.performances = new ArrayList<>();
         this.name = "";
         this.salt = Password.getNextSalt();
         String temp = Password.generateRandomPassword(10);
@@ -85,7 +87,7 @@ public class Organization implements Serializable {
         return false;        
     }
     
-    public Set<Performance> getPerformances() {
+    public List<Performance> getPerformances() {
         return performances;
     }
     
@@ -116,7 +118,7 @@ public class Organization implements Serializable {
         return false;        
     }
     
-    public Set<Library> getLibraries() {
+    public List<Library> getLibraries() {
         return libraries;
     }
     
