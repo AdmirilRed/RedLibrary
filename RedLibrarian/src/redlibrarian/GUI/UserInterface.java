@@ -511,22 +511,39 @@ public class UserInterface extends javax.swing.JFrame {
             form.setVisible(true);
             if(form.wasSaved()) {
                 LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
-                pane.updateSong(selectedSong, form.getSong());
-
+                
+                currentOrganization.removeSong(selectedSong);
+                currentOrganization.addSong(form.getSong());
+                
                 try {
 
                     Session session = sessionFactory.getCurrentSession();
                     session.beginTransaction();
 
-                    session.saveOrUpdate(form.getSong());
-                    System.out.println("EDIT: Updating "+form.getSong());
+                    session.delete(selectedSong);
+                    
+                    session.save(form.getSong());
+                    System.out.println("EDIT: Saving "+form.getSong());
+                    
+                    session.update(currentOrganization);
 
                     session.getTransaction().commit();
                 }
                 catch(HibernateException hibernateException) {
                     Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
                 }
-
+                
+                if(!selectedSong.getLibrary().equals(form.getSong().getLibrary())) {
+                    tabbedLibrary_pane.refresh(selectedSong.getLibrary());
+                    tabbedLibrary_pane.refresh(form.getSong().getLibrary());
+                    tabbedLibrary_pane.selectSong(form.getSong());
+                }
+                else
+                  pane.updateSong(selectedSong, form.getSong());  
+                    
+                
+                
+                
             }
             form.dispose();
         }
@@ -561,7 +578,7 @@ public class UserInterface extends javax.swing.JFrame {
 
     private void newSong_menuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSong_menuItemActionPerformed
         if(admin) {
-            SongForm form = new SongForm(currentOrganization.getLibraries(), this, true);
+            SongForm form = new SongForm(currentOrganization.getLibraries(), tabbedLibrary_pane.getCurrentLibrary(), this, true);
             form.setVisible(true);
             if(form.wasSaved()) {
                 Song song = form.getSong();
