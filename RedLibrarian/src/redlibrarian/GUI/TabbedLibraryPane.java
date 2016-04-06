@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JTabbedPane;
 import redlibrarian.music.Library;
 import redlibrarian.music.Organization;
+import redlibrarian.music.Song;
 
 /**
  *
@@ -55,6 +56,16 @@ public class TabbedLibraryPane extends JTabbedPane {
         System.out.println("refresh()");
         ((LibraryPane) this.getComponent(this.getIndex(lib))).removeAll();
         ((LibraryPane) this.getComponent(this.getIndex(lib))).addSongs(lib);
+    }
+    
+    public void selectSong(Song song) {
+        this.setSelectedIndex(this.getIndex(song.getLibrary()));
+        LibraryPane pane = (LibraryPane) this.getSelectedComponent();
+        pane.selectSong(song);
+    }
+
+    public Library getCurrentLibrary() {
+        return this.getLibrary(this.getSelectedIndex());
     }
     
 }

@@ -32,26 +32,23 @@ public class SongForm extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public SongForm(List<Library> libraries, java.awt.Frame parent, boolean modal) {
+    public SongForm(List<Library> libraries, Library selected, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.libraries.addAll(libraries);
+        this.selectedLibrary = selected;
         
         initializeDropdown(libraries);
     }
     
     public SongForm(Song song, List<Library> libraries, java.awt.Frame parent, boolean modal) {
-        this(libraries, parent, modal);
+        this(libraries, song.getLibrary(), parent, modal);
         this.song = song;
         id_field.setText(song.getPseudoId()+"");
         title_field.setText(song.getTitle());
         composer_field.setText(song.getComposer());
         description_field.setText(song.getDescription());
-        available_checkbox.setSelected(song.isAvailable());
-        selectedLibrary = song.getLibrary();
-        
-        initializeDropdown(libraries);
-        
+        available_checkbox.setSelected(song.isAvailable());        
     }
     
     private void initializeDropdown(List<Library> libraries) {
@@ -64,13 +61,9 @@ public class SongForm extends javax.swing.JDialog {
     
     private boolean verifySong() {
         try {
-                if(song == null)
-                    song = new Song(Integer.parseInt(id_field.getText()), title_field.getText(), composer_field.getText(), libraries.get(library_box.getSelectedIndex()));
-                else {
-                    song.setPseudoId(Integer.parseInt(id_field.getText()));
-                    song.setTitle(title_field.getText());
-                    song.setComposer(composer_field.getText());
-                }
+
+                song = new Song(Integer.parseInt(id_field.getText()), title_field.getText(), composer_field.getText(), libraries.get(library_box.getSelectedIndex()));
+
                 song.setAvailable(available_checkbox.isSelected());
                 song.setDescription(description_field.getText());
                 return true;
@@ -216,45 +209,6 @@ public class SongForm extends javax.swing.JDialog {
         }            
     }//GEN-LAST:event_save_buttonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SongForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SongForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SongForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SongForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(() -> {
-            SongForm dialog = new SongForm(null, new javax.swing.JFrame(), true);
-            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                @Override
-                public void windowClosing(java.awt.event.WindowEvent e) {
-                    System.exit(0);
-                }
-            });
-            dialog.setVisible(true);
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox available_checkbox;
