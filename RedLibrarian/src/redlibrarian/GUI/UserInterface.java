@@ -483,8 +483,7 @@ public class UserInterface extends javax.swing.JFrame {
             if(JOptionPane.showConfirmDialog(null,
                 "Are you sure you wish to delete "+selectedSong+"?", "Delete "+selectedSong+"?", JOptionPane.YES_NO_OPTION) == 0) {
                 LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
-                currentOrganization.removeSong(selectedSong);
-                pane.removeSong(selectedSong);      
+                currentOrganization.removeSong(selectedSong);      
 
                 try {
 
@@ -501,6 +500,7 @@ public class UserInterface extends javax.swing.JFrame {
                 catch(HibernateException hibernateException) {
                     Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
                 }
+                pane.removeSong(selectedSong);
             }
         }
     }//GEN-LAST:event_deleteSong_buttonActionPerformed
