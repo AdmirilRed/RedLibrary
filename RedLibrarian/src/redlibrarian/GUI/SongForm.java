@@ -70,7 +70,6 @@ public class SongForm extends javax.swing.JDialog {
                     song.setPseudoId(Integer.parseInt(id_field.getText()));
                     song.setTitle(title_field.getText());
                     song.setComposer(composer_field.getText());
-                    song.setLibrary(libraries.get(library_box.getSelectedIndex()));
                 }
                 song.setAvailable(available_checkbox.isSelected());
                 song.setDescription(description_field.getText());
