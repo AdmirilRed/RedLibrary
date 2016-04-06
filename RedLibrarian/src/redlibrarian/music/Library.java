@@ -71,11 +71,13 @@ public class Library implements Serializable {
     
     protected boolean addSong(Song item) {
         boolean result = contents.add(item);
+        item.setLibrary(this);
         Collections.sort(this.contents);
         return result;
     }
     
     protected boolean removeSong(Song target) {
+        target.setLibrary(null);
         return contents.remove(target);
     }
     

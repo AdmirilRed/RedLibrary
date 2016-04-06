@@ -483,24 +483,28 @@ public class UserInterface extends javax.swing.JFrame {
             if(JOptionPane.showConfirmDialog(null,
                 "Are you sure you wish to delete "+selectedSong+"?", "Delete "+selectedSong+"?", JOptionPane.YES_NO_OPTION) == 0) {
                 LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
-                currentOrganization.removeSong(selectedSong);      
+                
+                Song oldSong = selectedSong;
+                Library oldLib = selectedSong.getLibrary();
+                    
+                currentOrganization.removeSong(selectedSong); 
+                pane.removeSong(selectedSong);
 
                 try {
-
+                    
                     Session session = sessionFactory.getCurrentSession();
                     session.beginTransaction();
+                    
+                    session.update(currentOrganization);
+                    session.update(oldLib);
 
-                    session.saveOrUpdate(currentOrganization);
-                    System.out.println("DELETE: Updating "+currentOrganization);
-                    session.delete(selectedSong);
-                    System.out.println("DELETE: Deleting "+selectedSong);
+                    session.delete(oldSong);
 
                     session.getTransaction().commit();
                 }
                 catch(HibernateException hibernateException) {
                     Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
                 }
-                pane.removeSong(selectedSong);
             }
         }
     }//GEN-LAST:event_deleteSong_buttonActionPerformed
@@ -512,38 +516,41 @@ public class UserInterface extends javax.swing.JFrame {
             if(form.wasSaved()) {
                 LibraryPane pane = (LibraryPane) tabbedLibrary_pane.getSelectedComponent();
                 
+                Song oldSong = selectedSong;
+                Library oldLib = selectedSong.getLibrary();
+                    
                 currentOrganization.removeSong(selectedSong);
                 currentOrganization.addSong(form.getSong());
                 
+                if(!oldLib.equals(form.getSong().getLibrary())) {
+                    tabbedLibrary_pane.refresh(form.getSong().getLibrary());
+                    tabbedLibrary_pane.selectSong(form.getSong());
+                    tabbedLibrary_pane.refresh(oldLib);
+                }
+                else
+                    pane.updateSong(oldSong, form.getSong());
+       
                 try {
 
                     Session session = sessionFactory.getCurrentSession();
                     session.beginTransaction();
-
-                    session.delete(selectedSong);
                     
+                    session.delete(oldSong);
+ 
                     session.save(form.getSong());
-                    System.out.println("EDIT: Saving "+form.getSong());
                     
                     session.update(currentOrganization);
+                    session.update(form.getSong().getLibrary());
+                    session.update(oldLib);
 
                     session.getTransaction().commit();
+                    
                 }
                 catch(HibernateException hibernateException) {
                     Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
-                }
+                }      
                 
-                if(!selectedSong.getLibrary().equals(form.getSong().getLibrary())) {
-                    tabbedLibrary_pane.refresh(selectedSong.getLibrary());
-                    tabbedLibrary_pane.refresh(form.getSong().getLibrary());
-                    tabbedLibrary_pane.selectSong(form.getSong());
-                }
-                else
-                  pane.updateSong(selectedSong, form.getSong());  
-                    
-                
-                
-                
+
             }
             form.dispose();
         }

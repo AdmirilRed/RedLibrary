@@ -153,6 +153,10 @@ public class Song implements Comparable, Serializable {
         return this.hashCode()>o.hashCode()?1:this.hashCode()==o.hashCode()?0:-1;
     }
     
+    protected void setLibrary(Library lib) {
+        this.parent = lib;
+    }
+    
     public Library getLibrary() {
         return parent;
     }
