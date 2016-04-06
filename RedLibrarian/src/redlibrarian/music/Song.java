@@ -140,9 +140,9 @@ public class Song implements Comparable, Serializable {
 
     public int compareTo(Song otherSong) {
         if(this.getPseudoId()!=otherSong.getPseudoId())
-            return this.getPseudoId()>otherSong.getPseudoId()?-1:1;
+            return this.getPseudoId()<otherSong.getPseudoId()?-1:1;
         if(this.getUniqueId()!=otherSong.getUniqueId())
-            return this.getUniqueId()>otherSong.getUniqueId()?-1:1;
+            return this.getUniqueId()<otherSong.getUniqueId()?-1:1;
         return 0;
     }
 
