@@ -7,7 +7,6 @@ package redlibrarian.GUI;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import redlibrarian.GUI.textVerification.IntegerVerifier;
@@ -29,6 +28,7 @@ public class SongForm extends javax.swing.JDialog {
     /**
      * Creates new form SongForm
      * @param libraries
+     * @param selected
      * @param parent
      * @param modal
      */
@@ -37,7 +37,7 @@ public class SongForm extends javax.swing.JDialog {
         initComponents();
         this.libraries.addAll(libraries);
         this.selectedLibrary = selected;
-        
+        this.setTitle("Song Editor");
         initializeDropdown(libraries);
     }
     

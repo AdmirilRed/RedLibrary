@@ -207,6 +207,7 @@ public class UserInterface extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem1 = new javax.swing.JMenuItem();
         tabbedRoot_pane = new javax.swing.JTabbedPane();
         details_panel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -237,7 +238,10 @@ public class UserInterface extends javax.swing.JFrame {
         new_menu = new javax.swing.JMenu();
         newSong_menuItem = new javax.swing.JMenuItem();
         newLibrary_menuItem = new javax.swing.JMenuItem();
+        newPerformance_menuItem = new javax.swing.JMenuItem();
         edit_menu = new javax.swing.JMenu();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("RedLibrarian");
@@ -429,6 +433,9 @@ public class UserInterface extends javax.swing.JFrame {
             }
         });
         new_menu.add(newLibrary_menuItem);
+
+        newPerformance_menuItem.setText("Performance");
+        new_menu.add(newPerformance_menuItem);
 
         file_menu.add(new_menu);
 
@@ -683,11 +690,13 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel library_label;
     private javax.swing.JMenuItem newLibrary_menuItem;
+    private javax.swing.JMenuItem newPerformance_menuItem;
     private javax.swing.JMenuItem newSong_menuItem;
     private javax.swing.JMenu new_menu;
     private javax.swing.JTree performances_tree;

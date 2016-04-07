@@ -6,9 +6,10 @@
 package redlibrarian.music;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Collections;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,15 +31,15 @@ public class Performance implements Serializable {
     private long id; 
             
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Calendar date;
+    private Calendar concertDate;
     private String title;
     private String description;
     
     @ManyToMany(cascade= {CascadeType.ALL}, fetch=FetchType.EAGER)
-    private Set<Song> songs = new TreeSet<>();
+    private final List<Song> songs = new ArrayList<>();
     
     public Performance() {
-        this.date = Calendar.getInstance();
+        this.concertDate = Calendar.getInstance();
     }
     
     public Performance(String title, String description) {
@@ -50,7 +51,7 @@ public class Performance implements Serializable {
     public Performance(String title, String description, Calendar date) {
         this.title = title;
         this.description = description;
-        this.date = date;
+        this.concertDate = date;
     }
 
     public long getId() {
@@ -74,7 +75,9 @@ public class Performance implements Serializable {
     }
     
     public boolean addSong(Song item) {
-        return songs.add(item);
+        boolean result = songs.add(item);
+        Collections.sort(songs);
+        return result;
     }
     
     public boolean removeSong(Song target) {
@@ -88,12 +91,12 @@ public class Performance implements Serializable {
         return false;
     }
     
-    public Set<Song> getPlaylist() {
+    public List<Song> getPlaylist() {
         return songs;
     }
     
     @Override
     public String toString() {
-        return String.format("%s %tF", title, date);
+        return String.format("%s %tF", title, concertDate);
     }
 }
