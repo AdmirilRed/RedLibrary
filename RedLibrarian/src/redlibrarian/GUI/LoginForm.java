@@ -36,7 +36,7 @@ public class LoginForm extends javax.swing.JDialog {
     public LoginForm(java.awt.Frame parent, boolean modal, SessionFactory sessionFactory) {
         super(parent, modal);
         initComponents();
-        
+        this.setTitle("Login Prompt");
         loginStatus_label.setVisible(false);
         this.sessionFactory = sessionFactory;
     }

@@ -435,6 +435,11 @@ public class UserInterface extends javax.swing.JFrame {
         new_menu.add(newLibrary_menuItem);
 
         newPerformance_menuItem.setText("Performance");
+        newPerformance_menuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newPerformance_menuItemActionPerformed(evt);
+            }
+        });
         new_menu.add(newPerformance_menuItem);
 
         file_menu.add(new_menu);
@@ -637,6 +642,13 @@ public class UserInterface extends javax.swing.JFrame {
             ((LibraryPane) tabbedLibrary_pane.getSelectedComponent()).selectSong(song);
         }
     }//GEN-LAST:event_performances_treeValueChanged
+
+    private void newPerformance_menuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPerformance_menuItemActionPerformed
+        if(admin) {
+            PerformanceForm form = new PerformanceForm(this, true);
+            form.setVisible(true);
+        }
+    }//GEN-LAST:event_newPerformance_menuItemActionPerformed
 
     /**
      * @param args the command line arguments
