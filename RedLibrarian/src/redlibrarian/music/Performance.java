@@ -65,6 +65,14 @@ public class Performance implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
+    
+    public Calendar getDate() {
+        return concertDate;
+    }
+    
+    public void setDate(Calendar newDate) {
+        this.concertDate = newDate;
+    }
 
     public String getDescription() {
         return description;

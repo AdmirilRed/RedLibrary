@@ -647,6 +647,9 @@ public class UserInterface extends javax.swing.JFrame {
         if(admin) {
             PerformanceForm form = new PerformanceForm(this, true);
             form.setVisible(true);
+            if(form.wasSaved()) {
+                Performance perf = form.getPerformance();
+            }
         }
     }//GEN-LAST:event_newPerformance_menuItemActionPerformed
 

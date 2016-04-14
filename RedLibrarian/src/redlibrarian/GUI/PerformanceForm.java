@@ -5,12 +5,15 @@
  */
 package redlibrarian.GUI;
 
-import java.awt.Container;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Properties;
+import org.jdatepicker.DateModel;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 import redlibrarian.GUI.textVerification.DateLabelFormatter;
+import redlibrarian.music.Performance;
 
 /**
  *
@@ -18,8 +21,10 @@ import redlibrarian.GUI.textVerification.DateLabelFormatter;
  */
 public class PerformanceForm extends javax.swing.JDialog {
 
+    private boolean saved;
     
-    JDatePickerImpl datePicker;
+    private JDatePickerImpl datePicker;
+    private Performance performance;
     
     /**
      * Creates new form PerformanceForm
@@ -31,6 +36,12 @@ public class PerformanceForm extends javax.swing.JDialog {
         initComponents();
         
         loadDatePicker();
+    }
+    
+    public PerformanceForm(Performance perf, java.awt.Frame parent, boolean modal) {
+        this(parent, modal);
+        Calendar date = perf.getDate();
+        setDatePicker(date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), date.get(Calendar.YEAR));
     }
     
     private void loadDatePicker() {
@@ -47,12 +58,28 @@ public class PerformanceForm extends javax.swing.JDialog {
         datePicker.setVisible(true);
     }
     
-    private void loadDatePicker(int month, int day, int year) {
-        loadDatePicker();
+    private void setDatePicker(int month, int day, int year) {
         datePicker.getModel().setYear(year);
         datePicker.getModel().setMonth(month);
         datePicker.getModel().setDay(day);
         datePicker.getModel().setSelected(true);         
+    }
+    
+    public String getDate() {
+        return String.format("%tF",this.getCal());
+    }
+    
+    public Calendar getCal() {
+        DateModel model = datePicker.getModel();
+        return new GregorianCalendar(model.getYear(),model.getMonth(),model.getDay());
+    }
+    
+    public boolean wasSaved() {
+        return saved;
+    }
+    
+    public Performance getPerformance() {
+        return performance;
     }
 
     /**
@@ -99,6 +126,11 @@ public class PerformanceForm extends javax.swing.JDialog {
         jScrollPane1.setViewportView(jList1);
 
         save_button.setText("Save");
+        save_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                save_buttonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -157,6 +189,11 @@ public class PerformanceForm extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void save_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_buttonActionPerformed
+        saved = true;
+        this.setVisible(false);
+    }//GEN-LAST:event_save_buttonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -185,17 +222,15 @@ public class PerformanceForm extends javax.swing.JDialog {
         //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                PerformanceForm dialog = new PerformanceForm(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            PerformanceForm dialog = new PerformanceForm(new javax.swing.JFrame(), true);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
         });
     }
 

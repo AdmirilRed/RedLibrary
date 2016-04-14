@@ -73,6 +73,9 @@ public class SearchResults extends javax.swing.JFrame {
     
     private boolean applyQuery(Song song) {
         
+        if(query.equals("*"))
+            return true;
+        
         if(song.getTitle().toLowerCase().contains(query) || song.getComposer().toLowerCase().contains(query))
             return true;
         
