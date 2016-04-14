@@ -127,7 +127,7 @@ public class UserInterface extends javax.swing.JFrame {
     
     private void loadLibraries() {
         System.out.println("loadLibraries()");
-        tabbedLibrary_pane = new TabbedLibraryPane(currentOrganization);
+        tabbedLibrary_pane = new TabbedLibraryPane(currentOrganization, this);
         tabbedRoot_pane.add("Libraries", tabbedLibrary_pane);
     }
     
@@ -184,9 +184,14 @@ public class UserInterface extends javax.swing.JFrame {
     }    
     
     private void search() {
-        SearchResults pane = new SearchResults(search_field.getText() , currentOrganization);
-        pane.load();
-        pane.setVisible(true);
+        
+        for(int x=0;x<tabbedRoot_pane.getTabCount();x++)
+            if(tabbedRoot_pane.getTitleAt(x).equals("Search Results"))
+                tabbedRoot_pane.remove(x);
+        
+        Search s = new Search(search_field.getText(), currentOrganization);
+        tabbedRoot_pane.add(new LibraryPane(s.getSongResults(), this), "Search Results");
+        
     }
     
     private void processKeyPress(KeyEvent evt) {
@@ -574,7 +579,7 @@ public class UserInterface extends javax.swing.JFrame {
             form.setVisible(true);
             if(form.wasSaved()) {
                 Library lib = form.getLibrary();
-                tabbedLibrary_pane.addLibrary(lib, new LibraryPane(lib));
+                tabbedLibrary_pane.addLibrary(lib, new LibraryPane(lib, this));
                 currentOrganization.addLibrary(lib);
                 try {
                     Session session = sessionFactory.getCurrentSession();

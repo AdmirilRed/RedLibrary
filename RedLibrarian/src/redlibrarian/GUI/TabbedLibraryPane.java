@@ -18,25 +18,27 @@ import redlibrarian.music.Song;
  */
 public class TabbedLibraryPane extends JTabbedPane {
     
+    UserInterface updateTarget;
     ArrayList<Library> tabs = new ArrayList<>();
     Organization organization;
     
-    public TabbedLibraryPane(Organization org) {
+    public TabbedLibraryPane(Organization org, UserInterface target) {
         super();
         this.organization = org;
         for (Library lib : org.getLibraries()) {
-            LibraryPane pane = new LibraryPane(lib);
+            LibraryPane pane = new LibraryPane(lib, updateTarget);
             this.addLibrary(lib, pane);
         }
-        
+        this.updateTarget = target;        
     }
     
-    public TabbedLibraryPane(List<Library> libraries) {
+    public TabbedLibraryPane(List<Library> libraries, UserInterface target) {
         super();
         for (Library lib : libraries) {
-            LibraryPane pane = new LibraryPane(lib);
+            LibraryPane pane = new LibraryPane(lib, updateTarget);
             this.addLibrary(lib, pane);
         }
+        this.updateTarget = target;
     }
     
     public void addLibrary(Library lib, LibraryPane pane) {
