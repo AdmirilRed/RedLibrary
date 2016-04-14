@@ -25,20 +25,20 @@ public class TabbedLibraryPane extends JTabbedPane {
     public TabbedLibraryPane(Organization org, UserInterface target) {
         super();
         this.organization = org;
+        this.updateTarget = target; 
         for (Library lib : org.getLibraries()) {
             LibraryPane pane = new LibraryPane(lib, updateTarget);
             this.addLibrary(lib, pane);
-        }
-        this.updateTarget = target;        
+        }       
     }
     
     public TabbedLibraryPane(List<Library> libraries, UserInterface target) {
         super();
+        this.updateTarget = target;
         for (Library lib : libraries) {
             LibraryPane pane = new LibraryPane(lib, updateTarget);
             this.addLibrary(lib, pane);
         }
-        this.updateTarget = target;
     }
     
     public void addLibrary(Library lib, LibraryPane pane) {
