@@ -22,20 +22,50 @@ import redlibrarian.music.Song;
  */
 public class LibraryPane extends javax.swing.JPanel {
 
-    /**
-     * Creates new form LibraryPane
-     */
+    private UserInterface updateTarget;
+    
     public LibraryPane() {
         initComponents();
     }
+    
+    public LibraryPane(UserInterface target) {
+        this();
+        this.updateTarget = target;
+    }
 
     public LibraryPane(Library lib) {
-        
         this();
         
         LibraryTableModel model = (LibraryTableModel) table.getModel();
         
         for(Song song : lib.getContents())
+            model.addRow(song);
+    }
+    
+    public LibraryPane(Library lib, UserInterface target) {
+        this(target);
+        
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        
+        for(Song song : lib.getContents())
+            model.addRow(song);
+    }
+    
+    public LibraryPane(ArrayList<Song> songs) {
+        this();
+        
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        
+        for(Song song:songs)
+            model.addRow(song);
+    }
+    
+    public LibraryPane(ArrayList<Song> songs, UserInterface target) {
+        this(target);
+        
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        
+        for(Song song:songs)
             model.addRow(song);
     }
     
@@ -72,6 +102,12 @@ public class LibraryPane extends javax.swing.JPanel {
             this.superUpdate(model.selectRow(row, true));
     }
     
+    public void selectSong(int index) {
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        model.selectRow(index);
+        this.superUpdate(model.getRow(index));
+    }
+    
     public void selectSong(Song song) {
         LibraryTableModel model = (LibraryTableModel) table.getModel();
         model.selectRow(model.getSongRow(song));
@@ -87,16 +123,8 @@ public class LibraryPane extends javax.swing.JPanel {
     }
     
     private void superUpdate(Song song) {
-        try{
-            Object superParent = this.getParent().getParent().getParent().getParent().getParent().getParent();
-            if(superParent.getClass().toString().equals(UserInterface.class.toString())) {
-                UserInterface userInterface = (UserInterface) superParent;
-                userInterface.updateSelection(song);
-            }
-        }    
-        catch(Exception ex) {
-            
-        }
+        if(updateTarget != null)
+            updateTarget.updateSelection(song);
     }
 
     /**
