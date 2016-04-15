@@ -184,14 +184,19 @@ public class UserInterface extends javax.swing.JFrame {
     }    
     
     private void search() {
-        
+        search_button.setEnabled(false);
         for(int x=0;x<tabbedRoot_pane.getTabCount();x++)
             if(tabbedRoot_pane.getTitleAt(x).equals("Search Results"))
                 tabbedRoot_pane.remove(x);
         
         Search s = new Search(search_field.getText(), currentOrganization);
-        tabbedRoot_pane.add(new LibraryPane(s.getSongResults(), this), "Search Results");
+        LibraryPane panel = new LibraryPane(s.getSongResults(), this);
+        tabbedRoot_pane.add(panel, "Search Results");
+        tabbedRoot_pane.setSelectedComponent(panel);
         
+        if(details_panel.isVisible())
+            panel.selectSong(0);
+        search_button.setEnabled(true);
     }
     
     private void processKeyPress(KeyEvent evt) {
