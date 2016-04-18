@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package redlibrarian.GUI;
+package utility;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import redlibrarian.music.Library;
 import redlibrarian.music.Organization;
 import redlibrarian.music.Song;
@@ -46,6 +47,7 @@ public class Search {
                     results.add(song);
             }
         }
+        Collections.sort(results);
         return results;
     }
     

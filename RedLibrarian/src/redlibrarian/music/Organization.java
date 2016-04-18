@@ -7,6 +7,8 @@ package redlibrarian.music;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -70,6 +72,15 @@ public class Organization implements Serializable {
     
     public String getName() {
         return name;
+    }
+    
+    public List<Song> getAllSongs() {
+        ArrayList<Song> songs = new ArrayList<>();
+        for(Library lib:libraries)
+            for(Song song:lib.getContents())
+                songs.add(song);
+        Collections.sort(songs);
+        return songs;
     }
     
     public boolean addPerformance(Performance item) {

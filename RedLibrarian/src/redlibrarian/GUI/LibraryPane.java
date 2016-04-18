@@ -114,6 +114,11 @@ public class LibraryPane extends javax.swing.JPanel {
         this.superUpdate(song);
     }
     
+    public Song getSelectedSong() {
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        return model.getSelectedRow();
+    }
+    
     @Override
     public void removeAll() {
         LibraryTableModel model = (LibraryTableModel) table.getModel();
@@ -307,6 +312,10 @@ public class LibraryPane extends javax.swing.JPanel {
             this.setRowColor(selectedRow, this.determineColor(selectedSong, true));
             lastSelectedRow = selectedRow;
             return selectedSong;
+        }
+        
+        public Song getSelectedRow() {
+            return this.getRow(lastSelectedRow);
         }
     }
 } 

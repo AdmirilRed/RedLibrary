@@ -5,6 +5,7 @@
  */
 package redlibrarian.GUI;
 
+import utility.Search;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -655,7 +656,7 @@ public class UserInterface extends javax.swing.JFrame {
 
     private void newPerformance_menuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPerformance_menuItemActionPerformed
         if(admin) {
-            PerformanceForm form = new PerformanceForm(this, true);
+            PerformanceForm form = new PerformanceForm(currentOrganization, this, true);
             form.setVisible(true);
             if(form.wasSaved()) {
                 Performance perf = form.getPerformance();

@@ -13,6 +13,7 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 import redlibrarian.GUI.textVerification.DateLabelFormatter;
+import redlibrarian.music.Organization;
 import redlibrarian.music.Performance;
 
 /**
@@ -25,21 +26,23 @@ public class PerformanceForm extends javax.swing.JDialog {
     
     private JDatePickerImpl datePicker;
     private Performance performance;
+    private Organization organization;
     
     /**
      * Creates new form PerformanceForm
+     * @param org
      * @param parent
      * @param modal
      */
-    public PerformanceForm(java.awt.Frame parent, boolean modal) {
+    public PerformanceForm(Organization org, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
+        this.organization = org;
         loadDatePicker();
     }
     
-    public PerformanceForm(Performance perf, java.awt.Frame parent, boolean modal) {
-        this(parent, modal);
+    public PerformanceForm(Organization org, Performance perf, java.awt.Frame parent, boolean modal) {
+        this(org, parent, modal);
         Calendar date = perf.getDate();
         setDatePicker(date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), date.get(Calendar.YEAR));
     }
@@ -98,11 +101,12 @@ public class PerformanceForm extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jButton2 = new javax.swing.JButton();
+        addSong_button = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        song_list = new javax.swing.JList<>();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         save_button = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -116,14 +120,19 @@ public class PerformanceForm extends javax.swing.JDialog {
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
 
-        jButton2.setText("Add Song");
+        addSong_button.setText("Add Song");
+        addSong_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSong_buttonActionPerformed(evt);
+            }
+        });
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        song_list.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = {};
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(song_list);
 
         save_button.setText("Save");
         save_button.addActionListener(new java.awt.event.ActionListener() {
@@ -131,6 +140,8 @@ public class PerformanceForm extends javax.swing.JDialog {
                 save_buttonActionPerformed(evt);
             }
         });
+
+        jButton1.setText("Remove Song");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -154,7 +165,9 @@ public class PerformanceForm extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2))
+                        .addComponent(addSong_button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(save_button)))
@@ -174,16 +187,17 @@ public class PerformanceForm extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jButton2))
+                    .addComponent(addSong_button)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(save_button)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -193,6 +207,15 @@ public class PerformanceForm extends javax.swing.JDialog {
         saved = true;
         this.setVisible(false);
     }//GEN-LAST:event_save_buttonActionPerformed
+
+    private void addSong_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSong_buttonActionPerformed
+        SongSelectForm form = new SongSelectForm(this.organization, (UserInterface)(this.getParent()), true);
+        form.setVisible(true);
+        if(form.wasSaved()) {
+            //ADD SELECTED SONG TO LIST
+        }
+        
+    }//GEN-LAST:event_addSong_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -223,7 +246,7 @@ public class PerformanceForm extends javax.swing.JDialog {
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(() -> {
-            PerformanceForm dialog = new PerformanceForm(new javax.swing.JFrame(), true);
+            PerformanceForm dialog = new PerformanceForm(null, new javax.swing.JFrame(), true);
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
@@ -235,11 +258,11 @@ public class PerformanceForm extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton addSong_button;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
@@ -247,5 +270,6 @@ public class PerformanceForm extends javax.swing.JDialog {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JButton save_button;
+    private javax.swing.JList<String> song_list;
     // End of variables declaration//GEN-END:variables
 }
