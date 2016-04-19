@@ -61,6 +61,11 @@ public class SongSelectForm extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         select_button.setText("Select");
+        select_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                select_buttonActionPerformed(evt);
+            }
+        });
 
         search_button.setText("Search");
         search_button.addActionListener(new java.awt.event.ActionListener() {
@@ -115,6 +120,11 @@ public class SongSelectForm extends javax.swing.JDialog {
         this.pane = new LibraryPane(search.getSongResults());
         tabbedRoot_pane.add(pane, "Songs");        
     }//GEN-LAST:event_search_buttonActionPerformed
+
+    private void select_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_select_buttonActionPerformed
+        saved = true;
+        this.setVisible(false);
+    }//GEN-LAST:event_select_buttonActionPerformed
 
     /**
      * @param args the command line arguments

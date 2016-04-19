@@ -69,6 +69,11 @@ public class LibraryPane extends javax.swing.JPanel {
             model.addRow(song);
     }
     
+    public void addSong(Song song) {
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        model.addRow(song);
+    }
+    
     public void addSongs(Library lib) {
         LibraryTableModel model = (LibraryTableModel) table.getModel();
         for(Song s:lib.getContents())
@@ -130,6 +135,10 @@ public class LibraryPane extends javax.swing.JPanel {
     private void superUpdate(Song song) {
         if(updateTarget != null)
             updateTarget.updateSelection(song);
+    }
+    
+    public LibraryTableModel getModel() {
+        return (LibraryTableModel) table.getModel();
     }
 
     /**
