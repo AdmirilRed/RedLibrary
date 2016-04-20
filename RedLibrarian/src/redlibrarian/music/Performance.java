@@ -49,9 +49,14 @@ public class Performance implements Serializable {
     }
         
     public Performance(String title, String description, Calendar date) {
-        this.title = title;
-        this.description = description;
+        this(title, description);
         this.concertDate = date;
+    }
+    
+    public Performance(String title, String description, Calendar date, List<Song> songs) {
+        this(title, description, date);
+        for(Song song:songs)
+            this.addSong(song);
     }
 
     public long getId() {

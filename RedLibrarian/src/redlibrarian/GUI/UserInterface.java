@@ -5,7 +5,6 @@
  */
 package redlibrarian.GUI;
 
-import utility.Search;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -26,6 +25,7 @@ import redlibrarian.music.Library;
 import redlibrarian.music.Organization;
 import redlibrarian.music.Performance;
 import redlibrarian.music.Song;
+import utility.Search;
 
 /**
  *

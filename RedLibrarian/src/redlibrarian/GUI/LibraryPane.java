@@ -124,6 +124,11 @@ public class LibraryPane extends javax.swing.JPanel {
         return model.getSelectedRow();
     }
     
+    public int getRowCount() {
+        LibraryTableModel model = (LibraryTableModel) table.getModel();
+        return model.getRowCount();
+    }
+    
     @Override
     public void removeAll() {
         LibraryTableModel model = (LibraryTableModel) table.getModel();
@@ -135,10 +140,6 @@ public class LibraryPane extends javax.swing.JPanel {
     private void superUpdate(Song song) {
         if(updateTarget != null)
             updateTarget.updateSelection(song);
-    }
-    
-    public LibraryTableModel getModel() {
-        return (LibraryTableModel) table.getModel();
     }
 
     /**

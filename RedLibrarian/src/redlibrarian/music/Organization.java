@@ -7,7 +7,6 @@ package redlibrarian.music;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -135,6 +134,10 @@ public class Organization implements Serializable {
     
     public boolean verifyPassword(String password) {
         this.verifiedAdmin = Password.isExpectedPassword(password.toCharArray(), salt, passwordHash);
+        return verifiedAdmin;
+    }
+    
+    public boolean isAdmin() {
         return verifiedAdmin;
     }
     
