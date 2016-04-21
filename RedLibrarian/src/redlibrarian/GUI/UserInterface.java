@@ -592,9 +592,7 @@ public class UserInterface extends javax.swing.JFrame {
                     session.beginTransaction();
 
                     session.save(lib);
-                    System.out.println("NEW LIBRARY: Saving "+lib);
                     session.saveOrUpdate(currentOrganization);
-                    System.out.println("NEW LIBRARY: Updating "+lib);
 
                     session.getTransaction().commit();
                 }
@@ -619,9 +617,7 @@ public class UserInterface extends javax.swing.JFrame {
                     session.beginTransaction();
 
                     session.save(song);
-                    System.out.println("NEW SONG: Saving "+song);
-                    session.saveOrUpdate(currentOrganization);
-                    System.out.println("NEW SONG: Updating "+currentOrganization);
+                    session.update(currentOrganization);
 
                     session.getTransaction().commit();
                 }
@@ -647,7 +643,10 @@ public class UserInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_search_buttonKeyPressed
 
     private void performances_treeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_performances_treeValueChanged
-        if(performances_tree.getLastSelectedPathComponent().getClass().toString().equals(PerformanceTreeNode.class.toString())) {
+        
+        if(performances_tree.getLastSelectedPathComponent()!= null && 
+                performances_tree.getLastSelectedPathComponent().getClass().toString().equals(PerformanceTreeNode.class.toString())) {
+            
             Song song = (Song) ((PerformanceTreeNode) performances_tree.getLastSelectedPathComponent()).getSong();
             tabbedLibrary_pane.setSelectedIndex(tabbedLibrary_pane.getIndex(song.getLibrary()));
             ((LibraryPane) tabbedLibrary_pane.getSelectedComponent()).selectSong(song);
@@ -660,6 +659,20 @@ public class UserInterface extends javax.swing.JFrame {
             form.setVisible(true);
             if(form.wasSaved()) {
                 Performance perf = form.getPerformance();
+                currentOrganization.addPerformance(perf);
+                
+                try {
+                    Session session = sessionFactory.getCurrentSession();
+                    session.beginTransaction();
+                    
+                    session.save(perf);
+                    session.update(currentOrganization);
+                    
+                    session.getTransaction().commit();
+                }
+                catch(HibernateException hibernateException) {
+                    Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+                }
             }
         }
     }//GEN-LAST:event_newPerformance_menuItemActionPerformed
