@@ -41,6 +41,7 @@ public class UserInterface extends javax.swing.JFrame {
     private boolean admin;
     
     private Song selectedSong;
+    private Performance selectedPerformance;
     
     private Ini ini;
     private URL iniURL;
@@ -89,6 +90,7 @@ public class UserInterface extends javax.swing.JFrame {
         currentOrganization = this.login(true);
         deleteSong_button.setEnabled(admin);
         editSong_button.setEnabled(admin);
+        editPerformance_button.setEnabled(false);
         new_menu.setEnabled(admin);  
                 
         this.setTitle("RedLibrarian - "+currentOrganization.getName()+" "+(admin?"(ADMIN)":"(GUEST)"));
@@ -142,10 +144,10 @@ public class UserInterface extends javax.swing.JFrame {
         
         for(Performance perf:currentOrganization.getPerformances()) {
             if(perf.getPlaylist().contains(song)) {
-                DefaultMutableTreeNode parentNode = new DefaultMutableTreeNode(perf);
+                PerformanceTreeNode parentNode = new PerformanceTreeNode(perf);
                 rootNode.add(parentNode);
                 for(Song s:perf.getPlaylist()) {
-                    PerformanceTreeNode childNode = new PerformanceTreeNode(s);
+                    SongTreeNode childNode = new SongTreeNode(s);
                     parentNode.add(childNode);
                 }
             }
@@ -242,6 +244,7 @@ public class UserInterface extends javax.swing.JFrame {
         deleteSong_button = new javax.swing.JButton();
         editSong_button = new javax.swing.JButton();
         uid_label = new javax.swing.JLabel();
+        editPerformance_button = new javax.swing.JButton();
         search_button = new javax.swing.JButton();
         search_field = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -320,6 +323,8 @@ public class UserInterface extends javax.swing.JFrame {
 
         uid_label.setText("(Unique ID: )");
 
+        editPerformance_button.setText("Edit Performance");
+
         javax.swing.GroupLayout details_panelLayout = new javax.swing.GroupLayout(details_panel);
         details_panel.setLayout(details_panelLayout);
         details_panelLayout.setHorizontalGroup(
@@ -350,7 +355,6 @@ public class UserInterface extends javax.swing.JFrame {
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(library_label))
-                            .addComponent(jLabel2)
                             .addGroup(details_panelLayout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -360,8 +364,10 @@ public class UserInterface extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(id_label)
                                 .addGap(18, 18, 18)
-                                .addComponent(uid_label)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(uid_label))
+                            .addComponent(jLabel2))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(editPerformance_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         details_panelLayout.setVerticalGroup(
@@ -395,11 +401,13 @@ public class UserInterface extends javax.swing.JFrame {
                     .addComponent(jLabel7)
                     .addComponent(date_label))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editPerformance_button)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editSong_button)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -626,7 +634,7 @@ public class UserInterface extends javax.swing.JFrame {
                 }
 
                 tabbedLibrary_pane.refresh(song.getLibrary());
-        }
+            }
         }
     }//GEN-LAST:event_newSong_menuItemActionPerformed
 
@@ -644,13 +652,27 @@ public class UserInterface extends javax.swing.JFrame {
 
     private void performances_treeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_performances_treeValueChanged
         
-        if(performances_tree.getLastSelectedPathComponent()!= null && 
-                performances_tree.getLastSelectedPathComponent().getClass().toString().equals(PerformanceTreeNode.class.toString())) {
+        Object obj = performances_tree.getLastSelectedPathComponent();
+        
+        if(obj != null) {
             
-            Song song = (Song) ((PerformanceTreeNode) performances_tree.getLastSelectedPathComponent()).getSong();
-            tabbedLibrary_pane.setSelectedIndex(tabbedLibrary_pane.getIndex(song.getLibrary()));
-            ((LibraryPane) tabbedLibrary_pane.getSelectedComponent()).selectSong(song);
-        }
+            if(obj.getClass().toString().equals(SongTreeNode.class.toString())) {
+            
+                Song song = (Song) ((SongTreeNode) obj).getSong();
+                tabbedLibrary_pane.setSelectedIndex(tabbedLibrary_pane.getIndex(song.getLibrary()));
+                ((LibraryPane) tabbedLibrary_pane.getSelectedComponent()).selectSong(song);
+            }
+            if(obj.getClass().toString().equals(PerformanceTreeNode.class.toString())) {
+                
+                Performance perf =  (Performance) ((PerformanceTreeNode) obj).getPerformance();
+                this.selectedPerformance = perf;
+                
+                editPerformance_button.setEnabled(true && admin);
+            }
+            else
+                editPerformance_button.setEnabled(false);
+        } 
+                
     }//GEN-LAST:event_performances_treeValueChanged
 
     private void newPerformance_menuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPerformance_menuItemActionPerformed
@@ -716,6 +738,7 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JButton deleteSong_button;
     private javax.swing.JTextArea description_textArea;
     private javax.swing.JPanel details_panel;
+    private javax.swing.JButton editPerformance_button;
     private javax.swing.JButton editSong_button;
     private javax.swing.JMenu edit_menu;
     private javax.swing.JMenu file_menu;

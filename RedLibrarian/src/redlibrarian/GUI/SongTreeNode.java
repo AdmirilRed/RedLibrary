@@ -6,23 +6,23 @@
 package redlibrarian.GUI;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import redlibrarian.music.Performance;
+import redlibrarian.music.Song;
 
 /**
  *
  * @author admir
  */
-public class PerformanceTreeNode extends DefaultMutableTreeNode {
+public class SongTreeNode extends DefaultMutableTreeNode {
 
-    Performance performance;
+    Song song;
     
-    public PerformanceTreeNode(Performance perf) {
-        super(perf);
-        this.performance = perf;
+    public SongTreeNode(Song song) {
+        super(song);
+        this.song = song;
     }
     
-    public Performance getPerformance() {
-        return performance;
+    public Song getSong() {
+        return song;
     } 
     
     
