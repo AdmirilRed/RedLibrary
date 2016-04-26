@@ -93,7 +93,7 @@ public class Organization implements Serializable {
     public boolean removePeformance(long targetId) {
         for(Performance perf:performances)
             if(perf.getId()==targetId)
-                return performances.remove(perf);
+                return removePerformance(perf);
         return false;        
     }
     
@@ -117,14 +117,14 @@ public class Organization implements Serializable {
         return libraries.add(item);
     }
     
-    public boolean removeLibrary(Library target) {
+    public boolean removeLibrary(Library target) {        
         return libraries.remove(target);
     }
     
     public boolean removeLibrary(long targetId) {
         for(Library lib:libraries)
             if(lib.getId()==targetId)
-                return libraries.remove(lib);
+                return removeLibrary(lib);
         return false;        
     }
     

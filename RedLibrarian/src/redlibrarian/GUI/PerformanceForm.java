@@ -51,8 +51,18 @@ public class PerformanceForm extends javax.swing.JDialog {
     
     public PerformanceForm(Organization org, Performance perf, java.awt.Frame parent, boolean modal) {
         this(org, parent, modal);
+        this.performance = perf;
         Calendar date = perf.getDate();
         setDatePicker(date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), date.get(Calendar.YEAR));
+        
+        title_field.setText(perf.getTitle());
+        description_textArea.setText(perf.getDescription());
+        
+        LibraryPane pane = (LibraryPane) tabbedSong_pane.getComponentAt(0);
+        for(Song song:perf.getPlaylist()) {
+            pane.addSong(song);
+            songs.add(song);
+        }
     }
     
     private void loadDatePicker() {
@@ -87,7 +97,14 @@ public class PerformanceForm extends javax.swing.JDialog {
     
     private boolean save() {
         try {
-            performance = new Performance(title_field.getText(), description_textArea.getText(), this.getCal(), this.songs);
+            if(performance != null) {
+                performance.setTitle(title_field.getText());
+                performance.setDate(this.getCal());
+                performance.setDescription(description_textArea.getText());
+                performance.setSongs(songs);
+            }
+            else
+                performance = new Performance(title_field.getText(), description_textArea.getText(), this.getCal(), this.songs);
             return true;
         }
         catch(Exception e) {

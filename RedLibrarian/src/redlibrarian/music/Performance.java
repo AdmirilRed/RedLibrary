@@ -35,8 +35,8 @@ public class Performance implements Serializable {
     private String title;
     private String description;
     
-    @ManyToMany(cascade= {CascadeType.ALL}, fetch=FetchType.EAGER)
-    private final List<Song> songs = new ArrayList<>();
+    @ManyToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
+    private List<Song> songs = new ArrayList<>();
     
     public Performance() {
         this.concertDate = Calendar.getInstance();
@@ -87,6 +87,10 @@ public class Performance implements Serializable {
         this.description = description;
     }
     
+    public void setSongs(List<Song> songs) {
+        this.songs = songs;
+    }
+    
     public boolean addSong(Song item) {
         boolean result = songs.add(item);
         Collections.sort(songs);
@@ -111,5 +115,10 @@ public class Performance implements Serializable {
     @Override
     public String toString() {
         return String.format("%s %tF", title, concertDate);
+    }
+
+    public void removeAllSongs() {
+        for(int i=0;i<songs.size();i++)
+            songs.remove(i);
     }
 }

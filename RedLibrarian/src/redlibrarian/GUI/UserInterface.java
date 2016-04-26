@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -324,6 +325,11 @@ public class UserInterface extends javax.swing.JFrame {
         uid_label.setText("(Unique ID: )");
 
         editPerformance_button.setText("Edit Performance");
+        editPerformance_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editPerformance_buttonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout details_panelLayout = new javax.swing.GroupLayout(details_panel);
         details_panel.setLayout(details_panelLayout);
@@ -698,6 +704,30 @@ public class UserInterface extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_newPerformance_menuItemActionPerformed
+
+    private void editPerformance_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPerformance_buttonActionPerformed
+        if(admin) {
+            PerformanceForm form = new PerformanceForm(currentOrganization, selectedPerformance, this, true);
+            form.setVisible(true);
+            if(form.wasSaved()) {
+               
+                Performance perf = form.getPerformance();
+                                 
+                try {
+                    Session session = sessionFactory.getCurrentSession();
+                    session.beginTransaction();
+                    
+                    session.update(perf);
+                    
+                    session.getTransaction().commit();
+                }
+                catch(HibernateException hibernateException) {
+                    Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+                }
+                loadPerformances(selectedSong);
+            }
+        }
+    }//GEN-LAST:event_editPerformance_buttonActionPerformed
 
     /**
      * @param args the command line arguments
