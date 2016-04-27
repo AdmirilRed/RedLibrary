@@ -241,7 +241,7 @@ public class PerformanceForm extends javax.swing.JDialog {
         if(admin) {
             SongSelectForm form = new SongSelectForm(this.organization, (UserInterface)(this.getParent()), true);
             form.setVisible(true);
-            if(form.wasSaved()) {
+            if(form.wasSaved() && !songs.contains(form.getSong())) {
                 LibraryPane pane = (LibraryPane) tabbedSong_pane.getComponentAt(0);
                 pane.addSong(form.getSong());
                 songs.add(form.getSong());
