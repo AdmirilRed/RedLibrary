@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -142,16 +145,22 @@ public class UserInterface extends javax.swing.JFrame {
         DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) model.getRoot();
         rootNode.removeAllChildren();
         
+        TreeSet<PerformanceTreeNode> nodeList = new TreeSet<>();
+        
         for(Performance perf:currentOrganization.getPerformances()) {
             if(perf.getPlaylist().contains(song)) {
                 PerformanceTreeNode parentNode = new PerformanceTreeNode(perf);
-                rootNode.add(parentNode);
+                nodeList.add(parentNode);
                 for(Song s:perf.getPlaylist()) {
                     SongTreeNode childNode = new SongTreeNode(s);
                     parentNode.add(childNode);
                 }
             }
         }
+        
+        for(PerformanceTreeNode node:nodeList)
+            rootNode.add(node);
+        
         performances_tree.repaint();
         model.reload();
     }

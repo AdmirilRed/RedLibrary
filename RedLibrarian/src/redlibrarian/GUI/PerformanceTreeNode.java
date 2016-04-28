@@ -12,7 +12,7 @@ import redlibrarian.music.Performance;
  *
  * @author admir
  */
-public class PerformanceTreeNode extends DefaultMutableTreeNode {
+public class PerformanceTreeNode extends DefaultMutableTreeNode implements Comparable {
 
     Performance performance;
     
@@ -24,6 +24,18 @@ public class PerformanceTreeNode extends DefaultMutableTreeNode {
     public Performance getPerformance() {
         return performance;
     } 
+
+    @Override
+    public int compareTo(Object o) {
+        if(o.getClass().toString().equals(this.getClass().toString())) {
+            PerformanceTreeNode otherNode = (PerformanceTreeNode) o;
+            return otherNode.getPerformance().getDate().compareTo(this.performance.getDate());
+        }
+            
+        return this.hashCode()>o.hashCode()?1:this.hashCode()==o.hashCode()?0:-1;
+    }
+   
+    
     
     
 }
