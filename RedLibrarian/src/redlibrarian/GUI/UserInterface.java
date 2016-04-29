@@ -268,6 +268,7 @@ public class UserInterface extends javax.swing.JFrame {
         editSong_button = new javax.swing.JButton();
         uid_label = new javax.swing.JLabel();
         editPerformance_button = new javax.swing.JButton();
+        editLibrary_button = new javax.swing.JButton();
         search_button = new javax.swing.JButton();
         search_field = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -357,6 +358,13 @@ public class UserInterface extends javax.swing.JFrame {
             }
         });
 
+        editLibrary_button.setText("Edit Library");
+        editLibrary_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editLibrary_buttonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout details_panelLayout = new javax.swing.GroupLayout(details_panel);
         details_panel.setLayout(details_panelLayout);
         details_panelLayout.setHorizontalGroup(
@@ -384,10 +392,6 @@ public class UserInterface extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(composer_label))
                             .addGroup(details_panelLayout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(library_label))
-                            .addGroup(details_panelLayout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(date_label))
@@ -399,7 +403,13 @@ public class UserInterface extends javax.swing.JFrame {
                                 .addComponent(uid_label))
                             .addComponent(jLabel2))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(editPerformance_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(editPerformance_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(details_panelLayout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(library_label)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(editLibrary_button)))
                 .addContainerGap())
         );
         details_panelLayout.setVerticalGroup(
@@ -427,13 +437,14 @@ public class UserInterface extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(library_label)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(editLibrary_button))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(details_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(date_label))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editPerformance_button)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -667,6 +678,7 @@ public class UserInterface extends javax.swing.JFrame {
 
                 tabbedLibrary_pane.refresh(song.getLibrary());
             }
+            form.dispose();
         }
     }//GEN-LAST:event_newSong_menuItemActionPerformed
 
@@ -728,6 +740,7 @@ public class UserInterface extends javax.swing.JFrame {
                     Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
                 }
             }
+            form.dispose();
         }
     }//GEN-LAST:event_newPerformance_menuItemActionPerformed
 
@@ -771,8 +784,38 @@ public class UserInterface extends javax.swing.JFrame {
                 }
             }
             loadPerformances(selectedSong);
+            form.dispose();
         }
     }//GEN-LAST:event_editPerformance_buttonActionPerformed
+
+    private void editLibrary_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLibrary_buttonActionPerformed
+        if(admin) {
+            LibraryForm  form = new LibraryForm(currentOrganization, selectedSong.getLibrary(), this, true);
+            form.setVisible(true);
+            if(form.wasSaved()) {
+                
+                Library lib = form.getLibrary();
+                System.out.println(lib);
+                
+                try {
+                    Session session = sessionFactory.getCurrentSession();
+                    session.beginTransaction();
+                    
+                    session.update(currentOrganization);
+                    session.update(lib);
+                    
+                    session.getTransaction().commit();
+                }
+                catch(HibernateException hibernateException) {
+                    Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+                }
+                
+                tabbedLibrary_pane.refresh(selectedSong.getLibrary());
+                tabbedLibrary_pane.selectSong(selectedSong);
+            }
+            form.dispose();
+        }
+    }//GEN-LAST:event_editLibrary_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -813,6 +856,7 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JButton deleteSong_button;
     private javax.swing.JTextArea description_textArea;
     private javax.swing.JPanel details_panel;
+    private javax.swing.JButton editLibrary_button;
     private javax.swing.JButton editPerformance_button;
     private javax.swing.JButton editSong_button;
     private javax.swing.JMenu edit_menu;
