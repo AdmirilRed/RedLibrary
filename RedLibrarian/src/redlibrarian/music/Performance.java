@@ -118,7 +118,6 @@ public class Performance implements Serializable {
     }
 
     public void removeAllSongs() {
-        for(int i=0;i<songs.size();i++)
-            songs.remove(i);
+        songs = new ArrayList<>();
     }
 }

@@ -750,8 +750,27 @@ public class UserInterface extends javax.swing.JFrame {
                 catch(HibernateException hibernateException) {
                     Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
                 }
-                loadPerformances(selectedSong);
+                
             }
+            if(form.wasDeleted()) {
+                
+                currentOrganization.removePerformance(selectedPerformance);
+                selectedPerformance.removeAllSongs();
+                
+                try {
+                    Session session = sessionFactory.getCurrentSession();
+                    session.beginTransaction();
+                    
+                    session.update(currentOrganization);
+                    session.delete(selectedPerformance);
+                    
+                    session.getTransaction().commit();
+                }
+                catch(HibernateException hibernateException) {
+                    Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+                }
+            }
+            loadPerformances(selectedSong);
         }
     }//GEN-LAST:event_editPerformance_buttonActionPerformed
 

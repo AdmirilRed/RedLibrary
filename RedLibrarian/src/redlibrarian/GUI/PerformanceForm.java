@@ -26,6 +26,7 @@ import redlibrarian.music.Song;
 public class PerformanceForm extends javax.swing.JDialog {
 
     private boolean saved;
+    private boolean deleted;
     private boolean admin;
     
     private JDatePickerImpl datePicker;
@@ -116,6 +117,10 @@ public class PerformanceForm extends javax.swing.JDialog {
         return saved;
     }
     
+    public boolean wasDeleted() {
+        return deleted;
+    }
+    
     public Performance getPerformance() {
         return performance;
     }
@@ -140,6 +145,7 @@ public class PerformanceForm extends javax.swing.JDialog {
         save_button = new javax.swing.JButton();
         removeSong_button = new javax.swing.JButton();
         tabbedSong_pane = new javax.swing.JTabbedPane();
+        deletePerformance_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -174,6 +180,13 @@ public class PerformanceForm extends javax.swing.JDialog {
             }
         });
 
+        deletePerformance_button.setText("Delete Performance");
+        deletePerformance_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deletePerformance_buttonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -192,15 +205,16 @@ public class PerformanceForm extends javax.swing.JDialog {
                         .addComponent(tabbedDate_pane, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(addSong_button)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(removeSong_button))
-                            .addComponent(save_button, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addComponent(addSong_button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removeSong_button))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(deletePerformance_button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(save_button)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -225,7 +239,9 @@ public class PerformanceForm extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(save_button)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(save_button)
+                    .addComponent(deletePerformance_button))
                 .addContainerGap())
         );
 
@@ -265,6 +281,13 @@ public class PerformanceForm extends javax.swing.JDialog {
             }
         }
     }//GEN-LAST:event_removeSong_buttonActionPerformed
+
+    private void deletePerformance_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePerformance_buttonActionPerformed
+        if(admin) {
+            deleted = true;
+            this.setVisible(false);
+        }
+    }//GEN-LAST:event_deletePerformance_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -308,6 +331,7 @@ public class PerformanceForm extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addSong_button;
+    private javax.swing.JButton deletePerformance_button;
     private javax.swing.JTextArea description_textArea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel6;
