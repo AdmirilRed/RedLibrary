@@ -142,8 +142,10 @@ public class UserInterface extends javax.swing.JFrame {
         DefaultTreeModel model = (DefaultTreeModel) performances_tree.getModel();
         
         DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) model.getRoot();
-        DefaultMutableTreeNode primaryNode = (DefaultMutableTreeNode) rootNode.getChildAt(0); 
+        DefaultMutableTreeNode primaryNode = (DefaultMutableTreeNode) rootNode.getChildAt(0);
         DefaultMutableTreeNode secondaryNode = (DefaultMutableTreeNode) rootNode.getChildAt(1);
+        
+        primaryNode.setUserObject("Performances of "+song);
         primaryNode.removeAllChildren();
         secondaryNode.removeAllChildren();
         
