@@ -11,8 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -142,24 +140,38 @@ public class UserInterface extends javax.swing.JFrame {
         System.out.println("loadPerformances("+song+")");
         
         DefaultTreeModel model = (DefaultTreeModel) performances_tree.getModel();
-        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) model.getRoot();
-        rootNode.removeAllChildren();
         
-        TreeSet<PerformanceTreeNode> nodeList = new TreeSet<>();
+        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) model.getRoot();
+        DefaultMutableTreeNode primaryNode = (DefaultMutableTreeNode) rootNode.getChildAt(0); 
+        DefaultMutableTreeNode secondaryNode = (DefaultMutableTreeNode) rootNode.getChildAt(1);
+        primaryNode.removeAllChildren();
+        secondaryNode.removeAllChildren();
+        
+        TreeSet<PerformanceTreeNode> primaryNodeList = new TreeSet<>();
+        TreeSet<PerformanceTreeNode> secondaryNodeList = new TreeSet<>();
         
         for(Performance perf:currentOrganization.getPerformances()) {
-            if(perf.getPlaylist().contains(song)) {
-                PerformanceTreeNode parentNode = new PerformanceTreeNode(perf);
-                nodeList.add(parentNode);
-                for(Song s:perf.getPlaylist()) {
+            
+            PerformanceTreeNode parentNode1 = new PerformanceTreeNode(perf);
+            PerformanceTreeNode parentNode2 = new PerformanceTreeNode(perf);
+            
+            boolean performed = perf.getPlaylist().contains(song);
+            
+            for(Song s:perf.getPlaylist()) {
                     SongTreeNode childNode = new SongTreeNode(s);
-                    parentNode.add(childNode);
-                }
+                    parentNode1.add(new SongTreeNode(s));
+                    parentNode2.add(new SongTreeNode(s));
             }
+            
+            if(performed)
+                primaryNodeList.add(parentNode1);
+            secondaryNodeList.add(parentNode2);
         }
-        
-        for(PerformanceTreeNode node:nodeList)
-            rootNode.add(node);
+                
+        for(PerformanceTreeNode node:primaryNodeList)
+            primaryNode.add(node);
+        for(PerformanceTreeNode node:secondaryNodeList)
+            secondaryNode.add(node);
         
         performances_tree.repaint();
         model.reload();
@@ -298,6 +310,10 @@ public class UserInterface extends javax.swing.JFrame {
         date_label.setText("date");
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Performances");
+        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Performances of This Song");
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("All Performances");
+        treeNode1.add(treeNode2);
         performances_tree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         performances_tree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
