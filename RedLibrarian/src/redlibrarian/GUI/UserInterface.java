@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -795,13 +798,11 @@ public class UserInterface extends javax.swing.JFrame {
             if(form.wasSaved()) {
                 
                 Library lib = form.getLibrary();
-                System.out.println(lib);
                 
                 try {
                     Session session = sessionFactory.getCurrentSession();
                     session.beginTransaction();
                     
-                    session.update(currentOrganization);
                     session.update(lib);
                     
                     session.getTransaction().commit();
@@ -812,6 +813,52 @@ public class UserInterface extends javax.swing.JFrame {
                 
                 tabbedLibrary_pane.refresh(selectedSong.getLibrary());
                 tabbedLibrary_pane.selectSong(selectedSong);
+            }
+            if(form.wasDeleted()) {
+                
+                Library lib = form.getLibrary();
+                List<Song> songs = new ArrayList<>();
+                for(Song song:lib.getContents())
+                    songs.add(song);
+                
+                int index = tabbedLibrary_pane.getIndex(lib);
+                
+                tabbedLibrary_pane.remove(index);
+                
+                if(index > tabbedLibrary_pane.getTabCount()-1)
+                    index--;
+                
+                currentOrganization.removeLibrary(lib);
+                System.out.println(songs);
+                
+                try {
+                    Session session = sessionFactory.getCurrentSession();
+                    session.beginTransaction();
+                    
+                    for(Song song:songs) {
+                        System.out.println(song+" "+song.getLibrary());
+                        session.delete(song);
+                    }
+                        
+                    
+                    for(Performance perf:currentOrganization.getPerformances())
+                        session.update(perf);
+                    
+                    session.update(currentOrganization);
+                    session.delete(lib);
+                    
+                    session.getTransaction().commit();
+                }
+                catch(HibernateException hibernateException) {
+                    Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+                }
+                
+                if(tabbedLibrary_pane.getTabCount() > 0) {
+                    tabbedLibrary_pane.setSelectedIndex(index);
+                    tabbedLibrary_pane.selectFirstSong();
+                }
+                else
+                    details_panel.setVisible(false);
             }
             form.dispose();
         }

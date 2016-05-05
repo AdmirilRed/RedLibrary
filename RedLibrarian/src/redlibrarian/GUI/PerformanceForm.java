@@ -48,6 +48,8 @@ public class PerformanceForm extends javax.swing.JDialog {
         this.admin = org.isAdmin();
         tabbedSong_pane.add(new LibraryPane(), "Songs");
         loadDatePicker();
+        
+        deletePerformance_button.setEnabled(false);
     }
     
     public PerformanceForm(Organization org, Performance perf, java.awt.Frame parent, boolean modal) {
@@ -64,6 +66,8 @@ public class PerformanceForm extends javax.swing.JDialog {
             pane.addSong(song);
             songs.add(song);
         }
+        
+        deletePerformance_button.setEnabled(true);
     }
     
     private void loadDatePicker() {
@@ -283,7 +287,8 @@ public class PerformanceForm extends javax.swing.JDialog {
     }//GEN-LAST:event_removeSong_buttonActionPerformed
 
     private void deletePerformance_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePerformance_buttonActionPerformed
-        if(admin) {
+        if(admin && performance!=null && JOptionPane.showConfirmDialog(null,
+                "Are you sure you wish to delete this performance?", "Remove "+performance+"?", JOptionPane.YES_NO_OPTION) == 0) {
             deleted = true;
             this.setVisible(false);
         }

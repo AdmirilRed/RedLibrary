@@ -5,6 +5,7 @@
  */
 package redlibrarian.GUI;
 
+import javax.swing.JOptionPane;
 import redlibrarian.music.Library;
 import redlibrarian.music.Organization;
 
@@ -14,10 +15,13 @@ import redlibrarian.music.Organization;
  */
 public class LibraryForm extends javax.swing.JDialog {
 
-    private final Organization organization;
-    private boolean saved;
-    
+    private final Organization organization;    
     private Library library;
+    
+    private boolean admin;
+    private boolean saved;
+    private boolean deleted;
+    
 
     /**
      * Creates new form LibraryForm
@@ -29,6 +33,8 @@ public class LibraryForm extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.organization = organization;
+        
+        admin = organization.isAdmin();
     }
     
     public LibraryForm(Organization organization, Library lib, java.awt.Frame parent, boolean modal) {
@@ -51,6 +57,10 @@ public class LibraryForm extends javax.swing.JDialog {
     public boolean wasSaved() {
         return saved;
     }
+    
+    public boolean wasDeleted() {
+        return deleted;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -65,8 +75,9 @@ public class LibraryForm extends javax.swing.JDialog {
         title_field = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         description_field = new javax.swing.JTextArea();
-        submit_button = new javax.swing.JButton();
+        save_button = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        deleteLibrary_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -76,37 +87,41 @@ public class LibraryForm extends javax.swing.JDialog {
         description_field.setRows(5);
         jScrollPane1.setViewportView(description_field);
 
-        submit_button.setText("Submit");
-        submit_button.addActionListener(new java.awt.event.ActionListener() {
+        save_button.setText("Save");
+        save_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                submit_buttonActionPerformed(evt);
+                save_buttonActionPerformed(evt);
             }
         });
 
         jLabel2.setText("Description");
+
+        deleteLibrary_button.setText("Delete Library");
+        deleteLibrary_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteLibrary_buttonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(submit_button))
+                        .addComponent(deleteLibrary_button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(save_button))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
+                    .addComponent(title_field, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
-                            .addComponent(title_field, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(0, 360, Short.MAX_VALUE)))))
+                            .addComponent(jLabel2)
+                            .addComponent(title_label))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(title_label)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -120,17 +135,27 @@ public class LibraryForm extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(submit_button)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(save_button)
+                    .addComponent(deleteLibrary_button))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void submit_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submit_buttonActionPerformed
+    private void save_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_buttonActionPerformed
         this.saved = true;
         this.setVisible(false);
-    }//GEN-LAST:event_submit_buttonActionPerformed
+    }//GEN-LAST:event_save_buttonActionPerformed
+
+    private void deleteLibrary_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteLibrary_buttonActionPerformed
+        if(admin && JOptionPane.showConfirmDialog(null,
+                "Are you sure you wish to delete this libray?", "Remove libary '"+library.getName()+"'?", JOptionPane.YES_NO_OPTION) == 0) {
+            deleted = true;
+            this.setVisible(false);
+        }
+    }//GEN-LAST:event_deleteLibrary_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -173,10 +198,11 @@ public class LibraryForm extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton deleteLibrary_button;
     private javax.swing.JTextArea description_field;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton submit_button;
+    private javax.swing.JButton save_button;
     private javax.swing.JTextField title_field;
     private javax.swing.JLabel title_label;
     // End of variables declaration//GEN-END:variables

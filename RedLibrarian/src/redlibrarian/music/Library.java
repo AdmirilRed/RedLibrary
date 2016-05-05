@@ -35,7 +35,7 @@ public class Library implements Serializable {
     
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     @OrderBy("pid ASC")
-    private final List<Song> contents;
+    private List<Song> contents;
     
     public Library(String name, String description) {
         this.contents = new ArrayList<>();
@@ -84,7 +84,7 @@ public class Library implements Serializable {
     protected boolean removeSong(long targetId) {
         for(Song song:contents)
             if(song.getUniqueId()==targetId)
-                return contents.remove(song);
+                return removeSong(song);
         return false;        
     }
     

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -104,8 +105,19 @@ public class Performance implements Serializable {
     public boolean removeSong(long targetId) {
         for(Song song:songs)
             if(song.getUniqueId()==targetId)
-                return songs.remove(song);
+                return removeSong(song);
         return false;
+    }
+    
+    public void removeLibrary(Library lib) {
+        Stack<Song> removeList = new Stack<>();
+        for(Song song:songs) {
+            if(song.getLibrary().equals(lib))
+                removeList.push(song);
+        }
+        while(removeList.size() > 0)
+            removeSong(removeList.pop());
+        
     }
     
     public List<Song> getPlaylist() {
