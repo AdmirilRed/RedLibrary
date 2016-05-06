@@ -18,6 +18,9 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import org.hibernate.HibernateException;
@@ -136,6 +139,15 @@ public class UserInterface extends javax.swing.JFrame {
         System.out.println("loadLibraries()");
         tabbedLibrary_pane = new TabbedLibraryPane(currentOrganization, this);
         tabbedRoot_pane.add("Libraries", tabbedLibrary_pane);
+        
+        ChangeListener tabListener = (ChangeEvent changeEvent) -> {
+            JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+            int index = sourceTabbedPane.getSelectedIndex();
+            System.out.println("Tab changed to: " + sourceTabbedPane.getTitleAt(index));
+            ((TabbedLibraryPane) sourceTabbedPane).newTabSelected();
+        };
+        
+        tabbedLibrary_pane.addChangeListener(tabListener);
     }
     
     private void loadPerformances(Song song) {

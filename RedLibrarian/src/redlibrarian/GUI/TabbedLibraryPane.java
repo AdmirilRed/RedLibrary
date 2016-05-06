@@ -18,9 +18,9 @@ import redlibrarian.music.Song;
  */
 public class TabbedLibraryPane extends JTabbedPane {
     
-    UserInterface updateTarget;
-    ArrayList<Library> tabs = new ArrayList<>();
-    Organization organization;
+    private UserInterface updateTarget;
+    private ArrayList<Library> tabs = new ArrayList<>();
+    private Organization organization;
     
     public TabbedLibraryPane(Organization org, UserInterface target) {
         super();
@@ -75,6 +75,12 @@ public class TabbedLibraryPane extends JTabbedPane {
 
     public Library getCurrentLibrary() {
         return this.getLibrary(this.getSelectedIndex());
+    }
+    
+    public void newTabSelected() {
+        LibraryPane pane = (LibraryPane) this.getSelectedComponent();
+        if(pane.getRowCount() > 0)
+            this.selectSong(pane.getSelectedSong());
     }
     
 }
