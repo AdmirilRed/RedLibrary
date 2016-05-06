@@ -32,9 +32,11 @@ public class LibraryForm extends javax.swing.JDialog {
     public LibraryForm(Organization organization, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        this.organization = organization;
         
-        admin = organization.isAdmin();
+        this.organization = organization;
+        this.admin = organization.isAdmin();
+        
+        deleteLibrary_button.setEnabled(false);
     }
     
     public LibraryForm(Organization organization, Library lib, java.awt.Frame parent, boolean modal) {
@@ -43,6 +45,7 @@ public class LibraryForm extends javax.swing.JDialog {
         
         title_field.setText(lib.getName());
         description_field.setText(lib.getDescription());
+        deleteLibrary_button.setEnabled(true);
     }
     
     public Library getLibrary() {

@@ -17,8 +17,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Transient;
+import redlibrarian.login.ContactDetails;
 import redlibrarian.login.Password;
 
 /**
@@ -44,6 +46,9 @@ public class Organization implements Serializable {
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)
     @OrderBy("name ASC")
     private final List<Library> libraries;
+    
+    @OneToOne
+    private ContactDetails contact;
     
     @Transient
     private boolean verifiedAdmin;
@@ -81,6 +86,10 @@ public class Organization implements Serializable {
                 songs.add(song);
         Collections.sort(songs);
         return songs;
+    }
+    
+    public ContactDetails getContactInfo() {
+        return contact;
     }
     
     public boolean addPerformance(Performance item) {

@@ -8,7 +8,7 @@ package redlibrarian.GUI;
 import java.util.ArrayList;
 import redlibrarian.music.Organization;
 import redlibrarian.music.Song;
-import utility.Search;
+import redlibrarian.utility.Search;
 
 /**
  *

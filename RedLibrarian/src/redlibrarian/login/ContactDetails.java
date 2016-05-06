@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import redlibrarian.music.Organization;
 
 /**
  *
@@ -23,6 +25,9 @@ public class ContactDetails implements Serializable {
     private Long id;
     private String name;
     private String email;
+    
+    @OneToOne
+    private Organization organization;
 
     public ContactDetails() {
         this.name = null;
@@ -54,5 +59,8 @@ public class ContactDetails implements Serializable {
         this.email = email;
     }
 
+    public Organization getOrganization() {
+        return organization;
+    }
     
 }

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -25,6 +24,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.ini4j.Ini;
 import static redlibrarian.RedLibrarian.sessionFactory;
@@ -32,7 +32,7 @@ import redlibrarian.music.Library;
 import redlibrarian.music.Organization;
 import redlibrarian.music.Performance;
 import redlibrarian.music.Song;
-import utility.Search;
+import redlibrarian.utility.Search;
 
 /**
  *
@@ -41,8 +41,8 @@ import utility.Search;
 public class UserInterface extends javax.swing.JFrame {
 
     private final String URL = "jdbc:mysql://redlibrarian.ciwuxwonopze.us-east-1.rds.amazonaws.com:3306/RedLibrarian";
-    private final String connectionUsername = "client";
-    private final String connectionPassword = "KrNestsS+4_-J+zU";
+    private final String connectionUsername = "root";//"client";
+    private final String connectionPassword = "Joseph707451Manahan";//"KrNestsS+4_-J+zU";
     
     private Organization currentOrganization;
     private boolean admin;
@@ -292,7 +292,8 @@ public class UserInterface extends javax.swing.JFrame {
         newSong_menuItem = new javax.swing.JMenuItem();
         newLibrary_menuItem = new javax.swing.JMenuItem();
         newPerformance_menuItem = new javax.swing.JMenuItem();
-        edit_menu = new javax.swing.JMenu();
+        jMenu1 = new javax.swing.JMenu();
+        reportBug_menuItem = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -523,8 +524,17 @@ public class UserInterface extends javax.swing.JFrame {
 
         jMenuBar1.add(file_menu);
 
-        edit_menu.setText("Edit");
-        jMenuBar1.add(edit_menu);
+        jMenu1.setText("Tools");
+
+        reportBug_menuItem.setText("Report Bug");
+        reportBug_menuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reportBug_menuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(reportBug_menuItem);
+
+        jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
 
@@ -876,6 +886,11 @@ public class UserInterface extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_editLibrary_buttonActionPerformed
 
+    private void reportBug_menuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportBug_menuItemActionPerformed
+        BugReportForm form = new BugReportForm(currentOrganization, this, false);
+        form.setVisible(true);
+    }//GEN-LAST:event_reportBug_menuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -918,7 +933,6 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JButton editLibrary_button;
     private javax.swing.JButton editPerformance_button;
     private javax.swing.JButton editSong_button;
-    private javax.swing.JMenu edit_menu;
     private javax.swing.JMenu file_menu;
     private javax.swing.JButton hide_button;
     private javax.swing.JLabel id_label;
@@ -929,6 +943,7 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -940,6 +955,7 @@ public class UserInterface extends javax.swing.JFrame {
     private javax.swing.JMenuItem newSong_menuItem;
     private javax.swing.JMenu new_menu;
     private javax.swing.JTree performances_tree;
+    private javax.swing.JMenuItem reportBug_menuItem;
     private javax.swing.JButton search_button;
     private javax.swing.JTextField search_field;
     private javax.swing.JTabbedPane tabbedRoot_pane;
