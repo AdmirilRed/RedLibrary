@@ -16,6 +16,7 @@ import redlibrarian.GUI.UserInterface;
 public class RedLibrarian {
 
     public static SessionFactory sessionFactory;
+    
     /**
      * @param args the command line arguments
      * @throws java.lang.InterruptedException
