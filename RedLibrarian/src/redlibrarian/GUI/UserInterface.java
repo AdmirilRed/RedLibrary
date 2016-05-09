@@ -143,7 +143,8 @@ public class UserInterface extends javax.swing.JFrame {
             JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
             int index = sourceTabbedPane.getSelectedIndex();
             System.out.println("Tab changed to: " + sourceTabbedPane.getTitleAt(index));
-            ((TabbedLibraryPane) sourceTabbedPane).newTabSelected();
+            if(details_panel.isVisible())
+                ((TabbedLibraryPane) sourceTabbedPane).newTabSelected();
         };
         
         tabbedLibrary_pane.addChangeListener(tabListener);
