@@ -40,8 +40,8 @@ import redlibrarian.utility.Search;
 public class UserInterface extends javax.swing.JFrame {
 
     private final String URL = "jdbc:mysql://redlibrarian.ciwuxwonopze.us-east-1.rds.amazonaws.com:3306/RedLibrarian";
-    private final String connectionUsername = "root";//"client";
-    private final String connectionPassword = "Joseph707451Manahan";//"KrNestsS+4_-J+zU";
+    private final String connectionUsername = "client";
+    private final String connectionPassword = "KrNestsS+4_-J+zU";
     
     private Organization currentOrganization;
     private boolean admin;
@@ -217,8 +217,8 @@ public class UserInterface extends javax.swing.JFrame {
         try {
             this.iniURL = url;
             ini = new Ini(url);
-            this.showAdminLogin = ini.get("preferences", "showAdminLogin", boolean.class);
-            this.suggestedOrganizationName = ini.get("preferences", "suggestedOrganizationName", String.class);
+            this.showAdminLogin = (boolean) ini.get("preferences", "showAdminLogin", boolean.class);
+            this.suggestedOrganizationName = (String) ini.get("preferences", "suggestedOrganizationName", String.class);
         } catch (IOException ex) {
             Logger.getLogger(UserInterface.class.getName()).log(Level.CONFIG, null, ex);
         }
