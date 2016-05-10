@@ -5,7 +5,6 @@
  */
 package redlibrarian;
 
-import java.net.MalformedURLException;
 import org.hibernate.SessionFactory;
 import redlibrarian.GUI.UserInterface;
 
@@ -20,12 +19,11 @@ public class RedLibrarian {
     /**
      * @param args the command line arguments
      * @throws java.lang.InterruptedException
-     * @throws java.net.MalformedURLException
      */
-    public static void main(String[] args) throws InterruptedException, MalformedURLException {  
+    public static void main(String[] args) throws InterruptedException {  
         
         
-        UserInterface window = new UserInterface(RedLibrarian.class.getResource("config.ini"));
+        UserInterface window = new UserInterface();
         window.load();
         window.setVisible(true);  
         

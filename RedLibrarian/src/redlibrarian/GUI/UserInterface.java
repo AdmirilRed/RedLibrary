@@ -7,9 +7,6 @@ package redlibrarian.GUI;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +22,6 @@ import javax.swing.tree.DefaultTreeModel;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
-import org.ini4j.Ini;
 import static redlibrarian.RedLibrarian.sessionFactory;
 import redlibrarian.music.Library;
 import redlibrarian.music.Organization;
@@ -49,12 +45,6 @@ public class UserInterface extends javax.swing.JFrame {
     private Song selectedSong;
     private Performance selectedPerformance;
     
-    private Ini ini;
-    private URL iniURL;
-    //Initializing config elements as default
-    String suggestedOrganizationName = "";
-    boolean showAdminLogin = true; 
-    
     TabbedLibraryPane tabbedLibrary_pane;
     
     /**
@@ -64,11 +54,6 @@ public class UserInterface extends javax.swing.JFrame {
         initComponents();
         details_panel.setVisible(false);
         
-    }
-
-    public UserInterface(URL url) {
-        this();
-        this.configure(url);
     }
 
     public boolean load() {
@@ -108,8 +93,7 @@ public class UserInterface extends javax.swing.JFrame {
     private Organization login(boolean modal) {
         
         LoginForm prompt = new LoginForm(this, modal, sessionFactory);
-        prompt.setOrganizationText(suggestedOrganizationName);
-        prompt.setShowAdminLogin(showAdminLogin);
+        prompt.setShowAdminLogin(true);
         prompt.setVisible(true);
         
         if(!prompt.isLoggedIn()) {
@@ -119,16 +103,6 @@ public class UserInterface extends javax.swing.JFrame {
             
         Organization org = prompt.getOrganization(); 
         this.admin = prompt.isAdmin();
-        
-        if(ini != null) {
-           ini.put("preferences", "showAdminLogin", !prompt.getGuestLoginState());
-           ini.put("preferences", "suggestedOrganizationName", prompt.getOrganization().getName());
-            try {
-                ini.store(new File(iniURL.toURI()));
-            } catch (IOException | URISyntaxException ex) {
-                Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
         
         prompt.dispose();
         return org;
@@ -212,17 +186,6 @@ public class UserInterface extends javax.swing.JFrame {
         this.loadPerformances(song);
         
     }
-    
-    private void configure(URL url) {
-        try {
-            this.iniURL = url;
-            ini = new Ini(url);
-            this.showAdminLogin = (boolean) ini.get("preferences", "showAdminLogin", boolean.class);
-            this.suggestedOrganizationName = (String) ini.get("preferences", "suggestedOrganizationName", String.class);
-        } catch (IOException ex) {
-            Logger.getLogger(UserInterface.class.getName()).log(Level.CONFIG, null, ex);
-        }
-    }    
     
     private void search() {
         search_button.setEnabled(false);
