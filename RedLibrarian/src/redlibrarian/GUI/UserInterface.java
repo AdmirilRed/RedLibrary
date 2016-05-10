@@ -81,6 +81,7 @@ public class UserInterface extends javax.swing.JFrame {
         currentOrganization = this.login(true);
         deleteSong_button.setEnabled(admin);
         editSong_button.setEnabled(admin);
+        editLibrary_button.setEnabled(admin);
         editPerformance_button.setEnabled(false);
         new_menu.setEnabled(admin);  
                 
