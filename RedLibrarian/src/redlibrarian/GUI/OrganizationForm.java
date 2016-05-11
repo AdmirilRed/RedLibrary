@@ -5,6 +5,13 @@
  */
 package redlibrarian.GUI;
 
+import java.awt.Color;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+import javax.swing.InputVerifier;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import redlibrarian.GUI.textVerification.ContiguityVerifier;
 import redlibrarian.GUI.textVerification.EmailVerifier;
 import redlibrarian.GUI.textVerification.PasswordVerifier;
@@ -17,41 +24,163 @@ import redlibrarian.music.Organization;
  */
 public class OrganizationForm extends javax.swing.JDialog {
 
+    private final SessionFactory sessionFactory;
+    
     private boolean saved;
+    private boolean checkMatch;
+    private boolean match;
     
-    private boolean password1Initialized;
-    private boolean password2Initialized;
+    private String orgName;
+    private String name;
+    private String email;
+    private String password;
     
+    private int index;
+    
+    private final String [] labels = {"Organization Name","Your Name","Email Address","Password","Confirm Password"};
+    private final String [] tip_labels = {"Organization name should have no spaces.","","Ex. - John@example.com","Password should be 4 or more characters.","Passwords should match exactly."};
+    private final String [] button_labels = {"Next >>","Next >>","Next >>","Next >>","Create Account"};
+    private final InputVerifier [] verifiers = {new ContiguityVerifier(), null, new EmailVerifier(), new PasswordVerifier(), new PasswordVerifier()};
+    private final String [] text = new String [5];
     /**
      * Creates new form OrganizationForm
+     * @param sessionFactory
      * @param parent
      * @param modal
      */
-    public OrganizationForm(java.awt.Frame parent, boolean modal) {
+    public OrganizationForm(SessionFactory sessionFactory,java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        submit_button.setEnabled(false);
+        this.sessionFactory = sessionFactory;
+        
+        availability_label.setVisible(false);
+        tip_label.setForeground(Color.GRAY);
+        
+        password_field.setVisible(false);
+        password_field.setInputVerifier(new PasswordVerifier());
+        
+        index = 0;
+        
+        this.changeIndex(0);
+    }
+    
+    private void changeIndex(int diff) {
+        if(index >= labels.length-2)
+            text[index] = password_field.getText();
+        else
+            text[index] = field.getText();
+        
+        index+=diff;
+        
+        if(index < 0)
+            index=0;
+        if(index > labels.length-1)
+            index=labels.length-1;
+        
+        field.setText(text[index]);
+        password_field.setText(text[index]);
+        
+        if(index == 0)
+            back_button.setVisible(false);
+        else
+            back_button.setVisible(true);
+            
+        
+        if(index >= labels.length-2) {
+            password_field.setVisible(true);
+            field.setVisible(false);
+        }
+        else {
+            password_field.setVisible(false);
+            field.setVisible(true);
+        }
+        
+        checkMatch = index == labels.length-1;  
+        
+        if(text[0]!=null)
+            orgName = text[0].trim();
+        if(text[1]!=null)
+            name = text[1].trim();
+        if(text[2]!=null)
+            email = text[2].trim();
+        if(text[3]!=null)
+            password = text[3].trim();
+                
+        prompt_label.setText(labels[index]);
+        tip_label.setText(tip_labels[index]);
+        forward_button.setText(button_labels[index]);
+        field.setInputVerifier(verifiers[index]);
     }
     
     public Organization getOrganization(){
-        return new Organization(organization_field.getText(), password_field.getText());
+        return new Organization(orgName, password);
     }
     
     public ContactDetails getContact() {
-        return new ContactDetails(name_field.getText(), email_field.getText());
-    }
-        
-    private void validateInput() {
-        if(password_field.getText().equals(confirmPassword_field.getText()))
-            submit_button.setEnabled(password1Initialized && password2Initialized);
-        else
-            submit_button.setEnabled(false);
+        return new ContactDetails(name, email);
     }
     
     public boolean wasSaved() {
         return saved;
     }
 
+    private void processKeyPress(java.awt.event.KeyEvent evt) {
+        if (evt.getKeyChar() == (KeyEvent.VK_ENTER)) {
+            KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            
+            if(manager.getFocusOwner().equals(forward_button))
+                forwardButton();
+            else
+                manager.focusNextComponent();
+        }
+    }
+    
+    private void forwardButton() {
+        
+        this.changeIndex(0);
+        availability_label.setVisible(false);
+                
+        if(index == labels.length-1) {
+            saved = true;
+            this.setVisible(false);
+        }
+        else if(index != 0)
+            this.changeIndex(1);
+        else {
+            availability_label.setText("Checking availability...");
+            availability_label.setForeground(Color.BLACK);
+            availability_label.setVisible(true);
+            
+            boolean available = false;
+            
+            try {
+                
+                Session session = sessionFactory.getCurrentSession();
+                session.beginTransaction();
+
+                SQLQuery query = session.createSQLQuery("SELECT * FROM Organization WHERE NAME='"+orgName+"'");
+                query.addEntity(Organization.class);
+
+                Organization testOrg = (Organization) query.list().get(0);
+                
+            } catch(Exception hibernateException) {
+                System.out.println(hibernateException);
+                if(hibernateException.toString().contains("IndexOutOfBoundsException")) {
+                    availability_label.setVisible(false);
+                    available = true;
+                }                    
+            }
+            
+            if(available)
+                this.changeIndex(1);
+            else {
+                availability_label.setText("Name is not available!");    
+                availability_label.setForeground(Color.RED);
+            }
+                
+            
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -61,178 +190,156 @@ public class OrganizationForm extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        organization_field = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        prompt_label = new javax.swing.JLabel();
+        field = new javax.swing.JTextField();
+        forward_button = new javax.swing.JButton();
+        back_button = new javax.swing.JButton();
+        tip_label = new javax.swing.JLabel();
         password_field = new javax.swing.JPasswordField();
-        confirmPassword_field = new javax.swing.JPasswordField();
-        email_field = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        submit_button = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
-        jSeparator2 = new javax.swing.JSeparator();
-        name_field = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
+        availability_label = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setText("Organization Name");
+        prompt_label.setText("LABEL");
 
-        organization_field.setInputVerifier(new ContiguityVerifier());
-        organization_field.addCaretListener(new javax.swing.event.CaretListener() {
+        field.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                organization_fieldCaretUpdate(evt);
+                fieldCaretUpdate(evt);
+            }
+        });
+        field.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                fieldKeyPressed(evt);
             }
         });
 
-        jLabel2.setText("Password");
+        forward_button.setText("Next >>");
+        forward_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                forward_buttonActionPerformed(evt);
+            }
+        });
+        forward_button.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                forward_buttonKeyPressed(evt);
+            }
+        });
 
-        jLabel3.setText("Confirm Password");
+        back_button.setText("<< Back");
+        back_button.setFocusable(false);
+        back_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                back_buttonActionPerformed(evt);
+            }
+        });
 
-        password_field.setInputVerifier(new PasswordVerifier());
+        tip_label.setText("TOOLTIP");
+
         password_field.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 password_fieldCaretUpdate(evt);
             }
         });
-
-        confirmPassword_field.setInputVerifier(new PasswordVerifier());
-        confirmPassword_field.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                confirmPassword_fieldCaretUpdate(evt);
+        password_field.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                password_fieldKeyPressed(evt);
             }
         });
 
-        email_field.setInputVerifier(new EmailVerifier());
-        email_field.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                email_fieldCaretUpdate(evt);
-            }
-        });
-
-        jLabel4.setText("Contact Email");
-
-        submit_button.setText("Submit");
-        submit_button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                submit_buttonActionPerformed(evt);
-            }
-        });
-
-        name_field.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                name_fieldCaretUpdate(evt);
-            }
-        });
-
-        jLabel5.setText("Full Name");
+        availability_label.setText("AVAILABILITY");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(back_button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(forward_button))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addComponent(name_field, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(submit_button)
-                                        .addGap(10, 10, 10))
-                                    .addComponent(email_field, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4)))
-                            .addComponent(jSeparator1)
-                            .addComponent(jSeparator2)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(organization_field, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 247, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(prompt_label)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(availability_label))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(field, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(confirmPassword_field, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(tip_label)
+                            .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(organization_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4))
+                    .addComponent(prompt_label)
+                    .addComponent(availability_label))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tip_label)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(email_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(name_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(confirmPassword_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(submit_button)
-                .addContainerGap(25, Short.MAX_VALUE))
+                    .addComponent(forward_button)
+                    .addComponent(back_button))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void submit_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submit_buttonActionPerformed
-        saved = true;
-        this.setVisible(false);
-    }//GEN-LAST:event_submit_buttonActionPerformed
+    private void forward_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forward_buttonActionPerformed
+        forwardButton();
+    }//GEN-LAST:event_forward_buttonActionPerformed
 
-    private void organization_fieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_organization_fieldCaretUpdate
-        validateInput();
-    }//GEN-LAST:event_organization_fieldCaretUpdate
+    private void fieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_fieldCaretUpdate
+        System.out.println(field.getText()+" "+(field.getText() != null)+" && "+(field.getText().length() > 0));
+        if(field.getText() != null && field.getText().length() > 0)
+            forward_button.setEnabled(field.getInputVerifier() == null || field.getInputVerifier().verify(field));
+        else
+            forward_button.setEnabled(false);      
+    }//GEN-LAST:event_fieldCaretUpdate
 
-    private void name_fieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_name_fieldCaretUpdate
-        validateInput();
-    }//GEN-LAST:event_name_fieldCaretUpdate
-
-    private void email_fieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_email_fieldCaretUpdate
-        validateInput();
-    }//GEN-LAST:event_email_fieldCaretUpdate
+    private void back_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_buttonActionPerformed
+        this.changeIndex(-1);
+    }//GEN-LAST:event_back_buttonActionPerformed
 
     private void password_fieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_password_fieldCaretUpdate
-        password1Initialized = true;
-        validateInput();
+        System.out.println(text[labels.length-2]+" match "+password_field.getText());
+        if(checkMatch) {
+            match = text[labels.length-2].equals(password_field.getText()) ;
+            forward_button.setEnabled((password_field.getInputVerifier() == null || password_field.getInputVerifier().verify(password_field)) && match);
+        } 
+        else {
+            if(password_field.getText() != null && password_field.getText().length() > 0)
+                forward_button.setEnabled(password_field.getInputVerifier() == null || password_field.getInputVerifier().verify(password_field));
+            else
+                forward_button.setEnabled(false);
+        }
     }//GEN-LAST:event_password_fieldCaretUpdate
 
-    private void confirmPassword_fieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_confirmPassword_fieldCaretUpdate
-        password2Initialized = true;
-        validateInput();
-    }//GEN-LAST:event_confirmPassword_fieldCaretUpdate
+    private void fieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fieldKeyPressed
+        processKeyPress(evt);
+    }//GEN-LAST:event_fieldKeyPressed
+
+    private void password_fieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_password_fieldKeyPressed
+        processKeyPress(evt);
+    }//GEN-LAST:event_password_fieldKeyPressed
+
+    private void forward_buttonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_forward_buttonKeyPressed
+        processKeyPress(evt);
+    }//GEN-LAST:event_forward_buttonKeyPressed
 
     /**
      * @param args the command line arguments
@@ -250,20 +357,16 @@ public class OrganizationForm extends javax.swing.JDialog {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(OrganizationForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(OrganizationForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(OrganizationForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(OrganizationForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(() -> {
-            OrganizationForm dialog = new OrganizationForm(new javax.swing.JFrame(), true);
+            OrganizationForm dialog = new OrganizationForm(null, new javax.swing.JFrame(), true);
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
@@ -275,19 +378,13 @@ public class OrganizationForm extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPasswordField confirmPassword_field;
-    private javax.swing.JTextField email_field;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextField name_field;
-    private javax.swing.JTextField organization_field;
+    private javax.swing.JLabel availability_label;
+    private javax.swing.JButton back_button;
+    private javax.swing.JTextField field;
+    private javax.swing.JButton forward_button;
     private javax.swing.JPasswordField password_field;
-    private javax.swing.JButton submit_button;
+    private javax.swing.JLabel prompt_label;
+    private javax.swing.JLabel tip_label;
     // End of variables declaration//GEN-END:variables
 
 }

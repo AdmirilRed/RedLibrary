@@ -99,11 +99,6 @@
       </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="password_field">
-      <Properties>
-        <Property name="inputVerifier" type="javax.swing.InputVerifier" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new PasswordVerifier()" type="code"/>
-        </Property>
-      </Properties>
       <Events>
         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="password_fieldKeyPressed"/>
       </Events>

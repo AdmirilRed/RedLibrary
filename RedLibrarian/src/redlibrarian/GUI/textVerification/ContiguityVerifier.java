@@ -17,7 +17,7 @@ public class ContiguityVerifier extends InputVerifier {
 
     @Override
     public boolean verify(JComponent input) {
-        String [] text = ((JTextField) input).getText().trim().split(" ");
+        String [] text = ((JTextField) input).getText().split(" ");
         return text.length == 1;
     }
     

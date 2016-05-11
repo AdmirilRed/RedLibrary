@@ -20,8 +20,8 @@ public class EmailVerifier extends InputVerifier {
     @Override
     public boolean verify(JComponent input) {
         
-        String text = ((JTextField) input).getText();
-        Pattern pattern = Pattern.compile("[\\w]+@[\\w]+.com");
+        String text = ((JTextField) input).getText().toLowerCase();
+        Pattern pattern = Pattern.compile("[\\w]+@[\\w]+.(com|org|net|gov|edu)");
         Matcher matcher = pattern.matcher(text);
         
         return matcher.find();
