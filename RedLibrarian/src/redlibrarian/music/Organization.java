@@ -88,6 +88,8 @@ public class Organization implements Serializable {
         return songs;
     }
     
+
+    
     public ContactDetails getContactInfo() {
         return contact;
     }
@@ -129,11 +131,13 @@ public class Organization implements Serializable {
     
     public void removeAllSongs(Library lib) {
         if(verifiedAdmin) {
+            System.out.println("Before song removal: "+lib.getContents());
             Stack<Song> removeList = new Stack<>();
             for(Song song:lib.getContents())
                 removeList.push(song);
             while(removeList.size() > 0)
                 removeSong(removeList.pop());
+            System.out.println("After song removal: "+lib.getContents());
         }
     }
     
@@ -170,7 +174,10 @@ public class Organization implements Serializable {
     public String toString() {
         return String.format("ORGANIZATION< %s | LIBRARIES%s>", name, libraries);
     }
-    
 
+    public void setContact(ContactDetails contact) {
+        this.contact = contact;
+        contact.setOrganization(this);
+    }
     
 }

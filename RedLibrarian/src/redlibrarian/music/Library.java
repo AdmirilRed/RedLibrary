@@ -77,7 +77,9 @@ public class Library implements Serializable {
     }
     
     protected boolean removeSong(Song target) {
+        System.out.println("Pre-remove song: "+target.getLibrary());
         target.setLibrary(null);
+        System.out.println("Post-remove song: "+target.getLibrary());
         return contents.remove(target);
     }
     

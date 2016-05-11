@@ -62,5 +62,9 @@ public class ContactDetails implements Serializable {
     public Organization getOrganization() {
         return organization;
     }
+
+    public void setOrganization(Organization org) {
+        this.organization = org;
+    }
     
 }

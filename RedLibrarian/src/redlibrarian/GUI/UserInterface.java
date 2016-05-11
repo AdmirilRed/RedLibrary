@@ -7,7 +7,6 @@ package redlibrarian.GUI;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -87,6 +86,7 @@ public class UserInterface extends javax.swing.JFrame {
                 
         this.setTitle("RedLibrarian - "+currentOrganization.getName()+" "+(admin?"(ADMIN)":"(GUEST)"));
         loadLibraries();
+        newSong_menuItem.setEnabled(tabbedLibrary_pane.getTabCount() > 0);
         
         return true;
     }
@@ -117,9 +117,9 @@ public class UserInterface extends javax.swing.JFrame {
         ChangeListener tabListener = (ChangeEvent changeEvent) -> {
             JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
             int index = sourceTabbedPane.getSelectedIndex();
-            System.out.println("Tab changed to: " + sourceTabbedPane.getTitleAt(index));
             if(details_panel.isVisible())
                 ((TabbedLibraryPane) sourceTabbedPane).newTabSelected();
+            newSong_menuItem.setEnabled(sourceTabbedPane.getTabCount() > 0);
         };
         
         tabbedLibrary_pane.addChangeListener(tabListener);
@@ -199,7 +199,7 @@ public class UserInterface extends javax.swing.JFrame {
         tabbedRoot_pane.add(panel, "Search Results");
         tabbedRoot_pane.setSelectedComponent(panel);
         
-        if(details_panel.isVisible())
+        if(details_panel.isVisible() && panel.getRowCount() > 0)
             panel.selectSong(0);
         search_button.setEnabled(true);
     }
@@ -358,7 +358,6 @@ public class UserInterface extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(hide_button))
                     .addComponent(jSeparator1)
-                    .addComponent(jScrollPane2)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
                     .addComponent(editSong_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(details_panelLayout.createSequentialGroup()
@@ -383,13 +382,14 @@ public class UserInterface extends javax.swing.JFrame {
                                 .addComponent(uid_label))
                             .addComponent(jLabel2))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(editPerformance_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(details_panelLayout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(library_label)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(editLibrary_button)))
+                        .addComponent(editLibrary_button))
+                    .addComponent(editPerformance_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         details_panelLayout.setVerticalGroup(
@@ -826,7 +826,6 @@ public class UserInterface extends javax.swing.JFrame {
                         session.delete(song);
                     }
                         
-                    
                     for(Performance perf:currentOrganization.getPerformances())
                         session.update(perf);
                     

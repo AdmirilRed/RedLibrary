@@ -21,7 +21,7 @@ public class Search {
     String query;
     
     public Search(String query, Organization org) {
-        this.query = query;
+        this.query = query.toLowerCase();
         this.organization = org;
     }
     

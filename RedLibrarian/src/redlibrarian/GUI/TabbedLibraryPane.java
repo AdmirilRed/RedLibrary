@@ -79,7 +79,7 @@ public class TabbedLibraryPane extends JTabbedPane {
     
     public void newTabSelected() {
         LibraryPane pane = (LibraryPane) this.getSelectedComponent();
-        if(pane.getRowCount() > 0)
+        if(pane != null && pane.getRowCount() > 0)
             this.selectSong(pane.getSelectedSong());
     }
     

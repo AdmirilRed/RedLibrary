@@ -156,7 +156,6 @@
                           <Component id="hide_button" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
-                      <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
                       <Component id="jScrollPane1" pref="322" max="32767" attributes="0"/>
                       <Component id="editSong_button" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
@@ -187,7 +186,6 @@
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="editPerformance_button" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -195,6 +193,8 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="editLibrary_button" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="editPerformance_button" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>

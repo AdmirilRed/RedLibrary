@@ -9,10 +9,14 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import redlibrarian.GUI.textVerification.PasswordVerifier;
+import redlibrarian.login.ContactDetails;
 import redlibrarian.music.Organization;
 
 /**
@@ -120,10 +124,11 @@ public class LoginForm extends javax.swing.JDialog {
     private void processKeyPress(java.awt.event.KeyEvent evt) {
         if (evt.getKeyChar() == (KeyEvent.VK_ENTER)) {
             KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-            manager.focusNextComponent();
             
             if(manager.getFocusOwner().equals(login_button))
                 attemptLogin();
+            else
+                manager.focusNextComponent();
         }
     }
 
@@ -154,7 +159,6 @@ public class LoginForm extends javax.swing.JDialog {
             }
         });
 
-        password_field.setInputVerifier(new PasswordVerifier());
         password_field.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 password_fieldKeyPressed(evt);
@@ -278,17 +282,30 @@ public class LoginForm extends javax.swing.JDialog {
     }//GEN-LAST:event_login_buttonKeyPressed
 
     private void createAccount_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createAccount_labelMouseClicked
-        OrganizationForm form = new OrganizationForm((Frame) this.getParent(), true);
+        OrganizationForm form = new OrganizationForm(sessionFactory, (Frame) this.getParent(), true);
         form.setVisible(true);
         
+        
+        
         if(form.wasSaved()) {
-            Session session = sessionFactory.getCurrentSession();
-            session.beginTransaction();
             
-            session.save(form.getOrganization());
-            session.save(form.getContact());
+            Organization org = form.getOrganization();
+            ContactDetails contact = form.getContact();
+        
+            org.setContact(contact); 
             
-            session.getTransaction().commit();
+            try {
+                Session session = sessionFactory.getCurrentSession();
+                session.beginTransaction();
+
+                session.save(org);
+                session.save(contact);
+
+                session.getTransaction().commit();    
+            } catch(HibernateException hibernateException) {
+                Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+            }
+            
         }
         
         form.dispose();
