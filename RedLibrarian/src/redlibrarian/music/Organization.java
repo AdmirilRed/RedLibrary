@@ -131,11 +131,13 @@ public class Organization implements Serializable {
     
     public void removeAllSongs(Library lib) {
         if(verifiedAdmin) {
+            System.out.println("Before song removal: "+lib.getContents());
             Stack<Song> removeList = new Stack<>();
             for(Song song:lib.getContents())
                 removeList.push(song);
             while(removeList.size() > 0)
                 removeSong(removeList.pop());
+            System.out.println("After song removal: "+lib.getContents());
         }
     }
     

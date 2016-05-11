@@ -86,6 +86,7 @@ public class UserInterface extends javax.swing.JFrame {
                 
         this.setTitle("RedLibrarian - "+currentOrganization.getName()+" "+(admin?"(ADMIN)":"(GUEST)"));
         loadLibraries();
+        newSong_menuItem.setEnabled(tabbedLibrary_pane.getTabCount() > 0);
         
         return true;
     }
@@ -116,9 +117,9 @@ public class UserInterface extends javax.swing.JFrame {
         ChangeListener tabListener = (ChangeEvent changeEvent) -> {
             JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
             int index = sourceTabbedPane.getSelectedIndex();
-            System.out.println("Tab changed to: " + sourceTabbedPane.getTitleAt(index));
             if(details_panel.isVisible())
                 ((TabbedLibraryPane) sourceTabbedPane).newTabSelected();
+            newSong_menuItem.setEnabled(sourceTabbedPane.getTabCount() > 0);
         };
         
         tabbedLibrary_pane.addChangeListener(tabListener);
@@ -825,7 +826,6 @@ public class UserInterface extends javax.swing.JFrame {
                         session.delete(song);
                     }
                         
-                    
                     for(Performance perf:currentOrganization.getPerformances())
                         session.update(perf);
                     
