@@ -199,7 +199,7 @@ public class UserInterface extends javax.swing.JFrame {
         tabbedRoot_pane.add(panel, "Search Results");
         tabbedRoot_pane.setSelectedComponent(panel);
         
-        if(details_panel.isVisible())
+        if(details_panel.isVisible() && panel.getRowCount() > 0)
             panel.selectSong(0);
         search_button.setEnabled(true);
     }
