@@ -88,6 +88,8 @@ public class Organization implements Serializable {
         return songs;
     }
     
+
+    
     public ContactDetails getContactInfo() {
         return contact;
     }
@@ -170,7 +172,10 @@ public class Organization implements Serializable {
     public String toString() {
         return String.format("ORGANIZATION< %s | LIBRARIES%s>", name, libraries);
     }
-    
 
+    public void setContact(ContactDetails contact) {
+        this.contact = contact;
+        contact.setOrganization(this);
+    }
     
 }

@@ -7,7 +7,6 @@ package redlibrarian.GUI;
 
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;

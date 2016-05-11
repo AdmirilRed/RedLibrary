@@ -13,6 +13,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import redlibrarian.GUI.textVerification.PasswordVerifier;
+import redlibrarian.login.ContactDetails;
 import redlibrarian.music.Organization;
 
 /**
@@ -281,12 +282,17 @@ public class LoginForm extends javax.swing.JDialog {
         OrganizationForm form = new OrganizationForm((Frame) this.getParent(), true);
         form.setVisible(true);
         
+        Organization org = form.getOrganization();
+        ContactDetails contact = form.getContact();
+        
+       org.setContact(contact); 
+        
         if(form.wasSaved()) {
             Session session = sessionFactory.getCurrentSession();
             session.beginTransaction();
             
-            session.save(form.getOrganization());
-            session.save(form.getContact());
+            session.save(org);
+            session.save(contact);
             
             session.getTransaction().commit();
         }
