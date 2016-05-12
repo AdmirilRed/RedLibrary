@@ -6,6 +6,7 @@
 package redlibrarian.GUI;
 
 import java.util.ArrayList;
+import redlibrarian.RedLibrarian;
 import redlibrarian.music.Organization;
 import redlibrarian.music.Song;
 import redlibrarian.utility.Search;
@@ -30,6 +31,7 @@ public class SongSelectForm extends javax.swing.JDialog {
     public SongSelectForm(Organization org, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.setIconImage(RedLibrarian.icon);
         this.organization = org;  
         this.pane = new LibraryPane((ArrayList<Song>)org.getAllSongs());
         tabbedRoot_pane.add(pane, "Songs");

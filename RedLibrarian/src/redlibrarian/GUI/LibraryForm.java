@@ -6,6 +6,7 @@
 package redlibrarian.GUI;
 
 import javax.swing.JOptionPane;
+import redlibrarian.RedLibrarian;
 import redlibrarian.music.Library;
 import redlibrarian.music.Organization;
 
@@ -32,6 +33,7 @@ public class LibraryForm extends javax.swing.JDialog {
     public LibraryForm(Organization organization, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.setIconImage(RedLibrarian.icon);
         
         this.organization = organization;
         this.admin = organization.isAdmin();

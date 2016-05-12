@@ -5,6 +5,10 @@
  */
 package redlibrarian;
 
+import java.awt.Image;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import org.hibernate.SessionFactory;
 import redlibrarian.GUI.UserInterface;
 
@@ -15,6 +19,7 @@ import redlibrarian.GUI.UserInterface;
 public class RedLibrarian {
 
     public static SessionFactory sessionFactory;
+    public static Image icon;
     
     /**
      * @param args the command line arguments
@@ -22,6 +27,7 @@ public class RedLibrarian {
      */
     public static void main(String[] args) throws InterruptedException {  
         
+        setIcon("RedLibrarian_Icon.png");
         
         UserInterface window = new UserInterface();
         window.load();
@@ -29,6 +35,13 @@ public class RedLibrarian {
         
     }
 
+    public static void setIcon(String file) {
+        try {
+            icon = new ImageIcon(ImageIO.read(RedLibrarian.class.getResourceAsStream(file))).getImage();
+        } catch(IOException e) {
+            System.out.println("WARN: Could not load icon!");
+        }
+    }
 
     
 }

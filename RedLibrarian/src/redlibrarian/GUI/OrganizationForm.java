@@ -15,6 +15,7 @@ import org.hibernate.SessionFactory;
 import redlibrarian.GUI.textVerification.ContiguityVerifier;
 import redlibrarian.GUI.textVerification.EmailVerifier;
 import redlibrarian.GUI.textVerification.PasswordVerifier;
+import redlibrarian.RedLibrarian;
 import redlibrarian.login.ContactDetails;
 import redlibrarian.music.Organization;
 
@@ -51,6 +52,7 @@ public class OrganizationForm extends javax.swing.JDialog {
     public OrganizationForm(SessionFactory sessionFactory,java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.setIconImage(RedLibrarian.icon);
         this.sessionFactory = sessionFactory;
         
         availability_label.setVisible(false);

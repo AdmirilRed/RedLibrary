@@ -5,13 +5,17 @@
  */
 package redlibrarian.GUI;
 
+import java.awt.Image;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -21,6 +25,7 @@ import javax.swing.tree.DefaultTreeModel;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
+import redlibrarian.RedLibrarian;
 import static redlibrarian.RedLibrarian.sessionFactory;
 import redlibrarian.music.Library;
 import redlibrarian.music.Organization;
@@ -52,11 +57,13 @@ public class UserInterface extends javax.swing.JFrame {
     public UserInterface() {
         initComponents();
         details_panel.setVisible(false);
-        
+                
     }
 
     public boolean load() {
-                
+        
+        this.setIconImage(RedLibrarian.icon);
+        
         try {
             if (sessionFactory == null) {
                 Configuration cfg = new Configuration();

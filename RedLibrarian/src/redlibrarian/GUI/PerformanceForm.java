@@ -15,6 +15,7 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 import redlibrarian.GUI.textVerification.DateLabelFormatter;
+import redlibrarian.RedLibrarian;
 import redlibrarian.music.Organization;
 import redlibrarian.music.Performance;
 import redlibrarian.music.Song;
@@ -44,6 +45,7 @@ public class PerformanceForm extends javax.swing.JDialog {
     public PerformanceForm(Organization org, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.setIconImage(RedLibrarian.icon);
         this.organization = org;
         this.admin = org.isAdmin();
         tabbedSong_pane.add(new LibraryPane(), "Songs");
