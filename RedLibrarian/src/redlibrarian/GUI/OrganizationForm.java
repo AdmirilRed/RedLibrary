@@ -299,6 +299,7 @@ public class OrganizationForm extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void forward_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forward_buttonActionPerformed
