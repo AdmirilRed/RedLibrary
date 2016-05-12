@@ -5,17 +5,13 @@
  */
 package redlibrarian.GUI;
 
-import java.awt.Image;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -659,12 +655,13 @@ public class UserInterface extends javax.swing.JFrame {
             if(form.wasSaved()) {
                 Song song = form.getSong();
                 currentOrganization.addSong(song);
-
+                
                 try {
                     Session session = sessionFactory.getCurrentSession();
                     session.beginTransaction();
 
                     session.save(song);
+                    session.update(song.getLibrary());
                     session.update(currentOrganization);
 
                     session.getTransaction().commit();

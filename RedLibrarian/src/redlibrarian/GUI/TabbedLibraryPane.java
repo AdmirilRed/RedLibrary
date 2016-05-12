@@ -46,6 +46,12 @@ public class TabbedLibraryPane extends JTabbedPane {
         tabs.add(lib);
     }
     
+    @Override
+    public void remove(int index) {
+        super.remove(index);
+        tabs.remove(index);
+    }
+    
     public Library getLibrary(int index) {
         return tabs.get(index);
     }
