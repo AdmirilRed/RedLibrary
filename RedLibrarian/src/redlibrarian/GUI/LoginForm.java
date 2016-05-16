@@ -43,6 +43,7 @@ public class LoginForm extends javax.swing.JDialog {
         this.setIconImage(RedLibrarian.icon);
         this.setTitle("Login Prompt");
         loginStatus_label.setVisible(false);
+        loginStatus_label.setForeground(Color.RED);
         this.sessionFactory = sessionFactory;
     }
     
@@ -90,8 +91,7 @@ public class LoginForm extends javax.swing.JDialog {
                 
                 if(!guest_button.isSelected()) {
                     if(!remoteOrg.verifyPassword(password_field.getText())) {
-                        loginStatus_label.setText("INCORRECT");
-                        loginStatus_label.setForeground(Color.RED);
+                        loginStatus_label.setText("Incorrect Password.");
                         loginStatus_label.setVisible(true);
                     }
                     else {
@@ -108,7 +108,7 @@ public class LoginForm extends javax.swing.JDialog {
                 }
             } catch(Exception hibernateException) {
                 System.out.println("LOGIN: "+hibernateException);
-                if(hibernateException.toString().contains("NullPointerException")) {
+                if(hibernateException.toString().contains("IndexOutOfBoundsException")) {
                     loginStatus_label.setText("Organization does not exist.");
                 }
                 
