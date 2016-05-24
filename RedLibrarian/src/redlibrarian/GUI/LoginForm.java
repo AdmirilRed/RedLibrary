@@ -305,7 +305,7 @@ public class LoginForm extends javax.swing.JDialog {
 
                 session.getTransaction().commit();    
             } catch(HibernateException hibernateException) {
-                Logger.getLogger(UserInterface.class.getName()).log(Level.SEVERE, null, hibernateException);
+                Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, hibernateException);
             }
             
         }
