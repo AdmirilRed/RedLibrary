@@ -29,7 +29,7 @@ import net.lingala.zip4j.core.ZipFile;
 public class UpdateGUI extends javax.swing.JFrame {
 
     private final String root = "update/";
-    private File updateFile;
+    private final File updateFile = new File("update.zip");
     
     /**
      * Creates new form UpdateGUI
@@ -49,7 +49,6 @@ public class UpdateGUI extends javax.swing.JFrame {
             long max = conn.getContentLength();
             progress_bar.setMaximum((int)max);
             output.setText(output.getText()+"Downloding file from "+link+"...\nUpdate Size(compressed): "+max+" Bytes");
-            updateFile = new File("update.zip");
             try (BufferedOutputStream fOut = new BufferedOutputStream(new FileOutputStream(updateFile))) {
                 byte[] buffer = new byte[32 * 1024];
                 int bytesRead;
@@ -58,7 +57,7 @@ public class UpdateGUI extends javax.swing.JFrame {
                     in += bytesRead;
                     
                     progress_bar.setValue(in);
-                    progress_bar.setString(String.format("%d%%",(int)(in*100/max)));
+                    progress_bar.setString(String.format("%d/%d KB (%d%%)",(int)in/1000,(int)max/1000,(int)(in*100/max)));
                     progress_bar.setStringPainted(true);
                     
                     fOut.write(buffer, 0, bytesRead);
@@ -96,6 +95,7 @@ public class UpdateGUI extends javax.swing.JFrame {
     }
     
     protected void copyFiles() throws IOException {
+        this.write(new File("").getAbsolutePath().substring(0,new File("").getAbsolutePath().lastIndexOf('/')));
         copyFiles(new File(root),new File("").getAbsolutePath());
     }
     
@@ -128,7 +128,31 @@ public class UpdateGUI extends javax.swing.JFrame {
             }
         }
         out.close();
-      }
+    }
+    
+    protected void cleanup() {
+        output.setText(output.getText()+"\nPreforming clean up...");
+        File f = new File("update.zip");
+        f.delete();
+        remove(new File(root));
+        new File(root).delete();
+    }
+    
+    private void remove(File f) {
+        File[]files = f.listFiles();
+        for(File ff:files)
+        {
+            if(ff.isDirectory())
+            {
+                remove(ff);
+                ff.delete();
+            }
+            else
+            {
+                ff.delete();
+            }
+        }
+    }
 
 
     

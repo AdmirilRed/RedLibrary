@@ -10,7 +10,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import org.hibernate.SessionFactory;
-import redlibrarian.GUI.UserInterface;
 import redlibrarian.utility.Update;
 
 /**
@@ -31,6 +30,10 @@ public class RedLibrarian {
     public static void main(String[] args) throws InterruptedException, IOException {  
         
         setIcon("RedLibrarian_Icon.png");
+        
+        switch(args[0]) {
+            case "cleanup": performCleanup();
+        }
         
         //UserInterface window = new UserInterface();
         //window.load();

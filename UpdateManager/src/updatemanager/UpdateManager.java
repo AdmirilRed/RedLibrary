@@ -5,8 +5,9 @@
  */
 package updatemanager;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,11 +26,18 @@ public class UpdateManager {
         UpdateGUI updater = new UpdateGUI();
         updater.setVisible(true);
         try {
-            if(updater.downloadFile(link)) {
+            //if(updater.downloadFile(link)) {
                 if(updater.unzip()) {
-                    updater.copyFiles();
-                }
-            }
+                    //updater.copyFiles();
+                    //updater.cleanup();
+                    String[] run = {"Cleaner.bat"};
+                    try {
+                        Runtime.getRuntime().exec(run);
+                    } catch (Exception ex) {
+                        Logger.getLogger(UpdateManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                        }
+            //}
             
         }
         catch(Exception ex) {

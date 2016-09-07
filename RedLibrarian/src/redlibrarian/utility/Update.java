@@ -31,7 +31,7 @@ public class Update {
         this.currentVersion = requestCurrentVersion();
         
         if(isOutdated() && JOptionPane.showConfirmDialog(null,
-                "You are running an outdated version, would you like to update now?", "Update detected ("+currentVersion+")", JOptionPane.YES_NO_OPTION) == 0) {
+                "You are running an outdated version, would you like to update now?", "Update detected ("+clientVersion+" --> "+currentVersion+")", JOptionPane.YES_NO_OPTION) == 0) {
             String[] run = {"java","-jar","updater/Update.jar",rootPath+"/RedLibrarian("+currentVersion+").zip"};
             try {
                 Runtime.getRuntime().exec(run);
